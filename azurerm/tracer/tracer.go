@@ -40,7 +40,20 @@ func (t *tracer) StartSpan(ctx context.Context, name string) context.Context {
 	return context.WithValue(newctx, traceSpanKey{}, span)
 }
 func (t *tracer) EndSpan(ctx context.Context, httpStatusCode int, err error) {
-	ctx.Value(traceSpanKey{}).(*opencensusTrace.Span).End()
+	span := ctx.Value(traceSpanKey{}).(*opencensusTrace.Span)
+	status := opencensusTrace.Status{}
+	if httpStatusCode != -1 {
+		if httpStatusCode/200 == 1 {
+			status.Code = opencensusTrace.StatusCodeOK
+		} else {
+			status.Code = opencensusTrace.StatusCodeUnknown
+		}
+	}
+	if err != nil {
+		status.Message = err.Error()
+	}
+	span.SetStatus(status)
+	span.End()
 }
 
 type exporterBuilder func(string) (opencensusTrace.Exporter, error)
