@@ -19,7 +19,7 @@ import (
 // If the 'SupportsCustomTimeouts' feature toggle is enabled - this is wrapped with a context
 // Otherwise this returns the default context
 func ForCreate(ctx context.Context, d *schema.ResourceData) (context.Context, context.CancelFunc) {
-	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutCreate), d.Get("name").(string), "create")
+	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutCreate), d, "create")
 }
 
 // ForCreateUpdate returns the context wrapped with the timeout for an combined Create/Update operation
@@ -39,7 +39,7 @@ func ForCreateUpdate(ctx context.Context, d *schema.ResourceData) (context.Conte
 // If the 'SupportsCustomTimeouts' feature toggle is enabled - this is wrapped with a context
 // Otherwise this returns the default context
 func ForDelete(ctx context.Context, d *schema.ResourceData) (context.Context, context.CancelFunc) {
-	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutDelete), d.Get("name").(string), "delete")
+	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutDelete), d, "delete")
 }
 
 // ForRead returns the context wrapped with the timeout for an Read operation
@@ -47,7 +47,7 @@ func ForDelete(ctx context.Context, d *schema.ResourceData) (context.Context, co
 // If the 'SupportsCustomTimeouts' feature toggle is enabled - this is wrapped with a context
 // Otherwise this returns the default context
 func ForRead(ctx context.Context, d *schema.ResourceData) (context.Context, context.CancelFunc) {
-	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutRead), d.Get("name").(string), "read")
+	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutRead), d, "read")
 }
 
 // ForUpdate returns the context wrapped with the timeout for an Update operation
@@ -55,10 +55,10 @@ func ForRead(ctx context.Context, d *schema.ResourceData) (context.Context, cont
 // If the 'SupportsCustomTimeouts' feature toggle is enabled - this is wrapped with a context
 // Otherwise this returns the default context
 func ForUpdate(ctx context.Context, d *schema.ResourceData) (context.Context, context.CancelFunc) {
-	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutUpdate), d.Get("name").(string), "update")
+	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutUpdate), d, "update")
 }
 
-func buildWithTimeout(ctx context.Context, timeout time.Duration, name, opname string) (context.Context, context.CancelFunc) {
+func buildWithTimeout(ctx context.Context, timeout time.Duration, d *schema.ResourceData, opname string) (context.Context, context.CancelFunc) {
 	if features.SupportsCustomTimeouts() {
 		return context.WithTimeout(ctx, timeout)
 	}
@@ -68,7 +68,7 @@ func buildWithTimeout(ctx context.Context, timeout time.Duration, name, opname s
 
 	if tracer.TracingEnabled() {
 		var span *opencensusTrace.Span
-		ctx, span = opencensusTrace.StartSpanWithRemoteParent(ctx, fmt.Sprintf("%s: %s", name, opname), tracer.RootSpan.SpanContext())
+		ctx, span = opencensusTrace.StartSpanWithRemoteParent(ctx, fmt.Sprintf("%s: %s", d.Id(), opname), tracer.RootSpan.SpanContext())
 		originNullFunc := nullFunc
 		nullFunc = func() {
 			originNullFunc()
