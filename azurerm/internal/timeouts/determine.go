@@ -70,7 +70,7 @@ func buildWithTimeout(ctx context.Context, timeout time.Duration, d *schema.Reso
 		var span *opencensusTrace.Span
 		// Use "name" as identity if available, otherwise use "Id"
 		ident := d.Get("name")
-		if ident == "" {
+		if ident == "" || ident == nil {
 			ident = d.Id()
 		}
 
