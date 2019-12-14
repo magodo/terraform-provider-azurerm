@@ -68,7 +68,13 @@ func buildWithTimeout(ctx context.Context, timeout time.Duration, d *schema.Reso
 
 	if tracer.TracingEnabled() {
 		var span *opencensusTrace.Span
-		ctx, span = opencensusTrace.StartSpanWithRemoteParent(ctx, fmt.Sprintf("%s: %s", d.Id(), opname), tracer.RootSpan.SpanContext())
+		// Use "name" as identity if available, otherwise use "Id"
+		ident := d.Get("name")
+		if ident == "" {
+			ident = d.Id()
+		}
+
+		ctx, span = opencensusTrace.StartSpanWithRemoteParent(ctx, fmt.Sprintf("%s: %s", ident, opname), tracer.RootSpan.SpanContext())
 		originNullFunc := nullFunc
 		nullFunc = func() {
 			originNullFunc()
