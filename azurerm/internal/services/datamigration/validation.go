@@ -16,3 +16,16 @@ func validateName(i interface{}, k string) ([]string, []error) {
 	}
 	return nil, nil
 }
+
+// Sql data source in the format: Protocol:MachineName\SQLServerInstanceName,PortNumber
+func validateSqlConnectionInfoSourceName(i interface{}, k string) ([]string, []error) {
+	v, ok := i.(string)
+	if !ok {
+		return nil, []error{fmt.Errorf("expected type of %q to be string", k)}
+	}
+	validSourceName := regexp.MustCompile(`^\w+:[\w\d]+\\[\w\d]+,\d+$`)
+	if !validSourceName.MatchString(v) {
+		return nil, []error{fmt.Errorf("invalid format of %q", k)}
+	}
+	return nil, nil
+}

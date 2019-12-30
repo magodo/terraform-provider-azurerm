@@ -14,14 +14,16 @@ func (r Registration) Name() string {
 // SupportedDataSources returns the supported Data Sources supported by this Service
 func (r Registration) SupportedDataSources() map[string]*schema.Resource {
 	return map[string]*schema.Resource{
-		"azurerm_data_migration_service": dataSourceArmDataMigrationService(),
+		"azurerm_data_migration_service":         dataSourceArmDataMigrationService(),
+		"azurerm_data_migration_service_project": dataSourceArmDataMigrationServiceProject(),
 	}
 }
 
 // SupportedResources returns the supported Resources supported by this Service
 func (r Registration) SupportedResources() map[string]*schema.Resource {
 	resources := map[string]*schema.Resource{
-		"azurerm_data_migration_service": resourceArmDataMigrationService(),
+		"azurerm_data_migration_service":         resourceArmDataMigrationService(),
+		"azurerm_data_migration_service_project": resourceArmDataMigrationServiceProject(),
 	}
 
 	return resources
