@@ -186,22 +186,22 @@ func resourceArmDataMigrationServiceProjectCreateUpdate(d *schema.ResourceData, 
 		parameters.ProjectProperties.DatabasesInfo = expandProjectDatabaseInfo(sourceDatabases.(*schema.Set).List())
 	}
 
-	if sourceConnectionInfo, ok := d.GetOk("source_connection_info"); ok {
-		switch datamigration.ProjectSourcePlatform(sourcePlatform) {
-		case datamigration.ProjectSourcePlatformSQL:
+	switch datamigration.ProjectSourcePlatform(sourcePlatform) {
+	case datamigration.ProjectSourcePlatformSQL:
+		if sourceConnectionInfo, ok := d.GetOk("sql_source_connection_info"); ok {
 			parameters.SourceConnectionInfo = expandProjectSqlConnectionInfo(sourceConnectionInfo.([]interface{}))
-		default:
-			fmt.Errorf("Unknown source platform: %s", sourcePlatform)
 		}
+	default:
+		fmt.Errorf("Unknown source platform: %s", sourcePlatform)
 	}
 
-	if targetConnectionInfo, ok := d.GetOk("target_connection_info"); ok {
-		switch datamigration.ProjectTargetPlatform(targetPlatform) {
-		case datamigration.ProjectTargetPlatformSQLDB:
+	switch datamigration.ProjectTargetPlatform(targetPlatform) {
+	case datamigration.ProjectTargetPlatformSQLDB:
+		if targetConnectionInfo, ok := d.GetOk("sql_target_connection_info"); ok {
 			parameters.TargetConnectionInfo = expandProjectSqlConnectionInfo(targetConnectionInfo.([]interface{}))
-		default:
-			fmt.Errorf("Unknown target platform: %s", targetPlatform)
 		}
+	default:
+		fmt.Errorf("Unknown target platform: %s", targetPlatform)
 	}
 
 	if _, err := client.CreateOrUpdate(ctx, parameters, resourceGroup, serviceName, name); err != nil {
@@ -257,32 +257,30 @@ func resourceArmDataMigrationServiceProjectRead(d *schema.ResourceData, meta int
 		d.Set("target_platform", string(projectProperties.TargetPlatform))
 
 		if projectProperties.SourceConnectionInfo != nil {
-			var sourceConnectionInfo []interface{}
 			switch projectProperties.SourceConnectionInfo.(type) {
 			case datamigration.SQLConnectionInfo:
 				v := projectProperties.SourceConnectionInfo.(datamigration.SQLConnectionInfo)
-				sourceConnectionInfo = flattenProjectSqlConnectionInfo(&v)
+				sourceConnectionInfo := flattenProjectSqlConnectionInfo(&v)
+				if err := d.Set("sql_source_connection_info", sourceConnectionInfo); err != nil {
+					return fmt.Errorf("Error setting `sql_source_connection_info`: %+v", err)
+				}
 			default:
 				return fmt.Errorf("Unknown source connection info: %s", reflect.TypeOf(projectProperties.SourceConnectionInfo))
-			}
-			if err := d.Set("source_conection_info", sourceConnectionInfo); err != nil {
-				return fmt.Errorf("Error setting `source_connection_info`: %+v", err)
 			}
 		}
 
 		if projectProperties.TargetConnectionInfo != nil {
-			var targetConnectionInfo []interface{}
 			switch projectProperties.TargetConnectionInfo.(type) {
 			case datamigration.SQLConnectionInfo:
 				v := projectProperties.TargetConnectionInfo.(datamigration.SQLConnectionInfo)
-				targetConnectionInfo = flattenProjectSqlConnectionInfo(&v)
+				targetConnectionInfo := flattenProjectSqlConnectionInfo(&v)
+				if err := d.Set("sql_target_connection_info", targetConnectionInfo); err != nil {
+					return fmt.Errorf("Error setting `sql_target_connection_info`: %+v", err)
+				}
 			default:
 				return fmt.Errorf("Unknown target connection info: %s", reflect.TypeOf(projectProperties.TargetConnectionInfo))
 			}
 
-			if err := d.Set("target_connection_info", targetConnectionInfo); err != nil {
-				return fmt.Errorf("Error setting `target_connection_info`: %+v", err)
-			}
 		}
 	}
 	d.Set("id", resp.ID)
