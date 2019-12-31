@@ -1,16 +1,15 @@
 ---
-subcategory: ""
+subcategory: "Data Migration"
 layout: "azurerm"
 page_title: "Azure Resource Manager: azurerm_data_migration_service_project"
 sidebar_current: "docs-azurerm-resource-data-migration-service-project"
 description: |-
-  Manage Azure Project instance.
+  Manage Azure Data Migration Project instance.
 ---
 
 # azurerm_data_migration_service_project
 
-Manage Azure Project instance.
-
+Manage Azure Data Migration Project instance.
 
 ## Example Usage
 
@@ -20,7 +19,35 @@ resource "azurerm_resource_group" "example" {
   location = "%s"
 }
 
-resource "DataMigrationServiceProject" "example" {
+resource "azurerm_virtual_network" "example" {
+  name                = "example-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+}
+
+resource "azurerm_subnet" "example" {
+  name                 = "example-subnet"
+  resource_group_name  = azurerm_resource_group.example.name
+  virtual_network_name = azurerm_virtual_network.example.name
+  address_prefix       = "10.0.1.0/24"
+}
+
+resource "azurerm_data_migration_service" "example" {
+	name                = "example-dms"
+	location            = azurerm_resource_group.example.location
+	resource_group_name = azurerm_resource_group.example.name
+	virtual_subnet_id   = azurerm_subnet.example.id
+	sku_name            = "Standard_1vCores"
+}
+
+resource "azurerm_data_migration_service_project" "example" {
+	name                = "example-dms-project"
+	service_name        = azurerm_data_migration_service.example.name
+	resource_group_name = azurerm_resource_group.example.name
+	location            = "zurerm_resource_group.example.location
+	source_platform     = "SQL"
+	target_platform     = "SQLDB"
 }
 ```
 
@@ -28,69 +55,30 @@ resource "DataMigrationServiceProject" "example" {
 
 The following arguments are supported:
 
-* `group_name` - (Required) Name of the resource group Changing this forces a new resource to be created.
+* `name` - (Required) Specify the name of the data migration service project. Changing this forces a new resource to be created.
 
-* `location` - (Required) Resource location. Changing this forces a new resource to be created.
+* `service_name` - (Required) Name of the data migration service where resource belongs to. Changing this forces a new resource to be created.
 
-* `project_name` - (Required) Name of the project Changing this forces a new resource to be created.
+* `resource_group_name` - (Required) Name of the resource group in which to create the data migration service project. Changing this forces a new resource to be created.
 
-* `service_name` - (Required) Name of the service Changing this forces a new resource to be created.
+* `location` - (Required) Specifies the supported Azure location where the resource exists. Changing this forces a new resource to be created.
 
-* `source_platform` - (Required) Source platform for the project
+* `source_platform` - (Required) Platform type of migration source. Currently only support: "SQL" (i.e. on-premises SQL Server). Changing this forces a new resource to be created.
 
-* `target_platform` - (Required) Target platform for the project
+* `target_platform` - (Required) Platform type of migration target. Currently only support: "SQLDB" (i.e. Azure SQL Database). Changing this forces a new resource to be created.
 
-* `databases_info` - (Optional) One or more `databases_info` block defined below.
-
-* `delete_running_tasks` - (Optional) Delete the resource even if it contains running tasks Changing this forces a new resource to be created.
-
-* `source_connection_info` - (Optional) One `source_connection_info` block defined below.
-
-* `target_connection_info` - (Optional) One `target_connection_info` block defined below.
-
-* `tags` - (Optional) Resource tags. Changing this forces a new resource to be created.
-
----
-
-The `databases_info` block supports the following:
-
-* `source_database_name` - (Required) Name of the database
-
----
-
-The `source_connection_info` block supports the following:
-
-* `user_name` - (Optional) User name
-
-* `password` - (Optional) Password credential.
-
----
-
-The `target_connection_info` block supports the following:
-
-* `user_name` - (Optional) User name
-
-* `password` - (Optional) Password credential.
+* `tags` - (Optional) A mapping of tags to assigned to the resource.
 
 ## Attributes Reference
 
 The following attributes are exported:
 
-* `creation_time` - UTC Date and time when project was created
-
-* `provisioning_state` - The project's provisioning state
-
 * `id` - Resource ID.
-
-* `name` - Resource name.
-
-* `type` - Resource type.
-
 
 ## Import
 
 Data Migration Service Project can be imported using the `resource id`, e.g.
 
 ```shell
-$ terraform import azurerm_data_migration_service_project.example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg/providers/Microsoft.DataMigration/services//projects/
+$ terraform import azurerm_data_migration_service_project.example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg/providers/Microsoft.DataMigration/services/example-dms/projects/project1
 ```
