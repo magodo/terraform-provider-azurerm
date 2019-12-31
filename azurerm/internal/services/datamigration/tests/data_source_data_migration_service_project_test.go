@@ -32,10 +32,9 @@ func testAccDataSourceDataMigrationServiceProject_basic(data acceptance.TestData
 %s
 
 data "azurerm_data_migration_service_project" "test" {
-  name         = azurerm_data_migration_service_project.test.name
-  service_name = azurerm_data_migration_service_project.test.service_name
-  group_name   = azurerm_data_migration_service_project.test.group_name
-  location     = azurerm_data_migration_service_project.test.location
+  name                  = azurerm_data_migration_service_project.test.name
+  service_name          = azurerm_data_migration_service_project.test.service_name
+  resource_group_name   = azurerm_data_migration_service_project.test.resource_group_name
 }
 `, config)
 }

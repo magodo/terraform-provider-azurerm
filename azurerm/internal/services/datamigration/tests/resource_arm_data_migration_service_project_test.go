@@ -86,7 +86,7 @@ func TestAccAzureRMDataMigrationServiceProject_update(t *testing.T) {
 			{
 				Config: testAccAzureRMDataMigrationServiceProject_basic(data),
 				Check: resource.ComposeTestCheckFunc(
-					testCheckAzureRMDataMigrationServiceExists(data.ResourceName),
+					testCheckAzureRMDataMigrationServiceProjectExists(data.ResourceName),
 				),
 			},
 			{
@@ -181,7 +181,7 @@ resource "azurerm_data_migration_service_project" "test" {
 	source_platform     = "SQL"
 	target_platform     = "SQLDB"
     tags = {
-  		name = "test"
+ 		name = "test"
     }
 }
 `, template, data.RandomInteger)
