@@ -6,8 +6,6 @@ import (
 
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/features"
 
-	"github.com/Azure/azure-sdk-for-go/services/datamigration/mgmt/2018-04-19/datamigration"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/acceptance"
@@ -49,15 +47,6 @@ func TestAccAzureRMDataMigrationServiceProject_complete(t *testing.T) {
 					testCheckAzureRMDataMigrationServiceProjectExists(data.ResourceName),
 					resource.TestCheckResourceAttr(data.ResourceName, "source_platform", "SQL"),
 					resource.TestCheckResourceAttr(data.ResourceName, "target_platform", "SQLDB"),
-					resource.TestCheckResourceAttr(data.ResourceName, "source_databases.#", "2"),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_source_connection_info.additional_settings", "foo"),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_source_connection_info.authentication", string(datamigration.SQLAuthentication)),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_source_connection_info.data_source", `tcp:localhost\sourceServer,12345`),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_source_connection_info.encrypt_connection", "true"),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_source_connection_info.password", "secret"),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_source_connection_info.platform", string(datamigration.SQLOnPrem)),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_source_connection_info.trust_server_certificate", "true"),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_source_connection_info.user_name", "root"),
 					resource.TestCheckResourceAttr(data.ResourceName, "tags.name", "test"),
 				),
 			},
@@ -104,17 +93,6 @@ func TestAccAzureRMDataMigrationServiceProject_update(t *testing.T) {
 				Config: testAccAzureRMDataMigrationServiceProject_complete(data),
 				Check: resource.ComposeTestCheckFunc(
 					testCheckAzureRMDataMigrationServiceProjectExists(data.ResourceName),
-					resource.TestCheckResourceAttr(data.ResourceName, "source_platform", "SQL"),
-					resource.TestCheckResourceAttr(data.ResourceName, "target_platform", "SQLDB"),
-					resource.TestCheckResourceAttr(data.ResourceName, "source_databases.#", "2"),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_target_connection_info.additional_settings", "bar"),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_target_connection_info.authentication", string(datamigration.SQLAuthentication)),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_target_connection_info.data_source", `tcp:localhost\targetServer,12345`),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_target_connection_info.encrypt_connection", "true"),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_target_connection_info.password", "secret"),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_target_connection_info.platform", string(datamigration.SQLOnPrem)),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_target_connection_info.trust_server_certificate", "true"),
-					resource.TestCheckResourceAttr(data.ResourceName, "sql_target_connection_info.user_name", "root"),
 					resource.TestCheckResourceAttr(data.ResourceName, "tags.name", "test"),
 				),
 			},
@@ -202,27 +180,6 @@ resource "azurerm_data_migration_service_project" "test" {
 	location            = azurerm_resource_group.test.location
 	source_platform     = "SQL"
 	target_platform     = "SQLDB"
-    source_databases    = ["db1", "db2"]
-	sql_source_connection_info {
-		additional_settings = "foo"
-		authentication = "SqlAuthentication"
-		data_source = "tcp:localhost\\sourceServer,12345"
-		encrypt_connection = true
-		password = "secret"
-		platform = "SqlOnPrem"
-		trust_server_certificate = true
-		user_name = "root"
-	}
-	sql_source_connection_info {
-		additional_settings = "bar"
-		authentication = "SqlAuthentication"
-		data_source = "tcp:localhost\\targetServer,12345"
-		encrypt_connection = true
-		password = "secret"
-		platform = "SqlOnPrem"
-		trust_server_certificate = true
-		user_name = "root"
-	}
     tags = {
   		name = "test"
     }
