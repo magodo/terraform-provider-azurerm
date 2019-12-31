@@ -45,7 +45,7 @@ The following arguments are supported:
 
 The following attributes are exported:
 
-* `id` - Resource ID of data migration service project.
+* `id` - The ID of Data Migration Service Project.
 
 * `location` - Azure location where the resource exists.
 

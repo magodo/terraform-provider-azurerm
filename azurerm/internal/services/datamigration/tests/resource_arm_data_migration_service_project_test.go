@@ -89,6 +89,7 @@ func TestAccAzureRMDataMigrationServiceProject_update(t *testing.T) {
 					testCheckAzureRMDataMigrationServiceProjectExists(data.ResourceName),
 				),
 			},
+			data.ImportStep(),
 			{
 				Config: testAccAzureRMDataMigrationServiceProject_complete(data),
 				Check: resource.ComposeTestCheckFunc(
@@ -96,6 +97,7 @@ func TestAccAzureRMDataMigrationServiceProject_update(t *testing.T) {
 					resource.TestCheckResourceAttr(data.ResourceName, "tags.name", "test"),
 				),
 			},
+			data.ImportStep(),
 		},
 	})
 }
