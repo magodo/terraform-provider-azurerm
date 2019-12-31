@@ -9,14 +9,14 @@ description: |-
 
 # azurerm_data_migration_service_project
 
-Manage Azure Data Migration Project instance.
+Manage a Azure Data Migration Project.
 
 ## Example Usage
 
 ```hcl
 resource "azurerm_resource_group" "example" {
   name     = "example-rg"
-  location = "%s"
+  location = "West Europe"
 }
 
 resource "azurerm_virtual_network" "example" {
@@ -45,7 +45,7 @@ resource "azurerm_data_migration_service_project" "example" {
 	name                = "example-dms-project"
 	service_name        = azurerm_data_migration_service.example.name
 	resource_group_name = azurerm_resource_group.example.name
-	location            = "zurerm_resource_group.example.location
+	location            = zurerm_resource_group.example.location
 	source_platform     = "SQL"
 	target_platform     = "SQLDB"
 }
@@ -63,9 +63,9 @@ The following arguments are supported:
 
 * `location` - (Required) Specifies the supported Azure location where the resource exists. Changing this forces a new resource to be created.
 
-* `source_platform` - (Required) Platform type of migration source. Currently only support: "SQL" (i.e. on-premises SQL Server). Changing this forces a new resource to be created.
+* `source_platform` - (Required) Platform type of migration source. Currently only support: `SQL`(on-premises SQL Server). Changing this forces a new resource to be created.
 
-* `target_platform` - (Required) Platform type of migration target. Currently only support: "SQLDB" (i.e. Azure SQL Database). Changing this forces a new resource to be created.
+* `target_platform` - (Required) Platform type of migration target. Currently only support: `SQLDB`(Azure SQL Database). Changing this forces a new resource to be created.
 
 * `tags` - (Optional) A mapping of tags to assigned to the resource.
 
@@ -73,11 +73,11 @@ The following arguments are supported:
 
 The following attributes are exported:
 
-* `id` - Resource ID.
+* `id` - The ID of Data Migration Service Project.
 
 ## Import
 
-Data Migration Service Project can be imported using the `resource id`, e.g.
+Data Migration Service Projects can be imported using the `resource id`, e.g.
 
 ```shell
 $ terraform import azurerm_data_migration_service_project.example /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/example-rg/providers/Microsoft.DataMigration/services/example-dms/projects/project1
