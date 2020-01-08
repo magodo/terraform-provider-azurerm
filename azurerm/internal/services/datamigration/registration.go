@@ -22,8 +22,9 @@ func (r Registration) SupportedDataSources() map[string]*schema.Resource {
 // SupportedResources returns the supported Resources supported by this Service
 func (r Registration) SupportedResources() map[string]*schema.Resource {
 	resources := map[string]*schema.Resource{
-		"azurerm_data_migration_service":         resourceArmDataMigrationService(),
-		"azurerm_data_migration_service_project": resourceArmDataMigrationServiceProject(),
+		"azurerm_data_migration_service":                 resourceArmDataMigrationService(),
+		"azurerm_data_migration_service_project":         resourceArmDataMigrationServiceProject(),
+		"azurerm_data_migration_service_task_sql_server": resourceArmDataMigrationServiceTaskSqlServer(),
 	}
 
 	return resources
