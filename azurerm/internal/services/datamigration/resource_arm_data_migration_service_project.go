@@ -173,7 +173,8 @@ func resourceArmDataMigrationServiceProjectDelete(d *schema.ResourceData, meta i
 	serviceName := id.Path["services"]
 	name := id.Path["projects"]
 
-	deleteRunningTasks := true
+	// Always leave outstanding migration tasks untouched when deleting DMS Project. This is to avoid unexpectedly delete any tasks managed out of terraform.
+	deleteRunningTasks := false
 	if _, err := client.Delete(ctx, resourceGroup, serviceName, name, &deleteRunningTasks); err != nil {
 		return fmt.Errorf("Error deleting Data Migration Service Project (Project Name %q / Service Name %q / Group Name %q): %+v", name, serviceName, resourceGroup, err)
 	}

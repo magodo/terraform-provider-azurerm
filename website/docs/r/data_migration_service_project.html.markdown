@@ -11,6 +11,8 @@ description: |-
 
 Manage a Azure Data Migration Project.
 
+~> **NOTE on destroy behavior of Data Migration Service Project:** Destroy a Data Migration Service Project will leave any outstanding tasks untouched. This is to avoid unexpectedly delete any tasks managed out of terraform.
+
 ## Example Usage
 
 ```hcl
