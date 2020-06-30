@@ -12,7 +12,6 @@ import (
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/helpers/tf"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/clients"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/features"
-	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/locks"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/timeouts"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/utils"
 )
@@ -201,9 +200,6 @@ func resourceArmNetworkSecurityRuleCreateUpdate(d *schema.ResourceData, meta int
 	direction := d.Get("direction").(string)
 	protocol := d.Get("protocol").(string)
 
-	locks.ByName(nsgName, networkSecurityGroupResourceName)
-	defer locks.UnlockByName(nsgName, networkSecurityGroupResourceName)
-
 	rule := network.SecurityRule{
 		Name: &name,
 		SecurityRulePropertiesFormat: &network.SecurityRulePropertiesFormat{
@@ -372,9 +368,6 @@ func resourceArmNetworkSecurityRuleDelete(d *schema.ResourceData, meta interface
 	resGroup := id.ResourceGroup
 	nsgName := id.Path["networkSecurityGroups"]
 	sgRuleName := id.Path["securityRules"]
-
-	locks.ByName(nsgName, networkSecurityGroupResourceName)
-	defer locks.UnlockByName(nsgName, networkSecurityGroupResourceName)
 
 	future, err := client.Delete(ctx, resGroup, nsgName, sgRuleName)
 	if err != nil {
