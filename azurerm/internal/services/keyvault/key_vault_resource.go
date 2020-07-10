@@ -70,6 +70,8 @@ func resourceArmKeyVault() *schema.Resource {
 			"sku_name": {
 				Type:     schema.TypeString,
 				Required: true,
+				// We shall make this case-sensitive once following issue is addressed:
+				// https://github.com/Azure/azure-rest-api-specs/issues/10082
 				ValidateFunc: validation.StringInSlice([]string{
 					string(keyvault.Standard),
 					string(keyvault.Premium),
