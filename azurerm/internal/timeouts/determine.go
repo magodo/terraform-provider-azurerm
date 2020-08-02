@@ -2,17 +2,23 @@ package timeouts
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	opencensusTrace "go.opencensus.io/trace"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/tracer"
 )
+
+// TODO: tests for this
 
 // ForCreate returns the context wrapped with the timeout for an Create operation
 //
 // If the 'SupportsCustomTimeouts' feature toggle is enabled - this is wrapped with a context
 // Otherwise this returns the default context
 func ForCreate(ctx context.Context, d *schema.ResourceData) (context.Context, context.CancelFunc) {
-	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutCreate))
+	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutCreate), d, "create")
 }
 
 // ForCreateUpdate returns the context wrapped with the timeout for an combined Create/Update operation
@@ -32,7 +38,7 @@ func ForCreateUpdate(ctx context.Context, d *schema.ResourceData) (context.Conte
 // If the 'SupportsCustomTimeouts' feature toggle is enabled - this is wrapped with a context
 // Otherwise this returns the default context
 func ForDelete(ctx context.Context, d *schema.ResourceData) (context.Context, context.CancelFunc) {
-	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutDelete))
+	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutDelete), d, "delete")
 }
 
 // ForRead returns the context wrapped with the timeout for an Read operation
@@ -40,7 +46,7 @@ func ForDelete(ctx context.Context, d *schema.ResourceData) (context.Context, co
 // If the 'SupportsCustomTimeouts' feature toggle is enabled - this is wrapped with a context
 // Otherwise this returns the default context
 func ForRead(ctx context.Context, d *schema.ResourceData) (context.Context, context.CancelFunc) {
-	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutRead))
+	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutRead), d, "read")
 }
 
 // ForUpdate returns the context wrapped with the timeout for an Update operation
@@ -48,9 +54,28 @@ func ForRead(ctx context.Context, d *schema.ResourceData) (context.Context, cont
 // If the 'SupportsCustomTimeouts' feature toggle is enabled - this is wrapped with a context
 // Otherwise this returns the default context
 func ForUpdate(ctx context.Context, d *schema.ResourceData) (context.Context, context.CancelFunc) {
-	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutUpdate))
+	return buildWithTimeout(ctx, d.Timeout(schema.TimeoutUpdate), d, "update")
 }
 
-func buildWithTimeout(ctx context.Context, timeout time.Duration) (context.Context, context.CancelFunc) {
-	return context.WithTimeout(ctx, timeout)
+func buildWithTimeout(ctx context.Context, timeout time.Duration, d *schema.ResourceData, opname string) (context.Context, context.CancelFunc) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+
+	if !tracer.TracingEnabled() {
+		return ctx, cancel
+	}
+	var span *opencensusTrace.Span
+	// Use "name" as identity if available, otherwise use "Id"
+	ident := d.Get("name")
+	if ident == "" || ident == nil {
+		ident = d.Id()
+	}
+
+	ctx, span = opencensusTrace.StartSpanWithRemoteParent(ctx, fmt.Sprintf("%s: %s", ident, opname), tracer.RootSpan.SpanContext())
+	originCancel := cancel
+	cancel = func() {
+		originCancel()
+		span.End()
+	}
+
+	return ctx, cancel
 }
