@@ -1,10 +1,14 @@
 module github.com/terraform-providers/terraform-provider-azurerm
 
 require (
+	contrib.go.opencensus.io/exporter/jaeger v0.2.1
+	contrib.go.opencensus.io/exporter/zipkin v0.1.2
 	github.com/Azure/azure-sdk-for-go v44.2.0+incompatible
 	github.com/Azure/go-autorest/autorest v0.10.0
 	github.com/Azure/go-autorest/autorest/azure/cli v0.3.1 // indirect
 	github.com/Azure/go-autorest/autorest/date v0.2.0
+	github.com/Azure/go-autorest/tracing v0.5.0
+	github.com/Azure/go-autorest/tracing/opencensus v0.1.0
 	github.com/btubbs/datetime v0.1.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/google/uuid v1.1.1
@@ -15,14 +19,16 @@ require (
 	github.com/hashicorp/go-version v1.2.0
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk v1.13.1
+	github.com/openzipkin/zipkin-go v0.2.2
 	github.com/rickb777/date v1.12.5-0.20200422084442-6300e543c4d9
 	github.com/satori/go.uuid v1.2.0
 	github.com/satori/uuid v0.0.0-20160927100844-b061729afc07
 	github.com/sergi/go-diff v1.1.0
 	github.com/terraform-providers/terraform-provider-azuread v0.9.0
 	github.com/tombuildsstuff/giovanni v0.10.0
+	go.opencensus.io v0.22.4
 	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413
-	golang.org/x/net v0.0.0-20200301022130-244492dfa37a
+	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
 	gopkg.in/yaml.v2 v2.2.4
 )
 
