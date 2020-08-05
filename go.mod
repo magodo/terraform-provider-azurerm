@@ -5,6 +5,8 @@ require (
 	github.com/Azure/go-autorest/autorest v0.10.0
 	github.com/Azure/go-autorest/autorest/azure/cli v0.3.1 // indirect
 	github.com/Azure/go-autorest/autorest/date v0.2.0
+	github.com/Azure/go-autorest/tracing v0.5.0
+	github.com/Azure/go-autorest/tracing/opencensus v0.1.0
 	github.com/btubbs/datetime v0.1.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/google/uuid v1.1.1
@@ -21,6 +23,7 @@ require (
 	github.com/sergi/go-diff v1.1.0
 	github.com/terraform-providers/terraform-provider-azuread v0.9.0
 	github.com/tombuildsstuff/giovanni v0.10.0
+	go.opencensus.io v0.22.0
 	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413
 	golang.org/x/net v0.0.0-20200301022130-244492dfa37a
 	gopkg.in/yaml.v2 v2.2.4
@@ -31,5 +34,7 @@ replace github.com/Azure/go-autorest => github.com/tombuildsstuff/go-autorest v1
 replace github.com/Azure/go-autorest/autorest => github.com/tombuildsstuff/go-autorest/autorest v0.10.1-0.20200416184303-d4e299a3c04a
 
 replace github.com/Azure/go-autorest/autorest/azure/auth => github.com/tombuildsstuff/go-autorest/autorest/azure/auth v0.4.3-0.20200416184303-d4e299a3c04a
+
+replace github.com/hashicorp/terraform-plugin-sdk => github.com/magodo/terraform-plugin-sdk v1.4.2-0.20200806023617-7c7cde15aacf
 
 go 1.13

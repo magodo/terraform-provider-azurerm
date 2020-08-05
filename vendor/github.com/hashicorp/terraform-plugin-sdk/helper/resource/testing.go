@@ -261,6 +261,7 @@ func runSweeperWithRegion(region string, s *Sweeper, sweepers map[string]*Sweepe
 }
 
 const TestEnvVar = "TF_ACC"
+const TestParallelism = "TF_ACC_PARALLELISM"
 const TestDisableBinaryTestingFlagEnvVar = "TF_DISABLE_BINARY_TESTING"
 
 // TestProvider can be implemented by any ResourceProvider to provide custom
@@ -613,7 +614,16 @@ func Test(t TestT, c TestCase) {
 		t.Fatal(err)
 	}
 
-	opts := terraform.ContextOpts{ProviderResolver: providerResolver}
+	var par int
+	if p := os.Getenv(TestParallelism); p != "" {
+		var err error
+		par, err = strconv.Atoi(p)
+		if err != nil {
+			t.Fatal(fmt.Errorf(`"%s" is not a valid value: %v`, TestParallelism, err))
+		}
+		log.Printf("[DEBUG] Test: Parallelism: %d", par)
+	}
+	opts := terraform.ContextOpts{ProviderResolver: providerResolver, Parallelism: par}
 
 	// A single state variable to track the lifecycle, starting with no state
 	var state *terraform.State
