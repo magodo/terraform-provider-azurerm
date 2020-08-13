@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/Azure/go-autorest/tracing"
@@ -77,6 +78,32 @@ func TestAccVirtualMachinePerf_SingleWindows(t *testing.T) {
 			Steps: []resource.TestStep{
 				{
 					Config: testVirtualMachinePerf_SingleWindows(data, i, COUNT),
+					Check: resource.ComposeTestCheckFunc(
+						checkVirtualMachinesExist(data.ResourceName, COUNT),
+					),
+				},
+			},
+		})
+	}
+}
+
+func TestAccVirtualMachinePerf_SingleLinuxBatch(t *testing.T) {
+	data := acceptance.BuildTestData(t, "azurerm_linux_virtual_machine", "test")
+
+	// Temporarily set acctest parallelism to the same amount as COUNT, so
+	// that VMs start to create a the same point.
+	oldParallelism := os.Getenv(resource.TestParallelism)
+	defer os.Setenv(resource.TestParallelism, oldParallelism)
+	os.Setenv(resource.TestParallelism, strconv.Itoa(COUNT))
+
+	for i := 0; i < ITERATION; i++ {
+		resource.Test(t, resource.TestCase{
+			PreCheck:     func() { acceptance.PreCheck(t) },
+			Providers:    acceptance.SupportedProviders,
+			CheckDestroy: checkLinuxVirtualMachineIsDestroyed,
+			Steps: []resource.TestStep{
+				{
+					Config: testVirtualMachinePerf_SingleLinuxBatch(data, i, COUNT),
 					Check: resource.ComposeTestCheckFunc(
 						checkVirtualMachinesExist(data.ResourceName, COUNT),
 					),
@@ -172,6 +199,50 @@ resource "azurerm_windows_virtual_machine" "test" {
   }
 }
 `, template, n, i*n)
+}
+
+func testVirtualMachinePerf_SingleLinuxBatch(data acceptance.TestData, i, n int) string {
+	template := testVirtualMachinePerf_VMTemplate(data, i, n)
+
+	// We explicitly introduce a dependency here to ensure the VMs are created all together at the same time.
+	var dependencies []string
+	for i := 0; i < n; i++ {
+		dependencies = append(dependencies, fmt.Sprintf("azurerm_network_interface.test[%d]", i))
+	}
+	return fmt.Sprintf(`
+%s
+
+resource "azurerm_linux_virtual_machine" "test" {
+  count               = %d
+  name                = "acctestVM-SingleLinuxBatch-${azurerm_resource_group.test.location}-%d-${count.index}"
+  resource_group_name = azurerm_resource_group.test.name
+  location            = azurerm_resource_group.test.location
+  size                = "Standard_D2s_v3"
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.test[count.index].id,
+  ]
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = local.first_public_key
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+
+  depends_on = [%s]
+}
+`, template, n, i, strings.Join(dependencies, ","))
 }
 
 func testVirtualMachinePerf_VMSS_20Linux(data acceptance.TestData, i, n int) string {
