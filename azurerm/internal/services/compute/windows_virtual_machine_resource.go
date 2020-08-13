@@ -3,6 +3,7 @@ package compute
 import (
 	"fmt"
 	"log"
+	"net"
 	"strings"
 	"time"
 
@@ -25,6 +26,7 @@ import (
 	azSchema "github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/tf/schema"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/timeouts"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/utils"
+	"go.opencensus.io/trace"
 )
 
 // TODO: confirm locking as appropriate
@@ -293,6 +295,8 @@ func resourceWindowsVirtualMachine() *schema.Resource {
 }
 
 func resourceWindowsVirtualMachineCreate(d *schema.ResourceData, meta interface{}) error {
+	networkInterfacesClient := meta.(*clients.Client).Network.InterfacesClient
+	publicIPAddressesClient := meta.(*clients.Client).Network.PublicIPsClient
 	client := meta.(*clients.Client).Compute.VMClient
 	ctx, cancel := timeouts.ForCreate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
@@ -500,6 +504,19 @@ func resourceWindowsVirtualMachineCreate(d *schema.ResourceData, meta interface{
 	}
 
 	d.SetId(*read.ID)
+
+	connectionInfo := retrieveConnectionInformation(ctx, networkInterfacesClient, publicIPAddressesClient, read.VirtualMachineProperties)
+	if connectionInfo.primaryPublicAddress != "" {
+		func() {
+			ctx, span := trace.StartSpan(ctx, name+": Verify Dial")
+			defer span.End()
+			deadline, _ := ctx.Deadline()
+			if _, err := net.DialTimeout("tcp", connectionInfo.primaryPublicAddress+":3389", time.Until(deadline)); err != nil {
+				span.SetStatus(trace.Status{Message: err.Error(), Code: trace.StatusCodeUnknown})
+				return
+			}
+		}()
+	}
 	return resourceWindowsVirtualMachineRead(d, meta)
 }
 

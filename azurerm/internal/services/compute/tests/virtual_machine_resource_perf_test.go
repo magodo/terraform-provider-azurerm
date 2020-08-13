@@ -221,11 +221,19 @@ resource "azurerm_linux_virtual_machine_scale_set" "test" {
 
 func testVirtualMachinePerf_VMTemplate(data acceptance.TestData, i, n int) string {
 	return fmt.Sprintf(`
-%s
+%[1]s
+
+resource "azurerm_public_ip" "test" {
+  count               = %[2]d
+  name                = "acctpip-%[3]d-${%[4]d + count.index}"
+  location            = azurerm_resource_group.test.location
+  resource_group_name = azurerm_resource_group.test.name
+  allocation_method   = "Static"
+}
 
 resource "azurerm_network_interface" "test" {
-  count               = %d
-  name                = "acctestnic-%d-${%d + count.index}"
+  count               = %[2]d
+  name                = "acctestnic-%[3]d-${%[4]d + count.index}"
   location            = azurerm_resource_group.test.location
   resource_group_name = azurerm_resource_group.test.name
 
@@ -233,6 +241,7 @@ resource "azurerm_network_interface" "test" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.test.id
     private_ip_address_allocation = "Dynamic"
+	public_ip_address_id          = azurerm_public_ip.test[count.index].id
   }
 }
 `, testVirtualMachinePerf_BasicTemplate(data), n, data.RandomInteger, i*n)
