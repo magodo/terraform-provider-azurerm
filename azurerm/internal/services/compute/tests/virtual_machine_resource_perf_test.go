@@ -48,9 +48,8 @@ func TestMain(m *testing.M) {
 }
 
 func TestAccVirtualMachinePerf_SingleLinux(t *testing.T) {
-	data := acceptance.BuildTestData(t, "azurerm_linux_virtual_machine", "test")
-
 	for i := 0; i < ITERATION; i++ {
+		data := acceptance.BuildTestData(t, "azurerm_linux_virtual_machine", "test")
 		resource.Test(t, resource.TestCase{
 			PreCheck:     func() { acceptance.PreCheck(t) },
 			Providers:    acceptance.SupportedProviders,
@@ -68,9 +67,8 @@ func TestAccVirtualMachinePerf_SingleLinux(t *testing.T) {
 }
 
 func TestAccVirtualMachinePerf_SingleWindows(t *testing.T) {
-	data := acceptance.BuildTestData(t, "azurerm_windows_virtual_machine", "test")
-
 	for i := 0; i < ITERATION; i++ {
+		data := acceptance.BuildTestData(t, "azurerm_windows_virtual_machine", "test")
 		resource.Test(t, resource.TestCase{
 			PreCheck:     func() { acceptance.PreCheck(t) },
 			Providers:    acceptance.SupportedProviders,
@@ -88,8 +86,6 @@ func TestAccVirtualMachinePerf_SingleWindows(t *testing.T) {
 }
 
 func TestAccVirtualMachinePerf_SingleLinuxBatch(t *testing.T) {
-	data := acceptance.BuildTestData(t, "azurerm_linux_virtual_machine", "test")
-
 	// Temporarily set acctest parallelism to the same amount as COUNT, so
 	// that VMs start to create a the same point.
 	oldParallelism := os.Getenv(resource.TestParallelism)
@@ -97,6 +93,7 @@ func TestAccVirtualMachinePerf_SingleLinuxBatch(t *testing.T) {
 	os.Setenv(resource.TestParallelism, strconv.Itoa(COUNT))
 
 	for i := 0; i < ITERATION; i++ {
+		data := acceptance.BuildTestData(t, "azurerm_linux_virtual_machine", "test")
 		resource.Test(t, resource.TestCase{
 			PreCheck:     func() { acceptance.PreCheck(t) },
 			Providers:    acceptance.SupportedProviders,
@@ -114,9 +111,8 @@ func TestAccVirtualMachinePerf_SingleLinuxBatch(t *testing.T) {
 }
 
 func TestAccVirtualMachinePerf_VMSS_20Linux(t *testing.T) {
-	data := acceptance.BuildTestData(t, "azurerm_linux_virtual_machine_scale_set", "test")
-
 	for i := 0; i < ITERATION; i++ {
+		data := acceptance.BuildTestData(t, "azurerm_linux_virtual_machine_scale_set", "test")
 		resource.Test(t, resource.TestCase{
 			PreCheck:     func() { acceptance.PreCheck(t) },
 			Providers:    acceptance.SupportedProviders,
