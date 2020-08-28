@@ -152,7 +152,7 @@ resource "azurerm_linux_virtual_machine" "test" {
 
   os_disk {
     caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    storage_account_type = "Premium_LRS"
   }
 
   source_image_reference {
@@ -184,7 +184,7 @@ resource "azurerm_windows_virtual_machine" "test" {
 
   os_disk {
     caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    storage_account_type = "Premium_LRS"
   }
 
   source_image_reference {
@@ -226,7 +226,7 @@ resource "azurerm_linux_virtual_machine" "test" {
 
   os_disk {
     caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    storage_account_type = "Premium_LRS"
   }
 
   source_image_reference {
@@ -268,8 +268,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "test" {
   }
 
   os_disk {
-    storage_account_type = "Standard_LRS"
     caching              = "ReadWrite"
+    storage_account_type = "Premium_LRS"
   }
 
   network_interface {
