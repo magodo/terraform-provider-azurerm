@@ -119,7 +119,26 @@ func TestAccVirtualMachinePerf_VMSS_20Linux(t *testing.T) {
 			CheckDestroy: testCheckAzureRMLinuxVirtualMachineScaleSetDestroy,
 			Steps: []resource.TestStep{
 				{
-					Config: testVirtualMachinePerf_VMSS_20Linux(data, i, COUNT),
+					Config: testVirtualMachinePerf_VMSS_Linux(data, 20, i, COUNT),
+					Check: resource.ComposeTestCheckFunc(
+						checkVirtualMachineScaleSetsExist(data.ResourceName, COUNT),
+					),
+				},
+			},
+		})
+	}
+}
+
+func TestAccVirtualMachinePerf_VMSS_1000Linux(t *testing.T) {
+	for i := 0; i < ITERATION; i++ {
+		data := acceptance.BuildTestData(t, "azurerm_linux_virtual_machine_scale_set", "test")
+		resource.Test(t, resource.TestCase{
+			PreCheck:     func() { acceptance.PreCheck(t) },
+			Providers:    acceptance.SupportedProviders,
+			CheckDestroy: testCheckAzureRMLinuxVirtualMachineScaleSetDestroy,
+			Steps: []resource.TestStep{
+				{
+					Config: testVirtualMachinePerf_VMSS_Linux(data, 1000, i, COUNT),
 					Check: resource.ComposeTestCheckFunc(
 						checkVirtualMachineScaleSetsExist(data.ResourceName, COUNT),
 					),
@@ -241,18 +260,18 @@ resource "azurerm_linux_virtual_machine" "test" {
 `, template, n, i, strings.Join(dependencies, ","))
 }
 
-func testVirtualMachinePerf_VMSS_20Linux(data acceptance.TestData, i, n int) string {
+func testVirtualMachinePerf_VMSS_Linux(data acceptance.TestData, size, i, n int) string {
 	template := testVirtualMachinePerf_BasicTemplate(data)
 	return fmt.Sprintf(`
 %s
 
 resource "azurerm_linux_virtual_machine_scale_set" "test" {
   count               = %d
-  name                = "VMSS-${azurerm_resource_group.test.location}-${%d + count.index}"
+  name                = "VMSS%d-${azurerm_resource_group.test.location}-${%d + count.index}"
   resource_group_name = azurerm_resource_group.test.name
   location            = azurerm_resource_group.test.location
   sku                 = "Standard_D2s_v3"
-  instances           = 20
+  instances           = %d
   admin_username      = "adminuser"
 
   admin_ssh_key {
@@ -282,8 +301,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "test" {
       subnet_id = azurerm_subnet.test.id
     }
   }
+
+  single_placement_group = false
 }
-`, template, n, i*n)
+`, template, n, size, i*n, size)
 }
 
 func testVirtualMachinePerf_VMTemplate(data acceptance.TestData, i, n int) string {
