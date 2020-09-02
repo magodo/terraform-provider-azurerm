@@ -19,8 +19,6 @@ var SupportedProviders map[string]terraform.ResourceProvider
 
 func PreCheck(t *testing.T) {
 	variables := []string{
-		"ARM_CLIENT_ID",
-		"ARM_CLIENT_SECRET",
 		"ARM_SUBSCRIPTION_ID",
 		"ARM_TENANT_ID",
 		"ARM_TEST_LOCATION",
@@ -69,6 +67,9 @@ func GetAuthConfig(t *testing.T) *authentication.Config {
 
 		// we intentionally only support Client Secret auth for tests (since those variables are used all over)
 		SupportsClientSecretAuth: true,
+
+		// we also support CLI token (in some special test we can only auth via interactive means)
+		SupportsAzureCliToken: true,
 	}
 	config, err := builder.Build()
 	if err != nil {
