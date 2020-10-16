@@ -263,6 +263,10 @@ func resourceArmLoadBalancerBackendAddressPoolDelete(d *schema.ResourceData, met
 }
 
 func expandArmLoadBalancerBackendAddresses(input []interface{}) *[]network.LoadBalancerBackendAddress {
+	if len(input) == 0 {
+		return nil
+	}
+
 	result := make([]network.LoadBalancerBackendAddress, 0)
 
 	for _, e := range input {
