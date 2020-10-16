@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/utils"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/clients"
@@ -44,50 +46,94 @@ func dataSourceArmLoadBalancerBackendAddressPool() *schema.Resource {
 					},
 				},
 			},
+
+			"load_balancing_rules": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: validation.StringIsNotEmpty,
+				},
+				Set: schema.HashString,
+			},
+
+			"outbound_rules": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: validation.StringIsNotEmpty,
+				},
+				Set: schema.HashString,
+			},
 		},
 	}
 }
 
 func dataSourceArmLoadBalancerBackendAddressPoolRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Network.LoadBalancersClient
+	subscriptionId := meta.(*clients.Client).Account.SubscriptionId
+	client := meta.(*clients.Client).Network.LoadBalancerBackendAddressPoolsClient
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
 	name := d.Get("name").(string)
 	loadBalancerId, err := parse.LoadBalancerID(d.Get("loadbalancer_id").(string))
 	if err != nil {
+		return fmt.Errorf("parsing Load Balancer Name and Group: %+v", err)
+	}
+
+	resp, err := client.Get(ctx, loadBalancerId.ResourceGroup, loadBalancerId.Name, name)
+	if err != nil {
+		if utils.ResponseWasNotFound(resp.Response) {
+			d.SetId("")
+			return nil
+		}
+		return fmt.Errorf("retrieving Load Balancer Backend Address Pool %q (Resource Group %q / Load Balancer: %q): %+v", name, loadBalancerId.ResourceGroup, loadBalancerId.Name, err)
+	}
+
+	if resp.ID == nil || *resp.ID == "" {
+		return fmt.Errorf("nil or empty id of Load Balancer Backend Address Pool %q (Resource Group %q / Load Balancer: %q): %+v", name, loadBalancerId.ResourceGroup, loadBalancerId.Name, err)
+	}
+
+	id, err := parse.LoadBalancerBackendAddressPoolID(*resp.ID)
+	if err != nil {
 		return err
 	}
+	d.SetId(id.ID(subscriptionId))
 
-	loadBalancer, exists, err := retrieveLoadBalancerById(ctx, client, *loadBalancerId)
-	if err != nil {
-		return fmt.Errorf("retrieving Load Balancer by ID: %+v", err)
-	}
-	if !exists {
-		return fmt.Errorf("Load Balancer %q (Resource Group %q) was not found", loadBalancerId.Name, loadBalancerId.ResourceGroup)
-	}
+	d.Set("name", id.Name)
+	d.Set("loadbalancer_id", parse.NewLoadBalancerID(id.ResourceGroup, id.LoadBalancerName).ID(subscriptionId))
 
-	bap, _, exists := FindLoadBalancerBackEndAddressPoolByName(loadBalancer, name)
-	if !exists {
-		return fmt.Errorf("Backend Address Pool %q was not found in Load Balancer %q (Resource Group %q)", name, loadBalancerId.Name, loadBalancerId.ResourceGroup)
-	}
+	var backendIpConfigurations []string
+	var loadBalancingRules []string
+	var outboudRules []string
 
-	d.SetId(*bap.ID)
+	if props := resp.BackendAddressPoolPropertiesFormat; props != nil {
+		if err := d.Set("backend_addresses", flattenArmLoadBalancerBackendAddresses(props.LoadBalancerBackendAddresses)); err != nil {
+			return fmt.Errorf("setting `backend_address`: %v", err)
+		}
 
-	backendIPConfigurations := make([]interface{}, 0)
-	if props := bap.BackendAddressPoolPropertiesFormat; props != nil {
-		if beipConfigs := props.BackendIPConfigurations; beipConfigs != nil {
-			for _, config := range *beipConfigs {
-				ipConfig := make(map[string]interface{})
-				if id := config.ID; id != nil {
-					ipConfig["id"] = *id
-					backendIPConfigurations = append(backendIPConfigurations, ipConfig)
-				}
+		if configs := props.BackendIPConfigurations; configs != nil {
+			for _, backendConfig := range *configs {
+				backendIpConfigurations = append(backendIpConfigurations, *backendConfig.ID)
+			}
+		}
+
+		if rules := props.LoadBalancingRules; rules != nil {
+			for _, rule := range *rules {
+				loadBalancingRules = append(loadBalancingRules, *rule.ID)
+			}
+		}
+
+		if rules := props.OutboundRules; rules != nil {
+			for _, rule := range *rules {
+				outboudRules = append(outboudRules, *rule.ID)
 			}
 		}
 	}
-
-	d.Set("backend_ip_configurations", backendIPConfigurations)
+	d.Set("backend_ip_configurations", backendIpConfigurations)
+	d.Set("load_balancing_rules", loadBalancingRules)
+	d.Set("outbound_rules", outboudRules)
 
 	return nil
 }
