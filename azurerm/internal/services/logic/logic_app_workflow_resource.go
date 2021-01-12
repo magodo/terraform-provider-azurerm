@@ -6,6 +6,8 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/logic/parse"
+
 	"github.com/Azure/azure-sdk-for-go/services/logic/mgmt/2019-05-01/logic"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -191,7 +193,11 @@ func resourceLogicAppWorkflowCreate(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("[ERROR] Cannot read Logic App Workflow %q (Resource Group %q) ID", name, resourceGroup)
 	}
 
-	d.SetId(*read.ID)
+	id, err := parse.WorkflowID(*read.ID)
+	if err != nil {
+		return err
+	}
+	d.SetId(id.ID())
 
 	return resourceLogicAppWorkflowRead(d, meta)
 }

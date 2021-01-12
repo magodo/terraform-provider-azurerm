@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/sentinel/parse"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/clients"
@@ -61,7 +63,12 @@ func dataSourceSentinelAlertRuleRead(d *schema.ResourceData, meta interface{}) e
 	if id == nil || *id == "" {
 		return fmt.Errorf("nil or empty ID of Sentinel Alert Rule %q (Resource Group %q / Workspace: %q)", name, workspaceID.ResourceGroup, workspaceID.WorkspaceName)
 	}
-	d.SetId(*id)
+
+	resId, err := parse.AlertRuleID(*id)
+	if err != nil {
+		return err
+	}
+	d.SetId(resId.ID())
 
 	return nil
 }

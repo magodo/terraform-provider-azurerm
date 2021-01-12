@@ -28,7 +28,7 @@ func resourceSentinelAlertRuleScheduled() *schema.Resource {
 		Delete: resourceSentinelAlertRuleScheduledDelete,
 
 		Importer: azSchema.ValidateResourceIDPriorToImportThen(func(id string) error {
-			_, err := parse.SentinelAlertRuleID(id)
+			_, err := parse.AlertRuleID(id)
 			return err
 		}, importSentinelAlertRule(securityinsight.Scheduled)),
 
@@ -327,7 +327,12 @@ func resourceSentinelAlertRuleScheduledCreateUpdate(d *schema.ResourceData, meta
 	if id == nil || *id == "" {
 		return fmt.Errorf("empty or nil ID returned for Sentinel Alert Rule Scheduled %q (Resource Group %q / Workspace %q) ID", name, workspaceID.ResourceGroup, workspaceID.WorkspaceName)
 	}
-	d.SetId(*id)
+
+	resId, err := parse.AlertRuleID(*id)
+	if err != nil {
+		return err
+	}
+	d.SetId(resId.ID())
 
 	return resourceSentinelAlertRuleScheduledRead(d, meta)
 }
@@ -337,30 +342,30 @@ func resourceSentinelAlertRuleScheduledRead(d *schema.ResourceData, meta interfa
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
-	id, err := parse.SentinelAlertRuleID(d.Id())
+	id, err := parse.AlertRuleID(d.Id())
 	if err != nil {
 		return err
 	}
 
-	resp, err := client.Get(ctx, id.ResourceGroup, "Microsoft.OperationalInsights", id.Workspace, id.Name)
+	resp, err := client.Get(ctx, id.ResourceGroup, "Microsoft.OperationalInsights", id.WorkspaceName, id.Name)
 	if err != nil {
 		if utils.ResponseWasNotFound(resp.Response) {
-			log.Printf("[DEBUG] Sentinel Alert Rule Scheduled %q was not found in Workspace %q in Resource Group %q - removing from state!", id.Name, id.Workspace, id.ResourceGroup)
+			log.Printf("[DEBUG] Sentinel Alert Rule Scheduled %q was not found in Workspace %q in Resource Group %q - removing from state!", id.Name, id.WorkspaceName, id.ResourceGroup)
 			d.SetId("")
 			return nil
 		}
 
-		return fmt.Errorf("retrieving Sentinel Alert Rule Scheduled %q (Resource Group %q / Workspace %q): %+v", id.Name, id.ResourceGroup, id.Workspace, err)
+		return fmt.Errorf("retrieving Sentinel Alert Rule Scheduled %q (Resource Group %q / Workspace %q): %+v", id.Name, id.ResourceGroup, id.WorkspaceName, err)
 	}
 
 	if err := assertAlertRuleKind(resp.Value, securityinsight.Scheduled); err != nil {
-		return fmt.Errorf("asserting alert rule of %q (Resource Group %q / Workspace %q): %+v", id.Name, id.ResourceGroup, id.Workspace, err)
+		return fmt.Errorf("asserting alert rule of %q (Resource Group %q / Workspace %q): %+v", id.Name, id.ResourceGroup, id.WorkspaceName, err)
 	}
 	rule := resp.Value.(securityinsight.ScheduledAlertRule)
 
 	d.Set("name", id.Name)
 
-	workspaceId := loganalyticsParse.NewLogAnalyticsWorkspaceID(id.SubscriptionId, id.ResourceGroup, id.Workspace)
+	workspaceId := loganalyticsParse.NewLogAnalyticsWorkspaceID(id.SubscriptionId, id.ResourceGroup, id.WorkspaceName)
 	d.Set("log_analytics_workspace_id", workspaceId.ID())
 
 	if prop := rule.ScheduledAlertRuleProperties; prop != nil {
@@ -398,13 +403,13 @@ func resourceSentinelAlertRuleScheduledDelete(d *schema.ResourceData, meta inter
 	ctx, cancel := timeouts.ForDelete(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
-	id, err := parse.SentinelAlertRuleID(d.Id())
+	id, err := parse.AlertRuleID(d.Id())
 	if err != nil {
 		return err
 	}
 
-	if _, err := client.Delete(ctx, id.ResourceGroup, "Microsoft.OperationalInsights", id.Workspace, id.Name); err != nil {
-		return fmt.Errorf("deleting Sentinel Alert Rule Scheduled %q (Resource Group %q / Workspace %q): %+v", id.Name, id.ResourceGroup, id.Workspace, err)
+	if _, err := client.Delete(ctx, id.ResourceGroup, "Microsoft.OperationalInsights", id.WorkspaceName, id.Name); err != nil {
+		return fmt.Errorf("deleting Sentinel Alert Rule Scheduled %q (Resource Group %q / Workspace %q): %+v", id.Name, id.ResourceGroup, id.WorkspaceName, err)
 	}
 
 	return nil

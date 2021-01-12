@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/logic/parse"
+
 	"github.com/Azure/azure-sdk-for-go/services/logic/mgmt/2019-05-01/logic"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/helpers/azure"
@@ -87,14 +89,17 @@ func resourceLogicAppComponentUpdate(d *schema.ResourceData, meta interface{}, k
 		return fmt.Errorf("[ERROR] Error parsing Logic App Workflow - `WorkflowProperties.Definition` is nil")
 	}
 
-	resourceId := fmt.Sprintf("%s/%s/%s", *read.ID, propertyName, name)
+	resourceId, err := parse.TriggerID(fmt.Sprintf("%s/%s/%s", *read.ID, propertyName, name))
+	if err != nil {
+		return err
+	}
 
 	definition := read.WorkflowProperties.Definition.(map[string]interface{})
 	vs := definition[propertyName].(map[string]interface{})
 
 	if d.IsNewResource() {
 		if _, hasExisting := vs[name]; hasExisting {
-			return tf.ImportAsExistsError(resourceName, resourceId)
+			return tf.ImportAsExistsError(resourceName, resourceId.ID())
 		}
 	}
 
@@ -115,7 +120,7 @@ func resourceLogicAppComponentUpdate(d *schema.ResourceData, meta interface{}, k
 	}
 
 	if d.IsNewResource() {
-		d.SetId(resourceId)
+		d.SetId(resourceId.ID())
 	}
 
 	return nil

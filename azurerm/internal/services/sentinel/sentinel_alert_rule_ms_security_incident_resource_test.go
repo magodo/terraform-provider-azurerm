@@ -137,12 +137,12 @@ func TestAccSentinelAlertRuleMsSecurityIncident_withDisplayNameExcludeFilter(t *
 }
 
 func (t SentinelAlertRuleMsSecurityIncidentResource) Exists(ctx context.Context, clients *clients.Client, state *terraform.InstanceState) (*bool, error) {
-	id, err := parse.SentinelAlertRuleID(state.ID)
+	id, err := parse.AlertRuleID(state.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := clients.Sentinel.AlertRulesClient.Get(ctx, id.ResourceGroup, "Microsoft.OperationalInsights", id.Workspace, id.Name)
+	resp, err := clients.Sentinel.AlertRulesClient.Get(ctx, id.ResourceGroup, "Microsoft.OperationalInsights", id.WorkspaceName, id.Name)
 	if err != nil {
 		return nil, fmt.Errorf("reading Sentinel Alert Rule Ms Security Incident %q (Resource Group %q): %v", id.Name, id.ResourceGroup, err)
 	}
