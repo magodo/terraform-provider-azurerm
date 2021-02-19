@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/Azure/azure-sdk-for-go/services/maps/mgmt/2018-05-01/maps"
+	"github.com/Azure/azure-sdk-for-go/services/preview/maps/mgmt/2020-02-01-preview/maps"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/common"
 )
 
