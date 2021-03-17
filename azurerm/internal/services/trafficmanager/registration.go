@@ -29,7 +29,8 @@ func (r Registration) SupportedDataSources() map[string]*schema.Resource {
 // SupportedResources returns the supported Resources supported by this Service
 func (r Registration) SupportedResources() map[string]*schema.Resource {
 	return map[string]*schema.Resource{
-		"azurerm_traffic_manager_endpoint": resourceArmTrafficManagerEndpoint(),
-		"azurerm_traffic_manager_profile":  resourceArmTrafficManagerProfile(),
+		"azurerm_traffic_manager_endpoint":         resourceArmTrafficManagerEndpoint(),
+		"azurerm_traffic_manager_profile":          resourceArmTrafficManagerProfile(),
+		"azurerm_traffic_manager_user_metrics_key": resourceTrafficManagerUserMetricsKey(),
 	}
 }

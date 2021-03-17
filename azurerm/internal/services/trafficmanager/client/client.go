@@ -9,6 +9,7 @@ type Client struct {
 	GeographialHierarchiesClient *trafficmanager.GeographicHierarchiesClient
 	EndpointsClient              *trafficmanager.EndpointsClient
 	ProfilesClient               *trafficmanager.ProfilesClient
+	UserMetricsKeysClient        *trafficmanager.UserMetricsKeysClient
 }
 
 func NewClient(o *common.ClientOptions) *Client {
@@ -21,9 +22,13 @@ func NewClient(o *common.ClientOptions) *Client {
 	profilesClient := trafficmanager.NewProfilesClientWithBaseURI(o.ResourceManagerEndpoint, o.SubscriptionId)
 	o.ConfigureClient(&profilesClient.Client, o.ResourceManagerAuthorizer)
 
+	userMetricsKeysClient := trafficmanager.NewUserMetricsKeysClientWithBaseURI(o.ResourceManagerEndpoint, o.SubscriptionId)
+	o.ConfigureClient(&userMetricsKeysClient.Client, o.ResourceManagerAuthorizer)
+
 	return &Client{
 		EndpointsClient:              &endpointsClient,
 		GeographialHierarchiesClient: &geographialHierarchiesClient,
 		ProfilesClient:               &profilesClient,
+		UserMetricsKeysClient:        &userMetricsKeysClient,
 	}
 }
