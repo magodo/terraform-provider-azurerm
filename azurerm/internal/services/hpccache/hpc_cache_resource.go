@@ -6,6 +6,10 @@ import (
 	"strconv"
 	"time"
 
+	keyVaultParse "github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/keyvault/parse"
+
+	keyVaultValidate "github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/keyvault/validate"
+
 	"github.com/Azure/azure-sdk-for-go/services/storagecache/mgmt/2021-03-01/storagecache"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -113,6 +117,54 @@ func resourceHPCCache() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringIsNotEmpty,
+						},
+					},
+				},
+			},
+
+			"encryption_setting": {
+				Type:     schema.TypeList,
+				ForceNew: true,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key_vault_id": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: keyVaultValidate.VaultID,
+						},
+						"key_id": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringIsNotEmpty,
+						},
+					},
+				},
+				RequiredWith: []string{"identity"},
+			},
+
+			"identity": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"type": {
+							Type:     schema.TypeString,
+							Required: true,
+							ValidateFunc: validation.StringInSlice([]string{
+								string(storagecache.SystemAssigned),
+								string(storagecache.None),
+							}, false),
+						},
+						"principal_id": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"tenant_id": {
+							Type:     schema.TypeString,
+							Computed: true,
 						},
 					},
 				},
@@ -266,6 +318,7 @@ func resourceHPCCacheCreateOrUpdate(d *schema.ResourceData, meta interface{}) er
 	cache := &storagecache.Cache{
 		Name:     utils.String(name),
 		Location: utils.String(location),
+		Identity: expandCacheIdentity(d.Get("identity").([]interface{})),
 		CacheProperties: &storagecache.CacheProperties{
 			CacheSizeGB:     utils.Int32(int32(cacheSize)),
 			Subnet:          utils.String(subnet),
@@ -273,6 +326,7 @@ func resourceHPCCacheCreateOrUpdate(d *schema.ResourceData, meta interface{}) er
 			SecuritySettings: &storagecache.CacheSecuritySettings{
 				AccessPolicies: &accessPolicies,
 			},
+			EncryptionSettings: expandStorageCacheEncryptionSetting(d.Get("encryption_setting").([]interface{})),
 		},
 		Sku: &storagecache.CacheSku{
 			Name: utils.String(skuName),
@@ -324,6 +378,9 @@ func resourceHPCCacheRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("name", id.Name)
 	d.Set("resource_group_name", id.ResourceGroup)
 	d.Set("location", resp.Location)
+	if err := d.Set("identity", resp.Identity); err != nil {
+		return fmt.Errorf("setting `identity`: %v", err)
+	}
 
 	if props := resp.CacheProperties; props != nil {
 		d.Set("cache_size_in_gb", props.CacheSizeGB)
@@ -350,6 +407,14 @@ func resourceHPCCacheRead(d *schema.ResourceData, meta interface{}) error {
 					d.Set("root_squash_enabled", d.Get("root_squash_enabled"))
 				}
 			}
+		}
+
+		encryptSetting, err := flattenCacheEncryptionSettings(props.EncryptionSettings)
+		if err != nil {
+			return err
+		}
+		if err := d.Set("encryption_setting", encryptSetting); err != nil {
+			return fmt.Errorf("setting `encryption_setting`: %v", err)
 		}
 	}
 
@@ -529,4 +594,84 @@ func flattenStorageCacheNetworkSettings(settings *storagecache.CacheNetworkSetti
 		}
 	}
 	return nil
+}
+
+func expandStorageCacheEncryptionSetting(input []interface{}) *storagecache.CacheEncryptionSettings {
+	if len(input) == 0 || input[0] == nil {
+		return nil
+	}
+
+	b := input[0].(map[string]interface{})
+
+	output := &storagecache.CacheEncryptionSettings{
+		KeyEncryptionKey: &storagecache.KeyVaultKeyReference{
+			KeyURL: utils.String(b["key_id"].(string)),
+			SourceVault: &storagecache.KeyVaultKeyReferenceSourceVault{
+				ID: utils.String(b["key_vault_id"].(string)),
+			},
+		},
+	}
+	return output
+}
+
+func flattenCacheEncryptionSettings(input *storagecache.CacheEncryptionSettings) ([]interface{}, error) {
+	if input == nil {
+		return nil, nil
+	}
+
+	vaultId := ""
+	keyId := ""
+
+	if k := input.KeyEncryptionKey; k != nil {
+		if k.KeyURL != nil {
+			keyId = *k.KeyURL
+		}
+
+		if v := k.SourceVault; v != nil && v.ID != nil {
+			id, err := keyVaultParse.VaultID(*v.ID)
+			if err != nil {
+				return nil, err
+			}
+			vaultId = id.ID()
+		}
+	}
+	return []interface{}{
+		map[string]interface{}{
+			"key_vault_id": vaultId,
+			"key_id":       keyId,
+		},
+	}, nil
+}
+
+func expandCacheIdentity(input []interface{}) *storagecache.CacheIdentity {
+	if len(input) == 0 {
+		return nil
+	}
+	b := input[0].(map[string]interface{})
+	return &storagecache.CacheIdentity{
+		Type: storagecache.CacheIdentityType(b["type"].(string)),
+	}
+}
+
+func flattenCacheIdentity(input *storagecache.CacheIdentity) []interface{} {
+	if input == nil {
+		return nil
+	}
+
+	var principalId string
+	if input.PrincipalID != nil {
+		principalId = *input.PrincipalID
+	}
+	var tenantId string
+	if input.TenantID != nil {
+		tenantId = *input.TenantID
+	}
+
+	return []interface{}{
+		map[string]interface{}{
+			"type":         string(input.Type),
+			"principal_id": principalId,
+			"tenant_id":    tenantId,
+		},
+	}
 }
