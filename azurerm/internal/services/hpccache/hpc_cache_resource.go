@@ -378,7 +378,7 @@ func resourceHPCCacheRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("name", id.Name)
 	d.Set("resource_group_name", id.ResourceGroup)
 	d.Set("location", resp.Location)
-	if err := d.Set("identity", resp.Identity); err != nil {
+	if err := d.Set("identity", flattenCacheIdentity(resp.Identity)); err != nil {
 		return fmt.Errorf("setting `identity`: %v", err)
 	}
 
