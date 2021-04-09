@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -308,12 +309,12 @@ func (t SubnetResource) Exists(ctx context.Context, clients *clients.Client, sta
 		return nil, err
 	}
 
-	resp, err := clients.Network.SubnetsClient.Get(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, "")
+	resp, err := clients.Network.SubnetsClient2.Get(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, nil)
 	if err != nil {
 		return nil, fmt.Errorf("reading Subnet (%s): %+v", id, err)
 	}
 
-	return utils.Bool(resp.ID != nil), nil
+	return utils.Bool(resp.Subnet != nil && resp.Subnet.ID != nil), nil
 }
 
 func (SubnetResource) Destroy(ctx context.Context, client *clients.Client, state *terraform.InstanceState) (*bool, error) {
@@ -322,12 +323,12 @@ func (SubnetResource) Destroy(ctx context.Context, client *clients.Client, state
 		return nil, err
 	}
 
-	future, err := client.Network.SubnetsClient.Delete(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name)
+	future, err := client.Network.SubnetsClient2.BeginDelete(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, nil)
 	if err != nil {
 		return nil, fmt.Errorf("deleting Subnet %q: %+v", id, err)
 	}
 
-	if err = future.WaitForCompletionRef(ctx, client.Network.SubnetsClient.Client); err != nil {
+	if _, err = future.PollUntilDone(ctx, time.Minute); err != nil {
 		return nil, fmt.Errorf("waiting for deletion of Subnet %q: %+v", id, err)
 	}
 
@@ -340,15 +341,15 @@ func (SubnetResource) hasNoNatGateway(ctx context.Context, client *clients.Clien
 		return err
 	}
 
-	subnet, err := client.Network.SubnetsClient.Get(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, "")
+	resp, err := client.Network.SubnetsClient2.Get(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, nil)
 	if err != nil {
-		if utils.ResponseWasNotFound(subnet.Response) {
+		if utils.Track2ResponseWasNotFound(err) {
 			return fmt.Errorf("Bad: Subnet %q (Virtual Network %q / Resource Group: %q) does not exist", id.Name, id.VirtualNetworkName, id.ResourceGroup)
 		}
 		return fmt.Errorf("Bad: Get on subnetClient: %+v", err)
 	}
 
-	props := subnet.SubnetPropertiesFormat
+	props := resp.Subnet.Properties
 	if props == nil {
 		return fmt.Errorf("Properties was nil for Subnet %q (Virtual Network %q / Resource Group: %q)", id.Name, id.VirtualNetworkName, id.ResourceGroup)
 	}
@@ -365,16 +366,16 @@ func (SubnetResource) hasNoNetworkSecurityGroup(ctx context.Context, client *cli
 		return err
 	}
 
-	resp, err := client.Network.SubnetsClient.Get(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, "")
+	resp, err := client.Network.SubnetsClient2.Get(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, nil)
 	if err != nil {
-		if utils.ResponseWasNotFound(resp.Response) {
+		if utils.Track2ResponseWasNotFound(err) {
 			return fmt.Errorf("Bad: Subnet %q (Virtual Network %q / Resource Group: %q) does not exist", id.Name, id.VirtualNetworkName, id.ResourceGroup)
 		}
 
 		return fmt.Errorf("Bad: Get on subnetClient: %+v", err)
 	}
 
-	props := resp.SubnetPropertiesFormat
+	props := resp.Subnet.Properties
 	if props == nil {
 		return fmt.Errorf("Properties was nil for Subnet %q (Virtual Network %q / Resource Group: %q)", id.Name, id.VirtualNetworkName, id.ResourceGroup)
 	}
@@ -392,16 +393,16 @@ func (SubnetResource) hasNoRouteTable(ctx context.Context, client *clients.Clien
 		return err
 	}
 
-	resp, err := client.Network.SubnetsClient.Get(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, "")
+	resp, err := client.Network.SubnetsClient2.Get(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, nil)
 	if err != nil {
-		if utils.ResponseWasNotFound(resp.Response) {
+		if utils.Track2ResponseWasNotFound(err) {
 			return fmt.Errorf("Bad: Subnet %q (Virtual Network %q / Resource Group: %q) does not exist", id.Name, id.VirtualNetworkName, id.ResourceGroup)
 		}
 
 		return fmt.Errorf("Bad: Get on subnetClient: %+v", err)
 	}
 
-	props := resp.SubnetPropertiesFormat
+	props := resp.Subnet.Properties
 	if props == nil {
 		return fmt.Errorf("Properties was nil for Subnet %q (Virtual Network %q / Resource Group: %q)", id.Name, id.VirtualNetworkName, id.ResourceGroup)
 	}

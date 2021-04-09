@@ -79,15 +79,15 @@ func dataSourceSubnet() *schema.Resource {
 }
 
 func dataSourceSubnetRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Network.SubnetsClient
+	client := meta.(*clients.Client).Network.SubnetsClient2
 	subscriptionId := meta.(*clients.Client).Account.SubscriptionId
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
 	id := parse.NewSubnetID(subscriptionId, d.Get("resource_group_name").(string), d.Get("virtual_network_name").(string), d.Get("name").(string))
-	resp, err := client.Get(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, "")
+	resp, err := client.Get(ctx, id.ResourceGroup, id.VirtualNetworkName, id.Name, nil)
 	if err != nil {
-		if utils.ResponseWasNotFound(resp.Response) {
+		if utils.Track2ResponseWasNotFound(err) {
 			return fmt.Errorf("Error: %s was not found", id)
 		}
 		return fmt.Errorf("retrieving %s: %+v", id, err)
@@ -98,7 +98,7 @@ func dataSourceSubnetRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("virtual_network_name", id.VirtualNetworkName)
 	d.Set("resource_group_name", id.ResourceGroup)
 
-	if props := resp.SubnetPropertiesFormat; props != nil {
+	if props := resp.Subnet.Properties; props != nil {
 		d.Set("address_prefix", props.AddressPrefix)
 		if props.AddressPrefixes == nil {
 			if props.AddressPrefix != nil && len(*props.AddressPrefix) > 0 {
