@@ -1,6 +1,7 @@
 package client
 
 import (
+	"github.com/Azure/azure-sdk-for-go/sdk/arm/network/2020-07-01/armnetwork"
 	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2020-05-01/network"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/common"
 )
@@ -36,12 +37,14 @@ type Client struct {
 	ServiceEndpointPolicyDefinitionsClient *network.ServiceEndpointPolicyDefinitionsClient
 	ServiceTagsClient                      *network.ServiceTagsClient
 	SubnetsClient                          *network.SubnetsClient
+	SubnetsClient2                         *armnetwork.SubnetsClient
 	NatGatewayClient                       *network.NatGatewaysClient
 	VirtualHubBgpConnectionClient          *network.VirtualHubBgpConnectionClient
 	VirtualHubIPClient                     *network.VirtualHubIPConfigurationClient
 	VnetGatewayConnectionsClient           *network.VirtualNetworkGatewayConnectionsClient
 	VnetGatewayClient                      *network.VirtualNetworkGatewaysClient
 	VnetClient                             *network.VirtualNetworksClient
+	VnetClient2                            *armnetwork.VirtualNetworksClient
 	VnetPeeringsClient                     *network.VirtualNetworkPeeringsClient
 	VirtualWanClient                       *network.VirtualWansClient
 	VirtualHubClient                       *network.VirtualHubsClient
@@ -236,12 +239,14 @@ func NewClient(o *common.ClientOptions) *Client {
 		ServiceEndpointPolicyDefinitionsClient: &ServiceEndpointPolicyDefinitionsClient,
 		ServiceTagsClient:                      &ServiceTagsClient,
 		SubnetsClient:                          &SubnetsClient,
+		SubnetsClient2:                         armnetwork.NewSubnetsClient(o.ResourceManagerConnection, o.SubscriptionId),
 		NatGatewayClient:                       &NatGatewayClient,
 		VirtualHubBgpConnectionClient:          &VirtualHubBgpConnectionClient,
 		VirtualHubIPClient:                     &VirtualHubIPClient,
 		VnetGatewayConnectionsClient:           &VnetGatewayConnectionsClient,
 		VnetGatewayClient:                      &VnetGatewayClient,
 		VnetClient:                             &VnetClient,
+		VnetClient2:                            armnetwork.NewVirtualNetworksClient(o.ResourceManagerConnection, o.SubscriptionId),
 		VnetPeeringsClient:                     &VnetPeeringsClient,
 		VirtualWanClient:                       &VirtualWanClient,
 		VirtualHubClient:                       &VirtualHubClient,

@@ -30,9 +30,18 @@ func FlattenAndSet(d *schema.ResourceData, tagMap map[string]*string) error {
 	return nil
 }
 
-func Track2FlattenAndSet(d *schema.ResourceData, tagMap *map[string]*string) error {
+func Track2FlattenAndSet(d *schema.ResourceData, tagMap *map[string]string) error {
 	if tagMap == nil {
 		return nil
 	}
-	return FlattenAndSet(d, *tagMap)
+
+	flattened := make(map[string]interface{}, len(*tagMap))
+
+	for i, v := range *tagMap {
+		flattened[i] = v
+	}
+	if err := d.Set("tags", flattened); err != nil {
+		return fmt.Errorf("Error setting `tags`: %s", err)
+	}
+	return nil
 }

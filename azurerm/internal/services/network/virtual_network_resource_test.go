@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -244,12 +245,12 @@ func (t VirtualNetworkResource) Exists(ctx context.Context, clients *clients.Cli
 		return nil, err
 	}
 
-	resp, err := clients.Network.VnetClient.Get(ctx, id.ResourceGroup, id.Name, "")
+	resp, err := clients.Network.VnetClient2.Get(ctx, id.ResourceGroup, id.Name, nil)
 	if err != nil {
 		return nil, fmt.Errorf("reading %s: %+v", *id, err)
 	}
 
-	return utils.Bool(resp.ID != nil), nil
+	return utils.Bool(resp.VirtualNetwork != nil && resp.VirtualNetwork.ID != nil), nil
 }
 
 func (r VirtualNetworkResource) Destroy(ctx context.Context, client *clients.Client, state *terraform.InstanceState) (*bool, error) {
@@ -258,12 +259,12 @@ func (r VirtualNetworkResource) Destroy(ctx context.Context, client *clients.Cli
 		return nil, err
 	}
 
-	future, err := client.Network.VnetClient.Delete(ctx, id.ResourceGroup, id.Name)
+	future, err := client.Network.VnetClient2.BeginDelete(ctx, id.ResourceGroup, id.Name, nil)
 	if err != nil {
 		return nil, fmt.Errorf("deleting on Virtual Network: %+v", err)
 	}
 
-	if err = future.WaitForCompletionRef(ctx, client.Network.VnetClient.Client); err != nil {
+	if _, err := future.PollUntilDone(ctx, time.Minute); err != nil {
 		return nil, fmt.Errorf("waiting for deletion of Virtual Network %q: %+v", id, err)
 	}
 

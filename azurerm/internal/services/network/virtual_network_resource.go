@@ -5,8 +5,9 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 	"time"
+
+	"github.com/Azure/azure-sdk-for-go/sdk/arm/network/2020-07-01/armnetwork"
 
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/network/parse"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/network/validate"
@@ -18,7 +19,6 @@ import (
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/tags"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/timeouts"
 
-	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2020-05-01/network"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/utils"
@@ -150,21 +150,18 @@ func resourceVirtualNetwork() *schema.Resource {
 }
 
 func resourceVirtualNetworkCreateUpdate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Network.VnetClient
+	client := meta.(*clients.Client).Network.VnetClient2
 	subscriptionId := meta.(*clients.Client).Account.SubscriptionId
 	ctx, cancel := timeouts.ForCreateUpdate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
 	id := parse.NewVirtualNetworkID(subscriptionId, d.Get("resource_group_name").(string), d.Get("name").(string))
 	if d.IsNewResource() {
-		existing, err := client.Get(ctx, id.ResourceGroup, id.Name, "")
-		if err != nil {
-			if !utils.ResponseWasNotFound(existing.Response) {
-				return fmt.Errorf("checking for presence of existing %s: %s", id, err)
-			}
+		_, err := client.Get(ctx, id.ResourceGroup, id.Name, nil)
+		if err != nil && !utils.Track2ResponseWasNotFound(err) {
+			return fmt.Errorf("checking for presence of existing %s: %s", id, err)
 		}
-
-		if !utils.ResponseWasNotFound(existing.Response) {
+		if err == nil {
 			return tf.ImportAsExistsError("azurerm_virtual_network", id.ID())
 		}
 	}
@@ -177,17 +174,19 @@ func resourceVirtualNetworkCreateUpdate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	vnet := network.VirtualNetwork{
-		Name:                           utils.String(id.Name),
-		Location:                       utils.String(location),
-		VirtualNetworkPropertiesFormat: vnetProperties,
-		Tags:                           tags.Expand(t),
+	vnet := armnetwork.VirtualNetwork{
+		Resource: armnetwork.Resource{
+			Name:     utils.String(id.Name),
+			Location: utils.String(location),
+			Tags:     tags.Track2Expand(t),
+		},
+		Properties: vnetProperties,
 	}
 
 	networkSecurityGroupNames := make([]string, 0)
-	for _, subnet := range *vnet.VirtualNetworkPropertiesFormat.Subnets {
-		if subnet.NetworkSecurityGroup != nil {
-			parsedNsgID, err := parse.NetworkSecurityGroupID(*subnet.NetworkSecurityGroup.ID)
+	for _, subnet := range *vnet.Properties.Subnets {
+		if subnet.Properties.NetworkSecurityGroup != nil {
+			parsedNsgID, err := parse.NetworkSecurityGroupID(*subnet.Properties.NetworkSecurityGroup.ID)
 			if err != nil {
 				return err
 			}
@@ -202,12 +201,12 @@ func resourceVirtualNetworkCreateUpdate(d *schema.ResourceData, meta interface{}
 	locks.MultipleByName(&networkSecurityGroupNames, networkSecurityGroupResourceName)
 	defer locks.UnlockMultipleByName(&networkSecurityGroupNames, networkSecurityGroupResourceName)
 
-	future, err := client.CreateOrUpdate(ctx, id.ResourceGroup, id.Name, vnet)
+	future, err := client.BeginCreateOrUpdate(ctx, id.ResourceGroup, id.Name, vnet, nil)
 	if err != nil {
 		return fmt.Errorf("creating/updating %s: %+v", id, err)
 	}
 
-	if err = future.WaitForCompletionRef(ctx, client.Client); err != nil {
+	if _, err = future.PollUntilDone(ctx, time.Minute); err != nil {
 		return fmt.Errorf("waiting for creation/update of %s: %+v", id, err)
 	}
 
@@ -216,7 +215,7 @@ func resourceVirtualNetworkCreateUpdate(d *schema.ResourceData, meta interface{}
 }
 
 func resourceVirtualNetworkRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Network.VnetClient
+	client := meta.(*clients.Client).Network.VnetClient2
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
@@ -225,9 +224,9 @@ func resourceVirtualNetworkRead(d *schema.ResourceData, meta interface{}) error 
 		return err
 	}
 
-	resp, err := client.Get(ctx, id.ResourceGroup, id.Name, "")
+	resp, err := client.Get(ctx, id.ResourceGroup, id.Name, nil)
 	if err != nil {
-		if utils.ResponseWasNotFound(resp.Response) {
+		if utils.Track2ResponseWasNotFound(err) {
 			d.SetId("")
 			return nil
 		}
@@ -237,11 +236,11 @@ func resourceVirtualNetworkRead(d *schema.ResourceData, meta interface{}) error 
 	d.Set("name", id.Name)
 	d.Set("resource_group_name", id.ResourceGroup)
 
-	if location := resp.Location; location != nil {
+	if location := resp.VirtualNetwork.Location; location != nil {
 		d.Set("location", azure.NormalizeLocation(*location))
 	}
 
-	if props := resp.VirtualNetworkPropertiesFormat; props != nil {
+	if props := resp.VirtualNetwork.Properties; props != nil {
 		d.Set("guid", props.ResourceGUID)
 
 		if space := props.AddressSpace; space != nil {
@@ -273,11 +272,11 @@ func resourceVirtualNetworkRead(d *schema.ResourceData, meta interface{}) error 
 		d.Set("vm_protection_enabled", props.EnableVMProtection)
 	}
 
-	return tags.FlattenAndSet(d, resp.Tags)
+	return tags.Track2FlattenAndSet(d, resp.VirtualNetwork.Tags)
 }
 
 func resourceVirtualNetworkDelete(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Network.VnetClient
+	client := meta.(*clients.Client).Network.VnetClient2
 	ctx, cancel := timeouts.ForDelete(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
@@ -294,20 +293,20 @@ func resourceVirtualNetworkDelete(d *schema.ResourceData, meta interface{}) erro
 	locks.MultipleByName(&nsgNames, VirtualNetworkResourceName)
 	defer locks.UnlockMultipleByName(&nsgNames, VirtualNetworkResourceName)
 
-	future, err := client.Delete(ctx, id.ResourceGroup, id.Name)
+	future, err := client.BeginDelete(ctx, id.ResourceGroup, id.Name, nil)
 	if err != nil {
 		return fmt.Errorf("deleting %s: %+v", *id, err)
 	}
 
-	if err = future.WaitForCompletionRef(ctx, client.Client); err != nil {
+	if _, err = future.PollUntilDone(ctx, time.Minute); err != nil {
 		return fmt.Errorf("waiting for deletion of %s: %+v", *id, err)
 	}
 
 	return nil
 }
 
-func expandVirtualNetworkProperties(ctx context.Context, d *schema.ResourceData, meta interface{}) (*network.VirtualNetworkPropertiesFormat, error) {
-	subnets := make([]network.Subnet, 0)
+func expandVirtualNetworkProperties(ctx context.Context, d *schema.ResourceData, meta interface{}) (*armnetwork.VirtualNetworkPropertiesFormat, error) {
+	subnets := make([]armnetwork.Subnet, 0)
 	if subs := d.Get("subnet").(*schema.Set); subs.Len() > 0 {
 		for _, subnet := range subs.List() {
 			subnet := subnet.(map[string]interface{})
@@ -329,29 +328,31 @@ func expandVirtualNetworkProperties(ctx context.Context, d *schema.ResourceData,
 
 			// set the props from config and leave the rest intact
 			subnetObj.Name = &name
-			if subnetObj.SubnetPropertiesFormat == nil {
-				subnetObj.SubnetPropertiesFormat = &network.SubnetPropertiesFormat{}
+			if subnetObj.Properties == nil {
+				subnetObj.Properties = &armnetwork.SubnetPropertiesFormat{}
 			}
 
-			subnetObj.SubnetPropertiesFormat.AddressPrefix = &prefix
+			subnetObj.Properties.AddressPrefix = &prefix
 
 			if secGroup != "" {
-				subnetObj.SubnetPropertiesFormat.NetworkSecurityGroup = &network.SecurityGroup{
-					ID: &secGroup,
+				subnetObj.Properties.NetworkSecurityGroup = &armnetwork.NetworkSecurityGroup{
+					Resource: armnetwork.Resource{
+						ID: &secGroup,
+					},
 				}
 			} else {
-				subnetObj.SubnetPropertiesFormat.NetworkSecurityGroup = nil
+				subnetObj.Properties.NetworkSecurityGroup = nil
 			}
 
 			subnets = append(subnets, *subnetObj)
 		}
 	}
 
-	properties := &network.VirtualNetworkPropertiesFormat{
-		AddressSpace: &network.AddressSpace{
+	properties := &armnetwork.VirtualNetworkPropertiesFormat{
+		AddressSpace: &armnetwork.AddressSpace{
 			AddressPrefixes: utils.ExpandStringSlice(d.Get("address_space").([]interface{})),
 		},
-		DhcpOptions: &network.DhcpOptions{
+		DhcpOptions: &armnetwork.DhcpOptions{
 			DNSServers: utils.ExpandStringSlice(d.Get("dns_servers").([]interface{})),
 		},
 		EnableVMProtection: utils.Bool(d.Get("vm_protection_enabled").(bool)),
@@ -368,7 +369,7 @@ func expandVirtualNetworkProperties(ctx context.Context, d *schema.ResourceData,
 
 		if v, ok := ddosPPlan["id"]; ok {
 			id := v.(string)
-			properties.DdosProtectionPlan = &network.SubResource{
+			properties.DdosProtectionPlan = &armnetwork.SubResource{
 				ID: &id,
 			}
 		}
@@ -380,13 +381,13 @@ func expandVirtualNetworkProperties(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if v, ok := d.GetOk("bgp_community"); ok {
-		properties.BgpCommunities = &network.VirtualNetworkBgpCommunities{VirtualNetworkCommunity: utils.String(v.(string))}
+		properties.BgpCommunities = &armnetwork.VirtualNetworkBgpCommunities{VirtualNetworkCommunity: utils.String(v.(string))}
 	}
 
 	return properties, nil
 }
 
-func flattenVirtualNetworkDDoSProtectionPlan(input *network.VirtualNetworkPropertiesFormat) []interface{} {
+func flattenVirtualNetworkDDoSProtectionPlan(input *armnetwork.VirtualNetworkPropertiesFormat) []interface{} {
 	if input == nil {
 		return []interface{}{}
 	}
@@ -403,7 +404,7 @@ func flattenVirtualNetworkDDoSProtectionPlan(input *network.VirtualNetworkProper
 	}
 }
 
-func flattenVirtualNetworkSubnets(input *[]network.Subnet) *schema.Set {
+func flattenVirtualNetworkSubnets(input *[]armnetwork.Subnet) *schema.Set {
 	results := &schema.Set{
 		F: resourceAzureSubnetHash,
 	}
@@ -420,7 +421,7 @@ func flattenVirtualNetworkSubnets(input *[]network.Subnet) *schema.Set {
 				output["name"] = *name
 			}
 
-			if props := subnet.SubnetPropertiesFormat; props != nil {
+			if props := subnet.Properties; props != nil {
 				if prefix := props.AddressPrefix; prefix != nil {
 					output["address_prefix"] = *prefix
 				}
@@ -439,7 +440,7 @@ func flattenVirtualNetworkSubnets(input *[]network.Subnet) *schema.Set {
 	return results
 }
 
-func flattenVirtualNetworkDNSServers(input *network.DhcpOptions) []string {
+func flattenVirtualNetworkDNSServers(input *armnetwork.DhcpOptions) []string {
 	results := make([]string, 0)
 
 	if input != nil {
@@ -467,19 +468,19 @@ func resourceAzureSubnetHash(v interface{}) int {
 	return schema.HashString(buf.String())
 }
 
-func getExistingSubnet(ctx context.Context, resGroup string, vnetName string, subnetName string, meta interface{}) (*network.Subnet, error) {
-	subnetClient := meta.(*clients.Client).Network.SubnetsClient
-	resp, err := subnetClient.Get(ctx, resGroup, vnetName, subnetName, "")
+func getExistingSubnet(ctx context.Context, resGroup string, vnetName string, subnetName string, meta interface{}) (*armnetwork.Subnet, error) {
+	subnetClient := meta.(*clients.Client).Network.SubnetsClient2
+	resp, err := subnetClient.Get(ctx, resGroup, vnetName, subnetName, nil)
 	if err != nil {
-		if resp.StatusCode == http.StatusNotFound {
-			return &network.Subnet{}, nil
+		if utils.Track2ResponseWasNotFound(err) {
+			return &armnetwork.Subnet{}, nil
 		}
 		// raise an error if there was an issue other than 404 in getting subnet properties
 		return nil, err
 	}
 
 	// Return it directly rather than copy the fields to prevent potential uncovered properties (for example, `ServiceEndpoints` mentioned in #1619)
-	return &resp, nil
+	return resp.Subnet, nil
 }
 
 func expandAzureRmVirtualNetworkVirtualNetworkSecurityGroupNames(d *schema.ResourceData) ([]string, error) {
