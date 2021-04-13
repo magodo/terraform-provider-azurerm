@@ -1,14 +1,16 @@
 package client
 
 import (
+	"github.com/Azure/azure-sdk-for-go/sdk/arm/network/2020-07-01/armnetwork"
 	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2020-07-01/network"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/common"
 )
 
 type Client struct {
-	AzureFirewallsClient          *network.AzureFirewallsClient
-	FirewallPolicyClient          *network.FirewallPoliciesClient
-	FirewallPolicyRuleGroupClient *network.FirewallPolicyRuleCollectionGroupsClient
+	AzureFirewallsClient           *network.AzureFirewallsClient
+	FirewallPolicyClient           *network.FirewallPoliciesClient
+	FirewallPolicyRuleGroupClient  *network.FirewallPolicyRuleCollectionGroupsClient
+	FirewallPolicyRuleGroupClient2 *armnetwork.FirewallPolicyRuleCollectionGroupsClient
 }
 
 func NewClient(o *common.ClientOptions) *Client {
@@ -22,8 +24,9 @@ func NewClient(o *common.ClientOptions) *Client {
 	o.ConfigureClient(&policyRuleGroupClient.Client, o.ResourceManagerAuthorizer)
 
 	return &Client{
-		AzureFirewallsClient:          &firewallsClient,
-		FirewallPolicyClient:          &policyClient,
-		FirewallPolicyRuleGroupClient: &policyRuleGroupClient,
+		AzureFirewallsClient:           &firewallsClient,
+		FirewallPolicyClient:           &policyClient,
+		FirewallPolicyRuleGroupClient:  &policyRuleGroupClient,
+		FirewallPolicyRuleGroupClient2: armnetwork.NewFirewallPolicyRuleCollectionGroupsClient(o.ResourceManagerConnection, o.SubscriptionId),
 	}
 }

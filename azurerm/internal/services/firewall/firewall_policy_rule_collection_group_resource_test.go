@@ -97,12 +97,12 @@ func (FirewallPolicyRuleCollectionGroupResource) Exists(ctx context.Context, cli
 		return nil, err
 	}
 
-	resp, err := clients.Firewall.FirewallPolicyRuleGroupClient.Get(ctx, id.ResourceGroup, id.FirewallPolicyName, id.RuleCollectionGroupName)
+	resp, err := clients.Firewall.FirewallPolicyRuleGroupClient2.Get(ctx, id.ResourceGroup, id.FirewallPolicyName, id.RuleCollectionGroupName, nil)
 	if err != nil {
 		return nil, fmt.Errorf("retrieving %s: %v", id.String(), err)
 	}
 
-	return utils.Bool(resp.FirewallPolicyRuleCollectionGroupProperties != nil), nil
+	return utils.Bool(resp.FirewallPolicyRuleCollectionGroup.ID != nil), nil
 }
 
 func (FirewallPolicyRuleCollectionGroupResource) basic(data acceptance.TestData) string {
