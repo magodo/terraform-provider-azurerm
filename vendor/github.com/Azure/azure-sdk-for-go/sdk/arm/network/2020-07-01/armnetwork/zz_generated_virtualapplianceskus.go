@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -47,7 +48,13 @@ func (client *VirtualApplianceSKUsClient) Get(ctx context.Context, skuName strin
 // getCreateRequest creates the Get request.
 func (client *VirtualApplianceSKUsClient) getCreateRequest(ctx context.Context, skuName string, options *VirtualApplianceSKUsGetOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkVirtualApplianceSkus/{skuName}"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if skuName == "" {
+		return nil, errors.New("parameter skuName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{skuName}", url.PathEscape(skuName))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -81,7 +88,7 @@ func (client *VirtualApplianceSKUsClient) getHandleError(resp *azcore.Response) 
 
 // List - List all SKUs available for a virtual appliance.
 func (client *VirtualApplianceSKUsClient) List(options *VirtualApplianceSKUsListOptions) NetworkVirtualApplianceSKUListResultPager {
-	return &networkVirtualApplianceSkuListResultPager{
+	return &networkVirtualApplianceSKUListResultPager{
 		pipeline: client.con.Pipeline(),
 		requester: func(ctx context.Context) (*azcore.Request, error) {
 			return client.listCreateRequest(ctx, options)
@@ -98,6 +105,9 @@ func (client *VirtualApplianceSKUsClient) List(options *VirtualApplianceSKUsList
 // listCreateRequest creates the List request.
 func (client *VirtualApplianceSKUsClient) listCreateRequest(ctx context.Context, options *VirtualApplianceSKUsListOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkVirtualApplianceSkus"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {

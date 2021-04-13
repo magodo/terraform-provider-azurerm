@@ -244,7 +244,7 @@ func resourceVirtualNetworkRead(d *schema.ResourceData, meta interface{}) error 
 		d.Set("guid", props.ResourceGUID)
 
 		if space := props.AddressSpace; space != nil {
-			d.Set("address_space", utils.FlattenStringSlice(space.AddressPrefixes))
+			d.Set("address_space", utils.FlattenStringPtrSlice(space.AddressPrefixes))
 		}
 
 		if err := d.Set("ddos_protection_plan", flattenVirtualNetworkDDoSProtectionPlan(props)); err != nil {
@@ -306,7 +306,7 @@ func resourceVirtualNetworkDelete(d *schema.ResourceData, meta interface{}) erro
 }
 
 func expandVirtualNetworkProperties(ctx context.Context, d *schema.ResourceData, meta interface{}) (*armnetwork.VirtualNetworkPropertiesFormat, error) {
-	subnets := make([]armnetwork.Subnet, 0)
+	subnets := make([]*armnetwork.Subnet, 0)
 	if subs := d.Get("subnet").(*schema.Set); subs.Len() > 0 {
 		for _, subnet := range subs.List() {
 			subnet := subnet.(map[string]interface{})
@@ -344,16 +344,16 @@ func expandVirtualNetworkProperties(ctx context.Context, d *schema.ResourceData,
 				subnetObj.Properties.NetworkSecurityGroup = nil
 			}
 
-			subnets = append(subnets, *subnetObj)
+			subnets = append(subnets, subnetObj)
 		}
 	}
 
 	properties := &armnetwork.VirtualNetworkPropertiesFormat{
 		AddressSpace: &armnetwork.AddressSpace{
-			AddressPrefixes: utils.ExpandStringSlice(d.Get("address_space").([]interface{})),
+			AddressPrefixes: utils.ExpandStringPtrSlice(d.Get("address_space").([]interface{})),
 		},
 		DhcpOptions: &armnetwork.DhcpOptions{
-			DNSServers: utils.ExpandStringSlice(d.Get("dns_servers").([]interface{})),
+			DNSServers: utils.ExpandStringPtrSlice(d.Get("dns_servers").([]interface{})),
 		},
 		EnableVMProtection: utils.Bool(d.Get("vm_protection_enabled").(bool)),
 		Subnets:            &subnets,
@@ -404,7 +404,7 @@ func flattenVirtualNetworkDDoSProtectionPlan(input *armnetwork.VirtualNetworkPro
 	}
 }
 
-func flattenVirtualNetworkSubnets(input *[]armnetwork.Subnet) *schema.Set {
+func flattenVirtualNetworkSubnets(input *[]*armnetwork.Subnet) *schema.Set {
 	results := &schema.Set{
 		F: resourceAzureSubnetHash,
 	}
@@ -440,8 +440,8 @@ func flattenVirtualNetworkSubnets(input *[]armnetwork.Subnet) *schema.Set {
 	return results
 }
 
-func flattenVirtualNetworkDNSServers(input *armnetwork.DhcpOptions) []string {
-	results := make([]string, 0)
+func flattenVirtualNetworkDNSServers(input *armnetwork.DhcpOptions) []*string {
+	results := make([]*string, 0)
 
 	if input != nil {
 		if servers := input.DNSServers; servers != nil {

@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -47,7 +48,13 @@ func (client *WebCategoriesClient) Get(ctx context.Context, name string, options
 // getCreateRequest creates the Get request.
 func (client *WebCategoriesClient) getCreateRequest(ctx context.Context, name string, options *WebCategoriesGetOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/azureWebCategories/{name}"
+	if name == "" {
+		return nil, errors.New("parameter name cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{name}", url.PathEscape(name))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -101,6 +108,9 @@ func (client *WebCategoriesClient) ListBySubscription(options *WebCategoriesList
 // listBySubscriptionCreateRequest creates the ListBySubscription request.
 func (client *WebCategoriesClient) listBySubscriptionCreateRequest(ctx context.Context, options *WebCategoriesListBySubscriptionOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/azureWebCategories"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {

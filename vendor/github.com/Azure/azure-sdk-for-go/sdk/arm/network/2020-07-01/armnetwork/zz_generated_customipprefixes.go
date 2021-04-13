@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -85,8 +86,17 @@ func (client *CustomIPPrefixesClient) createOrUpdate(ctx context.Context, resour
 // createOrUpdateCreateRequest creates the CreateOrUpdate request.
 func (client *CustomIPPrefixesClient) createOrUpdateCreateRequest(ctx context.Context, resourceGroupName string, customIPPrefixName string, parameters CustomIPPrefix, options *CustomIPPrefixesBeginCreateOrUpdateOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/customIpPrefixes/{customIpPrefixName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if customIPPrefixName == "" {
+		return nil, errors.New("parameter customIPPrefixName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{customIpPrefixName}", url.PathEscape(customIPPrefixName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPut, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -174,8 +184,17 @@ func (client *CustomIPPrefixesClient) delete(ctx context.Context, resourceGroupN
 // deleteCreateRequest creates the Delete request.
 func (client *CustomIPPrefixesClient) deleteCreateRequest(ctx context.Context, resourceGroupName string, customIPPrefixName string, options *CustomIPPrefixesBeginDeleteOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/customIpPrefixes/{customIpPrefixName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if customIPPrefixName == "" {
+		return nil, errors.New("parameter customIPPrefixName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{customIpPrefixName}", url.PathEscape(customIPPrefixName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodDelete, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -217,8 +236,17 @@ func (client *CustomIPPrefixesClient) Get(ctx context.Context, resourceGroupName
 // getCreateRequest creates the Get request.
 func (client *CustomIPPrefixesClient) getCreateRequest(ctx context.Context, resourceGroupName string, customIPPrefixName string, options *CustomIPPrefixesGetOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/customIpPrefixes/{customIpPrefixName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if customIPPrefixName == "" {
+		return nil, errors.New("parameter customIPPrefixName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{customIpPrefixName}", url.PathEscape(customIPPrefixName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -272,7 +300,13 @@ func (client *CustomIPPrefixesClient) List(resourceGroupName string, options *Cu
 // listCreateRequest creates the List request.
 func (client *CustomIPPrefixesClient) listCreateRequest(ctx context.Context, resourceGroupName string, options *CustomIPPrefixesListOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/customIpPrefixes"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -323,6 +357,9 @@ func (client *CustomIPPrefixesClient) ListAll(options *CustomIPPrefixesListAllOp
 // listAllCreateRequest creates the ListAll request.
 func (client *CustomIPPrefixesClient) listAllCreateRequest(ctx context.Context, options *CustomIPPrefixesListAllOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/customIpPrefixes"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -373,8 +410,17 @@ func (client *CustomIPPrefixesClient) UpdateTags(ctx context.Context, resourceGr
 // updateTagsCreateRequest creates the UpdateTags request.
 func (client *CustomIPPrefixesClient) updateTagsCreateRequest(ctx context.Context, resourceGroupName string, customIPPrefixName string, parameters TagsObject, options *CustomIPPrefixesUpdateTagsOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/customIpPrefixes/{customIpPrefixName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if customIPPrefixName == "" {
+		return nil, errors.New("parameter customIPPrefixName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{customIpPrefixName}", url.PathEscape(customIPPrefixName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPatch, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {

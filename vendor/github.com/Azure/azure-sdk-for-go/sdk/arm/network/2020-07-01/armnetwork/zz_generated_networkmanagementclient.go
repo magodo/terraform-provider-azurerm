@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -31,7 +32,7 @@ func NewNetworkManagementClient(con *armcore.Connection, subscriptionID string) 
 
 // CheckDNSNameAvailability - Checks whether a domain name in the cloudapp.azure.com zone is available for use.
 func (client *NetworkManagementClient) CheckDNSNameAvailability(ctx context.Context, location string, domainNameLabel string, options *NetworkManagementClientCheckDNSNameAvailabilityOptions) (DNSNameAvailabilityResultResponse, error) {
-	req, err := client.checkDnsNameAvailabilityCreateRequest(ctx, location, domainNameLabel, options)
+	req, err := client.checkDNSNameAvailabilityCreateRequest(ctx, location, domainNameLabel, options)
 	if err != nil {
 		return DNSNameAvailabilityResultResponse{}, err
 	}
@@ -40,15 +41,21 @@ func (client *NetworkManagementClient) CheckDNSNameAvailability(ctx context.Cont
 		return DNSNameAvailabilityResultResponse{}, err
 	}
 	if !resp.HasStatusCode(http.StatusOK) {
-		return DNSNameAvailabilityResultResponse{}, client.checkDnsNameAvailabilityHandleError(resp)
+		return DNSNameAvailabilityResultResponse{}, client.checkDNSNameAvailabilityHandleError(resp)
 	}
-	return client.checkDnsNameAvailabilityHandleResponse(resp)
+	return client.checkDNSNameAvailabilityHandleResponse(resp)
 }
 
-// checkDnsNameAvailabilityCreateRequest creates the CheckDNSNameAvailability request.
-func (client *NetworkManagementClient) checkDnsNameAvailabilityCreateRequest(ctx context.Context, location string, domainNameLabel string, options *NetworkManagementClientCheckDNSNameAvailabilityOptions) (*azcore.Request, error) {
+// checkDNSNameAvailabilityCreateRequest creates the CheckDNSNameAvailability request.
+func (client *NetworkManagementClient) checkDNSNameAvailabilityCreateRequest(ctx context.Context, location string, domainNameLabel string, options *NetworkManagementClientCheckDNSNameAvailabilityOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/locations/{location}/CheckDnsNameAvailability"
+	if location == "" {
+		return nil, errors.New("parameter location cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{location}", url.PathEscape(location))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -63,8 +70,8 @@ func (client *NetworkManagementClient) checkDnsNameAvailabilityCreateRequest(ctx
 	return req, nil
 }
 
-// checkDnsNameAvailabilityHandleResponse handles the CheckDNSNameAvailability response.
-func (client *NetworkManagementClient) checkDnsNameAvailabilityHandleResponse(resp *azcore.Response) (DNSNameAvailabilityResultResponse, error) {
+// checkDNSNameAvailabilityHandleResponse handles the CheckDNSNameAvailability response.
+func (client *NetworkManagementClient) checkDNSNameAvailabilityHandleResponse(resp *azcore.Response) (DNSNameAvailabilityResultResponse, error) {
 	var val *DNSNameAvailabilityResult
 	if err := resp.UnmarshalAsJSON(&val); err != nil {
 		return DNSNameAvailabilityResultResponse{}, err
@@ -72,8 +79,8 @@ func (client *NetworkManagementClient) checkDnsNameAvailabilityHandleResponse(re
 	return DNSNameAvailabilityResultResponse{RawResponse: resp.Response, DNSNameAvailabilityResult: val}, nil
 }
 
-// checkDnsNameAvailabilityHandleError handles the CheckDNSNameAvailability error response.
-func (client *NetworkManagementClient) checkDnsNameAvailabilityHandleError(resp *azcore.Response) error {
+// checkDNSNameAvailabilityHandleError handles the CheckDNSNameAvailability error response.
+func (client *NetworkManagementClient) checkDNSNameAvailabilityHandleError(resp *azcore.Response) error {
 	var err CloudError
 	if err := resp.UnmarshalAsJSON(&err); err != nil {
 		return err
@@ -137,8 +144,17 @@ func (client *NetworkManagementClient) deleteBastionShareableLink(ctx context.Co
 // deleteBastionShareableLinkCreateRequest creates the DeleteBastionShareableLink request.
 func (client *NetworkManagementClient) deleteBastionShareableLinkCreateRequest(ctx context.Context, resourceGroupName string, bastionHostName string, bslRequest BastionShareableLinkListRequest, options *NetworkManagementClientBeginDeleteBastionShareableLinkOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/bastionHosts/{bastionHostName}/deleteShareableLinks"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if bastionHostName == "" {
+		return nil, errors.New("parameter bastionHostName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{bastionHostName}", url.PathEscape(bastionHostName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -162,11 +178,11 @@ func (client *NetworkManagementClient) deleteBastionShareableLinkHandleError(res
 }
 
 // DisconnectActiveSessions - Returns the list of currently active sessions on the Bastion.
-func (client *NetworkManagementClient) DisconnectActiveSessions(resourceGroupName string, bastionHostName string, sessionIds SessionIDs, options *NetworkManagementClientDisconnectActiveSessionsOptions) BastionSessionDeleteResultPager {
+func (client *NetworkManagementClient) DisconnectActiveSessions(resourceGroupName string, bastionHostName string, sessionIDs SessionIDs, options *NetworkManagementClientDisconnectActiveSessionsOptions) BastionSessionDeleteResultPager {
 	return &bastionSessionDeleteResultPager{
 		pipeline: client.con.Pipeline(),
 		requester: func(ctx context.Context) (*azcore.Request, error) {
-			return client.disconnectActiveSessionsCreateRequest(ctx, resourceGroupName, bastionHostName, sessionIds, options)
+			return client.disconnectActiveSessionsCreateRequest(ctx, resourceGroupName, bastionHostName, sessionIDs, options)
 		},
 		responder: client.disconnectActiveSessionsHandleResponse,
 		errorer:   client.disconnectActiveSessionsHandleError,
@@ -178,10 +194,19 @@ func (client *NetworkManagementClient) DisconnectActiveSessions(resourceGroupNam
 }
 
 // disconnectActiveSessionsCreateRequest creates the DisconnectActiveSessions request.
-func (client *NetworkManagementClient) disconnectActiveSessionsCreateRequest(ctx context.Context, resourceGroupName string, bastionHostName string, sessionIds SessionIDs, options *NetworkManagementClientDisconnectActiveSessionsOptions) (*azcore.Request, error) {
+func (client *NetworkManagementClient) disconnectActiveSessionsCreateRequest(ctx context.Context, resourceGroupName string, bastionHostName string, sessionIDs SessionIDs, options *NetworkManagementClientDisconnectActiveSessionsOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/bastionHosts/{bastionHostName}/disconnectActiveSessions"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if bastionHostName == "" {
+		return nil, errors.New("parameter bastionHostName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{bastionHostName}", url.PathEscape(bastionHostName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -192,7 +217,7 @@ func (client *NetworkManagementClient) disconnectActiveSessionsCreateRequest(ctx
 	query.Set("api-version", "2020-07-01")
 	req.URL.RawQuery = query.Encode()
 	req.Header.Set("Accept", "application/json")
-	return req, req.MarshalAsJSON(sessionIds)
+	return req, req.MarshalAsJSON(sessionIDs)
 }
 
 // disconnectActiveSessionsHandleResponse handles the DisconnectActiveSessions response.
@@ -215,32 +240,32 @@ func (client *NetworkManagementClient) disconnectActiveSessionsHandleError(resp 
 
 // BeginGeneratevirtualwanvpnserverconfigurationvpnprofile - Generates a unique VPN profile for P2S clients for VirtualWan and associated VpnServerConfiguration
 // combination in the specified resource group.
-func (client *NetworkManagementClient) BeginGeneratevirtualwanvpnserverconfigurationvpnprofile(ctx context.Context, resourceGroupName string, virtualWanName string, vpnClientParams VirtualWanVpnProfileParameters, options *NetworkManagementClientBeginGeneratevirtualwanvpnserverconfigurationvpnprofileOptions) (VpnProfileResponsePollerResponse, error) {
-	resp, err := client.generatevirtualwanvpnserverconfigurationvpnprofile(ctx, resourceGroupName, virtualWanName, vpnClientParams, options)
+func (client *NetworkManagementClient) BeginGeneratevirtualwanvpnserverconfigurationvpnprofile(ctx context.Context, resourceGroupName string, virtualWANName string, vpnClientParams VirtualWanVPNProfileParameters, options *NetworkManagementClientBeginGeneratevirtualwanvpnserverconfigurationvpnprofileOptions) (VPNProfileResponsePollerResponse, error) {
+	resp, err := client.generatevirtualwanvpnserverconfigurationvpnprofile(ctx, resourceGroupName, virtualWANName, vpnClientParams, options)
 	if err != nil {
-		return VpnProfileResponsePollerResponse{}, err
+		return VPNProfileResponsePollerResponse{}, err
 	}
-	result := VpnProfileResponsePollerResponse{
+	result := VPNProfileResponsePollerResponse{
 		RawResponse: resp.Response,
 	}
 	pt, err := armcore.NewPoller("NetworkManagementClient.Generatevirtualwanvpnserverconfigurationvpnprofile", "location", resp, client.generatevirtualwanvpnserverconfigurationvpnprofileHandleError)
 	if err != nil {
-		return VpnProfileResponsePollerResponse{}, err
+		return VPNProfileResponsePollerResponse{}, err
 	}
 	poller := &vpnProfileResponsePoller{
 		pt:       pt,
 		pipeline: client.con.Pipeline(),
 	}
 	result.Poller = poller
-	result.PollUntilDone = func(ctx context.Context, frequency time.Duration) (VpnProfileResponseResponse, error) {
+	result.PollUntilDone = func(ctx context.Context, frequency time.Duration) (VPNProfileResponseResponse, error) {
 		return poller.pollUntilDone(ctx, frequency)
 	}
 	return result, nil
 }
 
-// ResumeGeneratevirtualwanvpnserverconfigurationvpnprofile creates a new VpnProfileResponsePoller from the specified resume token.
-// token - The value must come from a previous call to VpnProfileResponsePoller.ResumeToken().
-func (client *NetworkManagementClient) ResumeGeneratevirtualwanvpnserverconfigurationvpnprofile(token string) (VpnProfileResponsePoller, error) {
+// ResumeGeneratevirtualwanvpnserverconfigurationvpnprofile creates a new VPNProfileResponsePoller from the specified resume token.
+// token - The value must come from a previous call to VPNProfileResponsePoller.ResumeToken().
+func (client *NetworkManagementClient) ResumeGeneratevirtualwanvpnserverconfigurationvpnprofile(token string) (VPNProfileResponsePoller, error) {
 	pt, err := armcore.NewPollerFromResumeToken("NetworkManagementClient.Generatevirtualwanvpnserverconfigurationvpnprofile", token, client.generatevirtualwanvpnserverconfigurationvpnprofileHandleError)
 	if err != nil {
 		return nil, err
@@ -253,8 +278,8 @@ func (client *NetworkManagementClient) ResumeGeneratevirtualwanvpnserverconfigur
 
 // Generatevirtualwanvpnserverconfigurationvpnprofile - Generates a unique VPN profile for P2S clients for VirtualWan and associated VpnServerConfiguration
 // combination in the specified resource group.
-func (client *NetworkManagementClient) generatevirtualwanvpnserverconfigurationvpnprofile(ctx context.Context, resourceGroupName string, virtualWanName string, vpnClientParams VirtualWanVpnProfileParameters, options *NetworkManagementClientBeginGeneratevirtualwanvpnserverconfigurationvpnprofileOptions) (*azcore.Response, error) {
-	req, err := client.generatevirtualwanvpnserverconfigurationvpnprofileCreateRequest(ctx, resourceGroupName, virtualWanName, vpnClientParams, options)
+func (client *NetworkManagementClient) generatevirtualwanvpnserverconfigurationvpnprofile(ctx context.Context, resourceGroupName string, virtualWANName string, vpnClientParams VirtualWanVPNProfileParameters, options *NetworkManagementClientBeginGeneratevirtualwanvpnserverconfigurationvpnprofileOptions) (*azcore.Response, error) {
+	req, err := client.generatevirtualwanvpnserverconfigurationvpnprofileCreateRequest(ctx, resourceGroupName, virtualWANName, vpnClientParams, options)
 	if err != nil {
 		return nil, err
 	}
@@ -269,11 +294,20 @@ func (client *NetworkManagementClient) generatevirtualwanvpnserverconfigurationv
 }
 
 // generatevirtualwanvpnserverconfigurationvpnprofileCreateRequest creates the Generatevirtualwanvpnserverconfigurationvpnprofile request.
-func (client *NetworkManagementClient) generatevirtualwanvpnserverconfigurationvpnprofileCreateRequest(ctx context.Context, resourceGroupName string, virtualWanName string, vpnClientParams VirtualWanVpnProfileParameters, options *NetworkManagementClientBeginGeneratevirtualwanvpnserverconfigurationvpnprofileOptions) (*azcore.Request, error) {
+func (client *NetworkManagementClient) generatevirtualwanvpnserverconfigurationvpnprofileCreateRequest(ctx context.Context, resourceGroupName string, virtualWANName string, vpnClientParams VirtualWanVPNProfileParameters, options *NetworkManagementClientBeginGeneratevirtualwanvpnserverconfigurationvpnprofileOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualWans/{virtualWANName}/GenerateVpnProfile"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
-	urlPath = strings.ReplaceAll(urlPath, "{virtualWANName}", url.PathEscape(virtualWanName))
+	if virtualWANName == "" {
+		return nil, errors.New("parameter virtualWANName cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{virtualWANName}", url.PathEscape(virtualWANName))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
 		return nil, err
@@ -287,12 +321,12 @@ func (client *NetworkManagementClient) generatevirtualwanvpnserverconfigurationv
 }
 
 // generatevirtualwanvpnserverconfigurationvpnprofileHandleResponse handles the Generatevirtualwanvpnserverconfigurationvpnprofile response.
-func (client *NetworkManagementClient) generatevirtualwanvpnserverconfigurationvpnprofileHandleResponse(resp *azcore.Response) (VpnProfileResponseResponse, error) {
-	var val *VpnProfileResponse
+func (client *NetworkManagementClient) generatevirtualwanvpnserverconfigurationvpnprofileHandleResponse(resp *azcore.Response) (VPNProfileResponseResponse, error) {
+	var val *VPNProfileResponse
 	if err := resp.UnmarshalAsJSON(&val); err != nil {
-		return VpnProfileResponseResponse{}, err
+		return VPNProfileResponseResponse{}, err
 	}
-	return VpnProfileResponseResponse{RawResponse: resp.Response, VpnProfileResponse: val}, nil
+	return VPNProfileResponseResponse{RawResponse: resp.Response, VPNProfileResponse: val}, nil
 }
 
 // generatevirtualwanvpnserverconfigurationvpnprofileHandleError handles the Generatevirtualwanvpnserverconfigurationvpnprofile error response.
@@ -374,8 +408,17 @@ func (client *NetworkManagementClient) getActiveSessions(ctx context.Context, re
 // getActiveSessionsCreateRequest creates the GetActiveSessions request.
 func (client *NetworkManagementClient) getActiveSessionsCreateRequest(ctx context.Context, resourceGroupName string, bastionHostName string, options *NetworkManagementClientBeginGetActiveSessionsOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/bastionHosts/{bastionHostName}/getActiveSessions"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if bastionHostName == "" {
+		return nil, errors.New("parameter bastionHostName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{bastionHostName}", url.PathEscape(bastionHostName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -426,8 +469,17 @@ func (client *NetworkManagementClient) GetBastionShareableLink(resourceGroupName
 // getBastionShareableLinkCreateRequest creates the GetBastionShareableLink request.
 func (client *NetworkManagementClient) getBastionShareableLinkCreateRequest(ctx context.Context, resourceGroupName string, bastionHostName string, bslRequest BastionShareableLinkListRequest, options *NetworkManagementClientGetBastionShareableLinkOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/bastionHosts/{bastionHostName}/getShareableLinks"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if bastionHostName == "" {
+		return nil, errors.New("parameter bastionHostName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{bastionHostName}", url.PathEscape(bastionHostName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -529,8 +581,17 @@ func (client *NetworkManagementClient) putBastionShareableLink(ctx context.Conte
 // putBastionShareableLinkCreateRequest creates the PutBastionShareableLink request.
 func (client *NetworkManagementClient) putBastionShareableLinkCreateRequest(ctx context.Context, resourceGroupName string, bastionHostName string, bslRequest BastionShareableLinkListRequest, options *NetworkManagementClientBeginPutBastionShareableLinkOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/bastionHosts/{bastionHostName}/createShareableLinks"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if bastionHostName == "" {
+		return nil, errors.New("parameter bastionHostName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{bastionHostName}", url.PathEscape(bastionHostName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -563,8 +624,8 @@ func (client *NetworkManagementClient) putBastionShareableLinkHandleError(resp *
 }
 
 // SupportedSecurityProviders - Gives the supported security providers for the virtual wan.
-func (client *NetworkManagementClient) SupportedSecurityProviders(ctx context.Context, resourceGroupName string, virtualWanName string, options *NetworkManagementClientSupportedSecurityProvidersOptions) (VirtualWanSecurityProvidersResponse, error) {
-	req, err := client.supportedSecurityProvidersCreateRequest(ctx, resourceGroupName, virtualWanName, options)
+func (client *NetworkManagementClient) SupportedSecurityProviders(ctx context.Context, resourceGroupName string, virtualWANName string, options *NetworkManagementClientSupportedSecurityProvidersOptions) (VirtualWanSecurityProvidersResponse, error) {
+	req, err := client.supportedSecurityProvidersCreateRequest(ctx, resourceGroupName, virtualWANName, options)
 	if err != nil {
 		return VirtualWanSecurityProvidersResponse{}, err
 	}
@@ -579,11 +640,20 @@ func (client *NetworkManagementClient) SupportedSecurityProviders(ctx context.Co
 }
 
 // supportedSecurityProvidersCreateRequest creates the SupportedSecurityProviders request.
-func (client *NetworkManagementClient) supportedSecurityProvidersCreateRequest(ctx context.Context, resourceGroupName string, virtualWanName string, options *NetworkManagementClientSupportedSecurityProvidersOptions) (*azcore.Request, error) {
+func (client *NetworkManagementClient) supportedSecurityProvidersCreateRequest(ctx context.Context, resourceGroupName string, virtualWANName string, options *NetworkManagementClientSupportedSecurityProvidersOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualWans/{virtualWANName}/supportedSecurityProviders"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
-	urlPath = strings.ReplaceAll(urlPath, "{virtualWANName}", url.PathEscape(virtualWanName))
+	if virtualWANName == "" {
+		return nil, errors.New("parameter virtualWANName cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{virtualWANName}", url.PathEscape(virtualWANName))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
 		return nil, err

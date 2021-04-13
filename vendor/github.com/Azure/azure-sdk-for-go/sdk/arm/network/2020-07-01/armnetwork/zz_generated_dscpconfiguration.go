@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -85,8 +86,17 @@ func (client *DscpConfigurationClient) createOrUpdate(ctx context.Context, resou
 // createOrUpdateCreateRequest creates the CreateOrUpdate request.
 func (client *DscpConfigurationClient) createOrUpdateCreateRequest(ctx context.Context, resourceGroupName string, dscpConfigurationName string, parameters DscpConfiguration, options *DscpConfigurationBeginCreateOrUpdateOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/dscpConfigurations/{dscpConfigurationName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if dscpConfigurationName == "" {
+		return nil, errors.New("parameter dscpConfigurationName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{dscpConfigurationName}", url.PathEscape(dscpConfigurationName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPut, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -174,8 +184,17 @@ func (client *DscpConfigurationClient) delete(ctx context.Context, resourceGroup
 // deleteCreateRequest creates the Delete request.
 func (client *DscpConfigurationClient) deleteCreateRequest(ctx context.Context, resourceGroupName string, dscpConfigurationName string, options *DscpConfigurationBeginDeleteOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/dscpConfigurations/{dscpConfigurationName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if dscpConfigurationName == "" {
+		return nil, errors.New("parameter dscpConfigurationName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{dscpConfigurationName}", url.PathEscape(dscpConfigurationName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodDelete, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -217,8 +236,17 @@ func (client *DscpConfigurationClient) Get(ctx context.Context, resourceGroupNam
 // getCreateRequest creates the Get request.
 func (client *DscpConfigurationClient) getCreateRequest(ctx context.Context, resourceGroupName string, dscpConfigurationName string, options *DscpConfigurationGetOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/dscpConfigurations/{dscpConfigurationName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if dscpConfigurationName == "" {
+		return nil, errors.New("parameter dscpConfigurationName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{dscpConfigurationName}", url.PathEscape(dscpConfigurationName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -269,7 +297,13 @@ func (client *DscpConfigurationClient) List(resourceGroupName string, options *D
 // listCreateRequest creates the List request.
 func (client *DscpConfigurationClient) listCreateRequest(ctx context.Context, resourceGroupName string, options *DscpConfigurationListOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/dscpConfigurations"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -320,6 +354,9 @@ func (client *DscpConfigurationClient) ListAll(options *DscpConfigurationListAll
 // listAllCreateRequest creates the ListAll request.
 func (client *DscpConfigurationClient) listAllCreateRequest(ctx context.Context, options *DscpConfigurationListAllOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/dscpConfigurations"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {

@@ -202,9 +202,9 @@ func resourceSubnetCreate(d *schema.ResourceData, meta interface{}) error {
 
 	properties := armnetwork.SubnetPropertiesFormat{}
 	if value, ok := d.GetOk("address_prefixes"); ok {
-		var addressPrefixes []string
+		var addressPrefixes []*string
 		for _, item := range value.([]interface{}) {
-			addressPrefixes = append(addressPrefixes, item.(string))
+			addressPrefixes = append(addressPrefixes, utils.String(item.(string)))
 		}
 		properties.AddressPrefixes = &addressPrefixes
 	}
@@ -213,7 +213,7 @@ func resourceSubnetCreate(d *schema.ResourceData, meta interface{}) error {
 		properties.AddressPrefix = &addressPrefix
 	}
 	if properties.AddressPrefixes != nil && len(*properties.AddressPrefixes) == 1 {
-		properties.AddressPrefix = &(*properties.AddressPrefixes)[0]
+		properties.AddressPrefix = (*properties.AddressPrefixes)[0]
 		properties.AddressPrefixes = nil
 	}
 
@@ -221,7 +221,7 @@ func resourceSubnetCreate(d *schema.ResourceData, meta interface{}) error {
 	// Network policies like network security groups are not supported by private endpoints.
 	privateEndpointNetworkPolicies := d.Get("enforce_private_link_endpoint_network_policies").(bool)
 	privateLinkServiceNetworkPolicies := d.Get("enforce_private_link_service_network_policies").(bool)
-	properties.PrivateEndpointNetworkPolicies = expandSubnetPrivateLinkNetworkPolicy(privateEndpointNetworkPolicies)
+	properties.PrivateEndpointNetworkPolicies = expandSubnetPrivateEndpointNetworkPolicy(privateEndpointNetworkPolicies)
 	properties.PrivateLinkServiceNetworkPolicies = expandSubnetPrivateLinkNetworkPolicy(privateLinkServiceNetworkPolicies)
 
 	serviceEndpointsRaw := d.Get("service_endpoints").([]interface{})
@@ -290,7 +290,7 @@ func resourceSubnetUpdate(d *schema.ResourceData, meta interface{}) error {
 		default:
 			// 1->N: we shall insist on using the `AddressPrefixes` and clear the `AddressPrefix`. If both are set, service be confused and (currently) will only
 			// return the `AddressPrefix` in response.
-			props.AddressPrefixes = utils.ExpandStringSlice(addressPrefixesRaw)
+			props.AddressPrefixes = utils.ExpandStringPtrSlice(addressPrefixesRaw)
 			props.AddressPrefix = nil
 		}
 	}
@@ -302,7 +302,7 @@ func resourceSubnetUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("enforce_private_link_endpoint_network_policies") {
 		v := d.Get("enforce_private_link_endpoint_network_policies").(bool)
-		props.PrivateEndpointNetworkPolicies = expandSubnetPrivateLinkNetworkPolicy(v)
+		props.PrivateEndpointNetworkPolicies = expandSubnetPrivateEndpointNetworkPolicy(v)
 	}
 
 	if d.HasChange("enforce_private_link_service_network_policies") {
@@ -377,7 +377,7 @@ func resourceSubnetRead(d *schema.ResourceData, meta interface{}) error {
 			return fmt.Errorf("Error flattening `delegation`: %+v", err)
 		}
 
-		d.Set("enforce_private_link_endpoint_network_policies", flattenSubnetPrivateLinkNetworkPolicy(props.PrivateEndpointNetworkPolicies))
+		d.Set("enforce_private_link_endpoint_network_policies", flattenSubnetPrivateEndpointNetworkPolicy(props.PrivateEndpointNetworkPolicies))
 		d.Set("enforce_private_link_service_network_policies", flattenSubnetPrivateLinkNetworkPolicy(props.PrivateLinkServiceNetworkPolicies))
 
 		serviceEndpoints := flattenSubnetServiceEndpoints(props.ServiceEndpoints)
@@ -422,22 +422,22 @@ func resourceSubnetDelete(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func expandSubnetServiceEndpoints(input []interface{}) *[]armnetwork.ServiceEndpointPropertiesFormat {
-	endpoints := make([]armnetwork.ServiceEndpointPropertiesFormat, 0)
+func expandSubnetServiceEndpoints(input []interface{}) *[]*armnetwork.ServiceEndpointPropertiesFormat {
+	endpoints := make([]*armnetwork.ServiceEndpointPropertiesFormat, 0)
 
 	for _, svcEndpointRaw := range input {
 		if svc, ok := svcEndpointRaw.(string); ok {
 			endpoint := armnetwork.ServiceEndpointPropertiesFormat{
 				Service: &svc,
 			}
-			endpoints = append(endpoints, endpoint)
+			endpoints = append(endpoints, &endpoint)
 		}
 	}
 
 	return &endpoints
 }
 
-func flattenSubnetServiceEndpoints(serviceEndpoints *[]armnetwork.ServiceEndpointPropertiesFormat) []string {
+func flattenSubnetServiceEndpoints(serviceEndpoints *[]*armnetwork.ServiceEndpointPropertiesFormat) []string {
 	endpoints := make([]string, 0)
 
 	if serviceEndpoints == nil {
@@ -453,8 +453,8 @@ func flattenSubnetServiceEndpoints(serviceEndpoints *[]armnetwork.ServiceEndpoin
 	return endpoints
 }
 
-func expandSubnetDelegation(input []interface{}) *[]armnetwork.Delegation {
-	retDelegations := make([]armnetwork.Delegation, 0)
+func expandSubnetDelegation(input []interface{}) *[]*armnetwork.Delegation {
+	retDelegations := make([]*armnetwork.Delegation, 0)
 
 	for _, deleValue := range input {
 		deleData := deleValue.(map[string]interface{})
@@ -464,10 +464,10 @@ func expandSubnetDelegation(input []interface{}) *[]armnetwork.Delegation {
 		srvName := srvDelegation["name"].(string)
 		srvActions := srvDelegation["actions"].([]interface{})
 
-		retSrvActions := make([]string, 0)
+		retSrvActions := make([]*string, 0)
 		for _, srvAction := range srvActions {
 			srvActionData := srvAction.(string)
-			retSrvActions = append(retSrvActions, srvActionData)
+			retSrvActions = append(retSrvActions, &srvActionData)
 		}
 
 		retDelegation := armnetwork.Delegation{
@@ -478,13 +478,13 @@ func expandSubnetDelegation(input []interface{}) *[]armnetwork.Delegation {
 			},
 		}
 
-		retDelegations = append(retDelegations, retDelegation)
+		retDelegations = append(retDelegations, &retDelegation)
 	}
 
 	return &retDelegations
 }
 
-func flattenSubnetDelegation(delegations *[]armnetwork.Delegation) []interface{} {
+func flattenSubnetDelegation(delegations *[]*armnetwork.Delegation) []interface{} {
 	if delegations == nil {
 		return []interface{}{}
 	}
@@ -521,18 +521,20 @@ func flattenSubnetDelegation(delegations *[]armnetwork.Delegation) []interface{}
 
 // TODO: confirm this logic below
 
-func expandSubnetPrivateLinkNetworkPolicy(enabled bool) *string {
+func expandSubnetPrivateEndpointNetworkPolicy(enabled bool) *armnetwork.VirtualNetworkPrivateEndpointNetworkPolicies {
 	// This is strange logic, but to get the schema to make sense for the end user
 	// I exposed it with the same name that the Azure CLI does to be consistent
 	// between the tool sets, which means true == Disabled.
+	var ret armnetwork.VirtualNetworkPrivateEndpointNetworkPolicies
 	if enabled {
-		return utils.String("Disabled")
+		ret = armnetwork.VirtualNetworkPrivateEndpointNetworkPoliciesDisabled
+	} else {
+		ret  = armnetwork.VirtualNetworkPrivateEndpointNetworkPoliciesEnabled
 	}
-
-	return utils.String("Enabled")
+	return &ret
 }
 
-func flattenSubnetPrivateLinkNetworkPolicy(input *string) bool {
+func flattenSubnetPrivateEndpointNetworkPolicy(input *armnetwork.VirtualNetworkPrivateEndpointNetworkPolicies) bool {
 	// This is strange logic, but to get the schema to make sense for the end user
 	// I exposed it with the same name that the Azure CLI does to be consistent
 	// between the tool sets, which means true == Disabled.
@@ -540,19 +542,43 @@ func flattenSubnetPrivateLinkNetworkPolicy(input *string) bool {
 		return false
 	}
 
-	return strings.EqualFold(*input, "Disabled")
+	return strings.EqualFold(string(*input), string(armnetwork.VirtualNetworkPrivateEndpointNetworkPoliciesDisabled))
 }
 
-func expandSubnetServiceEndpointPolicies(input []interface{}) *[]armnetwork.ServiceEndpointPolicy {
-	output := make([]armnetwork.ServiceEndpointPolicy, 0)
+func expandSubnetPrivateLinkNetworkPolicy(enabled bool) *armnetwork.VirtualNetworkPrivateLinkServiceNetworkPolicies {
+	// This is strange logic, but to get the schema to make sense for the end user
+	// I exposed it with the same name that the Azure CLI does to be consistent
+	// between the tool sets, which means true == Disabled.
+	var ret armnetwork.VirtualNetworkPrivateLinkServiceNetworkPolicies
+	if enabled {
+		ret = armnetwork.VirtualNetworkPrivateLinkServiceNetworkPoliciesDisabled
+	} else {
+		ret  = armnetwork.VirtualNetworkPrivateLinkServiceNetworkPoliciesEnabled
+	}
+	return &ret
+}
+
+func flattenSubnetPrivateLinkNetworkPolicy(input *armnetwork.VirtualNetworkPrivateLinkServiceNetworkPolicies) bool {
+	// This is strange logic, but to get the schema to make sense for the end user
+	// I exposed it with the same name that the Azure CLI does to be consistent
+	// between the tool sets, which means true == Disabled.
+	if input == nil {
+		return false
+	}
+
+	return strings.EqualFold(string(*input), string(armnetwork.VirtualNetworkPrivateLinkServiceNetworkPoliciesDisabled))
+}
+
+func expandSubnetServiceEndpointPolicies(input []interface{}) *[]*armnetwork.ServiceEndpointPolicy {
+	output := make([]*armnetwork.ServiceEndpointPolicy, 0)
 	for _, policy := range input {
 		policy := policy.(string)
-		output = append(output, armnetwork.ServiceEndpointPolicy{Resource: armnetwork.Resource{ID: &policy}})
+		output = append(output, &armnetwork.ServiceEndpointPolicy{Resource: armnetwork.Resource{ID: &policy}})
 	}
 	return &output
 }
 
-func flattenSubnetServiceEndpointPolicies(input *[]armnetwork.ServiceEndpointPolicy) []interface{} {
+func flattenSubnetServiceEndpointPolicies(input *[]*armnetwork.ServiceEndpointPolicy) []interface{} {
 	if input == nil {
 		return nil
 	}

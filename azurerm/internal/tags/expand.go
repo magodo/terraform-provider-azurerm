@@ -12,13 +12,13 @@ func Expand(tagsMap map[string]interface{}) map[string]*string {
 	return output
 }
 
-func Track2Expand(tagsMap map[string]interface{}) *map[string]string {
-	output := make(map[string]string, len(tagsMap))
+func Track2Expand(tagsMap map[string]interface{}) *map[string]*string {
+	output := make(map[string]*string, len(tagsMap))
 
 	for i, v := range tagsMap {
 		// Validate should have ignored this error already
 		value, _ := TagValueToString(v)
-		output[i] = value
+		output[i] = &value
 	}
 
 	return &output

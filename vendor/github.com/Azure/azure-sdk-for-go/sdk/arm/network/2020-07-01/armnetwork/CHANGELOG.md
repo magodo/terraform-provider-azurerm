@@ -1,7 +1,7 @@
 # Release History
 
-## v0.2.0 (released)
+## v0.3.0 (released)
 
-Generated from https://github.com/Azure/azure-rest-api-specs/tree/8afb86737a4e792aa5d90280461e3cca4a2a9f52
+Generated from https://github.com/Azure/azure-rest-api-specs/tree/f7d973f621c207c58b3a06a797c2540089858e95
 
-Code generator @autorest/go@4.0.0-preview.11
+Code generator @autorest/go@4.0.0-preview.16

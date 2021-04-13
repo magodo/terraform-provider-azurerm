@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -85,8 +86,17 @@ func (client *ExpressRoutePortsClient) createOrUpdate(ctx context.Context, resou
 // createOrUpdateCreateRequest creates the CreateOrUpdate request.
 func (client *ExpressRoutePortsClient) createOrUpdateCreateRequest(ctx context.Context, resourceGroupName string, expressRoutePortName string, parameters ExpressRoutePort, options *ExpressRoutePortsBeginCreateOrUpdateOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/ExpressRoutePorts/{expressRoutePortName}"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if expressRoutePortName == "" {
+		return nil, errors.New("parameter expressRoutePortName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{expressRoutePortName}", url.PathEscape(expressRoutePortName))
 	req, err := azcore.NewRequest(ctx, http.MethodPut, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -174,8 +184,17 @@ func (client *ExpressRoutePortsClient) delete(ctx context.Context, resourceGroup
 // deleteCreateRequest creates the Delete request.
 func (client *ExpressRoutePortsClient) deleteCreateRequest(ctx context.Context, resourceGroupName string, expressRoutePortName string, options *ExpressRoutePortsBeginDeleteOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/ExpressRoutePorts/{expressRoutePortName}"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if expressRoutePortName == "" {
+		return nil, errors.New("parameter expressRoutePortName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{expressRoutePortName}", url.PathEscape(expressRoutePortName))
 	req, err := azcore.NewRequest(ctx, http.MethodDelete, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -198,27 +217,36 @@ func (client *ExpressRoutePortsClient) deleteHandleError(resp *azcore.Response) 
 	return azcore.NewResponseError(&err, resp.Response)
 }
 
-// GenerateLoa - Generate a letter of authorization for the requested ExpressRoutePort resource.
-func (client *ExpressRoutePortsClient) GenerateLoa(ctx context.Context, resourceGroupName string, expressRoutePortName string, request GenerateExpressRoutePortsLoaRequest, options *ExpressRoutePortsGenerateLoaOptions) (GenerateExpressRoutePortsLoaResultResponse, error) {
-	req, err := client.generateLoaCreateRequest(ctx, resourceGroupName, expressRoutePortName, request, options)
+// GenerateLOA - Generate a letter of authorization for the requested ExpressRoutePort resource.
+func (client *ExpressRoutePortsClient) GenerateLOA(ctx context.Context, resourceGroupName string, expressRoutePortName string, request GenerateExpressRoutePortsLOARequest, options *ExpressRoutePortsGenerateLOAOptions) (GenerateExpressRoutePortsLOAResultResponse, error) {
+	req, err := client.generateLOACreateRequest(ctx, resourceGroupName, expressRoutePortName, request, options)
 	if err != nil {
-		return GenerateExpressRoutePortsLoaResultResponse{}, err
+		return GenerateExpressRoutePortsLOAResultResponse{}, err
 	}
 	resp, err := client.con.Pipeline().Do(req)
 	if err != nil {
-		return GenerateExpressRoutePortsLoaResultResponse{}, err
+		return GenerateExpressRoutePortsLOAResultResponse{}, err
 	}
 	if !resp.HasStatusCode(http.StatusOK) {
-		return GenerateExpressRoutePortsLoaResultResponse{}, client.generateLoaHandleError(resp)
+		return GenerateExpressRoutePortsLOAResultResponse{}, client.generateLOAHandleError(resp)
 	}
-	return client.generateLoaHandleResponse(resp)
+	return client.generateLOAHandleResponse(resp)
 }
 
-// generateLoaCreateRequest creates the GenerateLoa request.
-func (client *ExpressRoutePortsClient) generateLoaCreateRequest(ctx context.Context, resourceGroupName string, expressRoutePortName string, request GenerateExpressRoutePortsLoaRequest, options *ExpressRoutePortsGenerateLoaOptions) (*azcore.Request, error) {
+// generateLOACreateRequest creates the GenerateLOA request.
+func (client *ExpressRoutePortsClient) generateLOACreateRequest(ctx context.Context, resourceGroupName string, expressRoutePortName string, request GenerateExpressRoutePortsLOARequest, options *ExpressRoutePortsGenerateLOAOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/expressRoutePorts/{expressRoutePortName}/generateLoa"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if expressRoutePortName == "" {
+		return nil, errors.New("parameter expressRoutePortName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{expressRoutePortName}", url.PathEscape(expressRoutePortName))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -232,17 +260,17 @@ func (client *ExpressRoutePortsClient) generateLoaCreateRequest(ctx context.Cont
 	return req, req.MarshalAsJSON(request)
 }
 
-// generateLoaHandleResponse handles the GenerateLoa response.
-func (client *ExpressRoutePortsClient) generateLoaHandleResponse(resp *azcore.Response) (GenerateExpressRoutePortsLoaResultResponse, error) {
-	var val *GenerateExpressRoutePortsLoaResult
+// generateLOAHandleResponse handles the GenerateLOA response.
+func (client *ExpressRoutePortsClient) generateLOAHandleResponse(resp *azcore.Response) (GenerateExpressRoutePortsLOAResultResponse, error) {
+	var val *GenerateExpressRoutePortsLOAResult
 	if err := resp.UnmarshalAsJSON(&val); err != nil {
-		return GenerateExpressRoutePortsLoaResultResponse{}, err
+		return GenerateExpressRoutePortsLOAResultResponse{}, err
 	}
-	return GenerateExpressRoutePortsLoaResultResponse{RawResponse: resp.Response, GenerateExpressRoutePortsLoaResult: val}, nil
+	return GenerateExpressRoutePortsLOAResultResponse{RawResponse: resp.Response, GenerateExpressRoutePortsLOAResult: val}, nil
 }
 
-// generateLoaHandleError handles the GenerateLoa error response.
-func (client *ExpressRoutePortsClient) generateLoaHandleError(resp *azcore.Response) error {
+// generateLOAHandleError handles the GenerateLOA error response.
+func (client *ExpressRoutePortsClient) generateLOAHandleError(resp *azcore.Response) error {
 	var err CloudError
 	if err := resp.UnmarshalAsJSON(&err); err != nil {
 		return err
@@ -269,8 +297,17 @@ func (client *ExpressRoutePortsClient) Get(ctx context.Context, resourceGroupNam
 // getCreateRequest creates the Get request.
 func (client *ExpressRoutePortsClient) getCreateRequest(ctx context.Context, resourceGroupName string, expressRoutePortName string, options *ExpressRoutePortsGetOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/ExpressRoutePorts/{expressRoutePortName}"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if expressRoutePortName == "" {
+		return nil, errors.New("parameter expressRoutePortName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{expressRoutePortName}", url.PathEscape(expressRoutePortName))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -321,6 +358,9 @@ func (client *ExpressRoutePortsClient) List(options *ExpressRoutePortsListOption
 // listCreateRequest creates the List request.
 func (client *ExpressRoutePortsClient) listCreateRequest(ctx context.Context, options *ExpressRoutePortsListOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/ExpressRoutePorts"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -371,7 +411,13 @@ func (client *ExpressRoutePortsClient) ListByResourceGroup(resourceGroupName str
 // listByResourceGroupCreateRequest creates the ListByResourceGroup request.
 func (client *ExpressRoutePortsClient) listByResourceGroupCreateRequest(ctx context.Context, resourceGroupName string, options *ExpressRoutePortsListByResourceGroupOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/ExpressRoutePorts"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -422,8 +468,17 @@ func (client *ExpressRoutePortsClient) UpdateTags(ctx context.Context, resourceG
 // updateTagsCreateRequest creates the UpdateTags request.
 func (client *ExpressRoutePortsClient) updateTagsCreateRequest(ctx context.Context, resourceGroupName string, expressRoutePortName string, parameters TagsObject, options *ExpressRoutePortsUpdateTagsOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/ExpressRoutePorts/{expressRoutePortName}"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if expressRoutePortName == "" {
+		return nil, errors.New("parameter expressRoutePortName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{expressRoutePortName}", url.PathEscape(expressRoutePortName))
 	req, err := azcore.NewRequest(ctx, http.MethodPatch, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {

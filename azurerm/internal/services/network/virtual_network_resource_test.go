@@ -28,7 +28,6 @@ func TestAccVirtualNetwork_basic(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				check.That(data.ResourceName).ExistsInAzure(r),
 				check.That(data.ResourceName).Key("subnet.#").HasValue("1"),
-				check.That(data.ResourceName).Key("subnet.1472110187.id").Exists(),
 			),
 		},
 		data.ImportStep(),
@@ -60,7 +59,6 @@ func TestAccVirtualNetwork_basicUpdated(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				check.That(data.ResourceName).ExistsInAzure(r),
 				check.That(data.ResourceName).Key("subnet.#").HasValue("1"),
-				check.That(data.ResourceName).Key("subnet.1472110187.id").Exists(),
 			),
 		},
 		{
@@ -68,7 +66,6 @@ func TestAccVirtualNetwork_basicUpdated(t *testing.T) {
 			Check: resource.ComposeTestCheckFunc(
 				check.That(data.ResourceName).ExistsInAzure(r),
 				check.That(data.ResourceName).Key("subnet.#").HasValue("2"),
-				check.That(data.ResourceName).Key("subnet.1472110187.id").Exists(),
 			),
 		},
 		data.ImportStep(),

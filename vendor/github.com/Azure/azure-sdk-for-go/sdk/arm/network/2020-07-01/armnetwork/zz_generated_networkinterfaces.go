@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -85,8 +86,17 @@ func (client *NetworkInterfacesClient) createOrUpdate(ctx context.Context, resou
 // createOrUpdateCreateRequest creates the CreateOrUpdate request.
 func (client *NetworkInterfacesClient) createOrUpdateCreateRequest(ctx context.Context, resourceGroupName string, networkInterfaceName string, parameters NetworkInterface, options *NetworkInterfacesBeginCreateOrUpdateOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPut, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -174,8 +184,17 @@ func (client *NetworkInterfacesClient) delete(ctx context.Context, resourceGroup
 // deleteCreateRequest creates the Delete request.
 func (client *NetworkInterfacesClient) deleteCreateRequest(ctx context.Context, resourceGroupName string, networkInterfaceName string, options *NetworkInterfacesBeginDeleteOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodDelete, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -217,8 +236,17 @@ func (client *NetworkInterfacesClient) Get(ctx context.Context, resourceGroupNam
 // getCreateRequest creates the Get request.
 func (client *NetworkInterfacesClient) getCreateRequest(ctx context.Context, resourceGroupName string, networkInterfaceName string, options *NetworkInterfacesGetOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -272,10 +300,25 @@ func (client *NetworkInterfacesClient) GetCloudServiceNetworkInterface(ctx conte
 // getCloudServiceNetworkInterfaceCreateRequest creates the GetCloudServiceNetworkInterface request.
 func (client *NetworkInterfacesClient) getCloudServiceNetworkInterfaceCreateRequest(ctx context.Context, resourceGroupName string, cloudServiceName string, roleInstanceName string, networkInterfaceName string, options *NetworkInterfacesGetCloudServiceNetworkInterfaceOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/cloudServices/{cloudServiceName}/roleInstances/{roleInstanceName}/networkInterfaces/{networkInterfaceName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if cloudServiceName == "" {
+		return nil, errors.New("parameter cloudServiceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{cloudServiceName}", url.PathEscape(cloudServiceName))
+	if roleInstanceName == "" {
+		return nil, errors.New("parameter roleInstanceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{roleInstanceName}", url.PathEscape(roleInstanceName))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -366,8 +409,17 @@ func (client *NetworkInterfacesClient) getEffectiveRouteTable(ctx context.Contex
 // getEffectiveRouteTableCreateRequest creates the GetEffectiveRouteTable request.
 func (client *NetworkInterfacesClient) getEffectiveRouteTableCreateRequest(ctx context.Context, resourceGroupName string, networkInterfaceName string, options *NetworkInterfacesBeginGetEffectiveRouteTableOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}/effectiveRouteTable"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -418,11 +470,29 @@ func (client *NetworkInterfacesClient) GetVirtualMachineScaleSetIPConfiguration(
 // getVirtualMachineScaleSetIPConfigurationCreateRequest creates the GetVirtualMachineScaleSetIPConfiguration request.
 func (client *NetworkInterfacesClient) getVirtualMachineScaleSetIPConfigurationCreateRequest(ctx context.Context, resourceGroupName string, virtualMachineScaleSetName string, virtualmachineIndex string, networkInterfaceName string, ipConfigurationName string, options *NetworkInterfacesGetVirtualMachineScaleSetIPConfigurationOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/virtualMachines/{virtualmachineIndex}/networkInterfaces/{networkInterfaceName}/ipConfigurations/{ipConfigurationName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualMachineScaleSetName == "" {
+		return nil, errors.New("parameter virtualMachineScaleSetName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualMachineScaleSetName}", url.PathEscape(virtualMachineScaleSetName))
+	if virtualmachineIndex == "" {
+		return nil, errors.New("parameter virtualmachineIndex cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualmachineIndex}", url.PathEscape(virtualmachineIndex))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if ipConfigurationName == "" {
+		return nil, errors.New("parameter ipConfigurationName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{ipConfigurationName}", url.PathEscape(ipConfigurationName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -476,10 +546,25 @@ func (client *NetworkInterfacesClient) GetVirtualMachineScaleSetNetworkInterface
 // getVirtualMachineScaleSetNetworkInterfaceCreateRequest creates the GetVirtualMachineScaleSetNetworkInterface request.
 func (client *NetworkInterfacesClient) getVirtualMachineScaleSetNetworkInterfaceCreateRequest(ctx context.Context, resourceGroupName string, virtualMachineScaleSetName string, virtualmachineIndex string, networkInterfaceName string, options *NetworkInterfacesGetVirtualMachineScaleSetNetworkInterfaceOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/virtualMachines/{virtualmachineIndex}/networkInterfaces/{networkInterfaceName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualMachineScaleSetName == "" {
+		return nil, errors.New("parameter virtualMachineScaleSetName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualMachineScaleSetName}", url.PathEscape(virtualMachineScaleSetName))
+	if virtualmachineIndex == "" {
+		return nil, errors.New("parameter virtualmachineIndex cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualmachineIndex}", url.PathEscape(virtualmachineIndex))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -533,7 +618,13 @@ func (client *NetworkInterfacesClient) List(resourceGroupName string, options *N
 // listCreateRequest creates the List request.
 func (client *NetworkInterfacesClient) listCreateRequest(ctx context.Context, resourceGroupName string, options *NetworkInterfacesListOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -584,6 +675,9 @@ func (client *NetworkInterfacesClient) ListAll(options *NetworkInterfacesListAll
 // listAllCreateRequest creates the ListAll request.
 func (client *NetworkInterfacesClient) listAllCreateRequest(ctx context.Context, options *NetworkInterfacesListAllOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkInterfaces"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -634,8 +728,17 @@ func (client *NetworkInterfacesClient) ListCloudServiceNetworkInterfaces(resourc
 // listCloudServiceNetworkInterfacesCreateRequest creates the ListCloudServiceNetworkInterfaces request.
 func (client *NetworkInterfacesClient) listCloudServiceNetworkInterfacesCreateRequest(ctx context.Context, resourceGroupName string, cloudServiceName string, options *NetworkInterfacesListCloudServiceNetworkInterfacesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/cloudServices/{cloudServiceName}/networkInterfaces"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if cloudServiceName == "" {
+		return nil, errors.New("parameter cloudServiceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{cloudServiceName}", url.PathEscape(cloudServiceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -686,9 +789,21 @@ func (client *NetworkInterfacesClient) ListCloudServiceRoleInstanceNetworkInterf
 // listCloudServiceRoleInstanceNetworkInterfacesCreateRequest creates the ListCloudServiceRoleInstanceNetworkInterfaces request.
 func (client *NetworkInterfacesClient) listCloudServiceRoleInstanceNetworkInterfacesCreateRequest(ctx context.Context, resourceGroupName string, cloudServiceName string, roleInstanceName string, options *NetworkInterfacesListCloudServiceRoleInstanceNetworkInterfacesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/cloudServices/{cloudServiceName}/roleInstances/{roleInstanceName}/networkInterfaces"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if cloudServiceName == "" {
+		return nil, errors.New("parameter cloudServiceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{cloudServiceName}", url.PathEscape(cloudServiceName))
+	if roleInstanceName == "" {
+		return nil, errors.New("parameter roleInstanceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{roleInstanceName}", url.PathEscape(roleInstanceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -776,8 +891,17 @@ func (client *NetworkInterfacesClient) listEffectiveNetworkSecurityGroups(ctx co
 // listEffectiveNetworkSecurityGroupsCreateRequest creates the ListEffectiveNetworkSecurityGroups request.
 func (client *NetworkInterfacesClient) listEffectiveNetworkSecurityGroupsCreateRequest(ctx context.Context, resourceGroupName string, networkInterfaceName string, options *NetworkInterfacesBeginListEffectiveNetworkSecurityGroupsOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}/effectiveNetworkSecurityGroups"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -828,10 +952,25 @@ func (client *NetworkInterfacesClient) ListVirtualMachineScaleSetIPConfiguration
 // listVirtualMachineScaleSetIPConfigurationsCreateRequest creates the ListVirtualMachineScaleSetIPConfigurations request.
 func (client *NetworkInterfacesClient) listVirtualMachineScaleSetIPConfigurationsCreateRequest(ctx context.Context, resourceGroupName string, virtualMachineScaleSetName string, virtualmachineIndex string, networkInterfaceName string, options *NetworkInterfacesListVirtualMachineScaleSetIPConfigurationsOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/virtualMachines/{virtualmachineIndex}/networkInterfaces/{networkInterfaceName}/ipConfigurations"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualMachineScaleSetName == "" {
+		return nil, errors.New("parameter virtualMachineScaleSetName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualMachineScaleSetName}", url.PathEscape(virtualMachineScaleSetName))
+	if virtualmachineIndex == "" {
+		return nil, errors.New("parameter virtualmachineIndex cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualmachineIndex}", url.PathEscape(virtualmachineIndex))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -885,8 +1024,17 @@ func (client *NetworkInterfacesClient) ListVirtualMachineScaleSetNetworkInterfac
 // listVirtualMachineScaleSetNetworkInterfacesCreateRequest creates the ListVirtualMachineScaleSetNetworkInterfaces request.
 func (client *NetworkInterfacesClient) listVirtualMachineScaleSetNetworkInterfacesCreateRequest(ctx context.Context, resourceGroupName string, virtualMachineScaleSetName string, options *NetworkInterfacesListVirtualMachineScaleSetNetworkInterfacesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/networkInterfaces"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualMachineScaleSetName == "" {
+		return nil, errors.New("parameter virtualMachineScaleSetName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualMachineScaleSetName}", url.PathEscape(virtualMachineScaleSetName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -937,9 +1085,21 @@ func (client *NetworkInterfacesClient) ListVirtualMachineScaleSetVMNetworkInterf
 // listVirtualMachineScaleSetVMNetworkInterfacesCreateRequest creates the ListVirtualMachineScaleSetVMNetworkInterfaces request.
 func (client *NetworkInterfacesClient) listVirtualMachineScaleSetVMNetworkInterfacesCreateRequest(ctx context.Context, resourceGroupName string, virtualMachineScaleSetName string, virtualmachineIndex string, options *NetworkInterfacesListVirtualMachineScaleSetVMNetworkInterfacesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/virtualMachines/{virtualmachineIndex}/networkInterfaces"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualMachineScaleSetName == "" {
+		return nil, errors.New("parameter virtualMachineScaleSetName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualMachineScaleSetName}", url.PathEscape(virtualMachineScaleSetName))
+	if virtualmachineIndex == "" {
+		return nil, errors.New("parameter virtualmachineIndex cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualmachineIndex}", url.PathEscape(virtualmachineIndex))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -990,8 +1150,17 @@ func (client *NetworkInterfacesClient) UpdateTags(ctx context.Context, resourceG
 // updateTagsCreateRequest creates the UpdateTags request.
 func (client *NetworkInterfacesClient) updateTagsCreateRequest(ctx context.Context, resourceGroupName string, networkInterfaceName string, parameters TagsObject, options *NetworkInterfacesUpdateTagsOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPatch, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {

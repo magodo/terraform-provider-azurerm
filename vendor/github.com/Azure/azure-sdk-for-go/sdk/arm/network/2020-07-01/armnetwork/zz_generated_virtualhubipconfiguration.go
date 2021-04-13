@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -85,9 +86,21 @@ func (client *VirtualHubIPConfigurationClient) createOrUpdate(ctx context.Contex
 // createOrUpdateCreateRequest creates the CreateOrUpdate request.
 func (client *VirtualHubIPConfigurationClient) createOrUpdateCreateRequest(ctx context.Context, resourceGroupName string, virtualHubName string, ipConfigName string, parameters HubIPConfiguration, options *VirtualHubIPConfigurationBeginCreateOrUpdateOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualHubs/{virtualHubName}/ipConfigurations/{ipConfigName}"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualHubName == "" {
+		return nil, errors.New("parameter virtualHubName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualHubName}", url.PathEscape(virtualHubName))
+	if ipConfigName == "" {
+		return nil, errors.New("parameter ipConfigName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{ipConfigName}", url.PathEscape(ipConfigName))
 	req, err := azcore.NewRequest(ctx, http.MethodPut, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -175,9 +188,21 @@ func (client *VirtualHubIPConfigurationClient) delete(ctx context.Context, resou
 // deleteCreateRequest creates the Delete request.
 func (client *VirtualHubIPConfigurationClient) deleteCreateRequest(ctx context.Context, resourceGroupName string, virtualHubName string, ipConfigName string, options *VirtualHubIPConfigurationBeginDeleteOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualHubs/{virtualHubName}/ipConfigurations/{ipConfigName}"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualHubName == "" {
+		return nil, errors.New("parameter virtualHubName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualHubName}", url.PathEscape(virtualHubName))
+	if ipConfigName == "" {
+		return nil, errors.New("parameter ipConfigName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{ipConfigName}", url.PathEscape(ipConfigName))
 	req, err := azcore.NewRequest(ctx, http.MethodDelete, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -219,9 +244,21 @@ func (client *VirtualHubIPConfigurationClient) Get(ctx context.Context, resource
 // getCreateRequest creates the Get request.
 func (client *VirtualHubIPConfigurationClient) getCreateRequest(ctx context.Context, resourceGroupName string, virtualHubName string, ipConfigName string, options *VirtualHubIPConfigurationGetOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualHubs/{virtualHubName}/ipConfigurations/{ipConfigName}"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualHubName == "" {
+		return nil, errors.New("parameter virtualHubName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualHubName}", url.PathEscape(virtualHubName))
+	if ipConfigName == "" {
+		return nil, errors.New("parameter ipConfigName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{ipConfigName}", url.PathEscape(ipConfigName))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -272,8 +309,17 @@ func (client *VirtualHubIPConfigurationClient) List(resourceGroupName string, vi
 // listCreateRequest creates the List request.
 func (client *VirtualHubIPConfigurationClient) listCreateRequest(ctx context.Context, resourceGroupName string, virtualHubName string, options *VirtualHubIPConfigurationListOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualHubs/{virtualHubName}/ipConfigurations"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualHubName == "" {
+		return nil, errors.New("parameter virtualHubName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualHubName}", url.PathEscape(virtualHubName))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {

@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -85,8 +86,17 @@ func (client *PublicIPAddressesClient) createOrUpdate(ctx context.Context, resou
 // createOrUpdateCreateRequest creates the CreateOrUpdate request.
 func (client *PublicIPAddressesClient) createOrUpdateCreateRequest(ctx context.Context, resourceGroupName string, publicIPAddressName string, parameters PublicIPAddress, options *PublicIPAddressesBeginCreateOrUpdateOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses/{publicIpAddressName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if publicIPAddressName == "" {
+		return nil, errors.New("parameter publicIPAddressName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{publicIpAddressName}", url.PathEscape(publicIPAddressName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPut, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -174,8 +184,17 @@ func (client *PublicIPAddressesClient) delete(ctx context.Context, resourceGroup
 // deleteCreateRequest creates the Delete request.
 func (client *PublicIPAddressesClient) deleteCreateRequest(ctx context.Context, resourceGroupName string, publicIPAddressName string, options *PublicIPAddressesBeginDeleteOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses/{publicIpAddressName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if publicIPAddressName == "" {
+		return nil, errors.New("parameter publicIPAddressName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{publicIpAddressName}", url.PathEscape(publicIPAddressName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodDelete, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -217,8 +236,17 @@ func (client *PublicIPAddressesClient) Get(ctx context.Context, resourceGroupNam
 // getCreateRequest creates the Get request.
 func (client *PublicIPAddressesClient) getCreateRequest(ctx context.Context, resourceGroupName string, publicIPAddressName string, options *PublicIPAddressesGetOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses/{publicIpAddressName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if publicIPAddressName == "" {
+		return nil, errors.New("parameter publicIPAddressName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{publicIpAddressName}", url.PathEscape(publicIPAddressName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -272,12 +300,33 @@ func (client *PublicIPAddressesClient) GetCloudServicePublicIPAddress(ctx contex
 // getCloudServicePublicIPAddressCreateRequest creates the GetCloudServicePublicIPAddress request.
 func (client *PublicIPAddressesClient) getCloudServicePublicIPAddressCreateRequest(ctx context.Context, resourceGroupName string, cloudServiceName string, roleInstanceName string, networkInterfaceName string, ipConfigurationName string, publicIPAddressName string, options *PublicIPAddressesGetCloudServicePublicIPAddressOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/cloudServices/{cloudServiceName}/roleInstances/{roleInstanceName}/networkInterfaces/{networkInterfaceName}/ipconfigurations/{ipConfigurationName}/publicipaddresses/{publicIpAddressName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if cloudServiceName == "" {
+		return nil, errors.New("parameter cloudServiceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{cloudServiceName}", url.PathEscape(cloudServiceName))
+	if roleInstanceName == "" {
+		return nil, errors.New("parameter roleInstanceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{roleInstanceName}", url.PathEscape(roleInstanceName))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if ipConfigurationName == "" {
+		return nil, errors.New("parameter ipConfigurationName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{ipConfigurationName}", url.PathEscape(ipConfigurationName))
+	if publicIPAddressName == "" {
+		return nil, errors.New("parameter publicIPAddressName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{publicIpAddressName}", url.PathEscape(publicIPAddressName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -331,12 +380,33 @@ func (client *PublicIPAddressesClient) GetVirtualMachineScaleSetPublicIPAddress(
 // getVirtualMachineScaleSetPublicIPAddressCreateRequest creates the GetVirtualMachineScaleSetPublicIPAddress request.
 func (client *PublicIPAddressesClient) getVirtualMachineScaleSetPublicIPAddressCreateRequest(ctx context.Context, resourceGroupName string, virtualMachineScaleSetName string, virtualmachineIndex string, networkInterfaceName string, ipConfigurationName string, publicIPAddressName string, options *PublicIPAddressesGetVirtualMachineScaleSetPublicIPAddressOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/virtualMachines/{virtualmachineIndex}/networkInterfaces/{networkInterfaceName}/ipconfigurations/{ipConfigurationName}/publicipaddresses/{publicIpAddressName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualMachineScaleSetName == "" {
+		return nil, errors.New("parameter virtualMachineScaleSetName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualMachineScaleSetName}", url.PathEscape(virtualMachineScaleSetName))
+	if virtualmachineIndex == "" {
+		return nil, errors.New("parameter virtualmachineIndex cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualmachineIndex}", url.PathEscape(virtualmachineIndex))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if ipConfigurationName == "" {
+		return nil, errors.New("parameter ipConfigurationName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{ipConfigurationName}", url.PathEscape(ipConfigurationName))
+	if publicIPAddressName == "" {
+		return nil, errors.New("parameter publicIPAddressName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{publicIpAddressName}", url.PathEscape(publicIPAddressName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -390,7 +460,13 @@ func (client *PublicIPAddressesClient) List(resourceGroupName string, options *P
 // listCreateRequest creates the List request.
 func (client *PublicIPAddressesClient) listCreateRequest(ctx context.Context, resourceGroupName string, options *PublicIPAddressesListOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -441,6 +517,9 @@ func (client *PublicIPAddressesClient) ListAll(options *PublicIPAddressesListAll
 // listAllCreateRequest creates the ListAll request.
 func (client *PublicIPAddressesClient) listAllCreateRequest(ctx context.Context, options *PublicIPAddressesListAllOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/publicIPAddresses"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -491,8 +570,17 @@ func (client *PublicIPAddressesClient) ListCloudServicePublicIPAddresses(resourc
 // listCloudServicePublicIPAddressesCreateRequest creates the ListCloudServicePublicIPAddresses request.
 func (client *PublicIPAddressesClient) listCloudServicePublicIPAddressesCreateRequest(ctx context.Context, resourceGroupName string, cloudServiceName string, options *PublicIPAddressesListCloudServicePublicIPAddressesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/cloudServices/{cloudServiceName}/publicipaddresses"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if cloudServiceName == "" {
+		return nil, errors.New("parameter cloudServiceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{cloudServiceName}", url.PathEscape(cloudServiceName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -543,11 +631,29 @@ func (client *PublicIPAddressesClient) ListCloudServiceRoleInstancePublicIPAddre
 // listCloudServiceRoleInstancePublicIPAddressesCreateRequest creates the ListCloudServiceRoleInstancePublicIPAddresses request.
 func (client *PublicIPAddressesClient) listCloudServiceRoleInstancePublicIPAddressesCreateRequest(ctx context.Context, resourceGroupName string, cloudServiceName string, roleInstanceName string, networkInterfaceName string, ipConfigurationName string, options *PublicIPAddressesListCloudServiceRoleInstancePublicIPAddressesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/cloudServices/{cloudServiceName}/roleInstances/{roleInstanceName}/networkInterfaces/{networkInterfaceName}/ipconfigurations/{ipConfigurationName}/publicipaddresses"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if cloudServiceName == "" {
+		return nil, errors.New("parameter cloudServiceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{cloudServiceName}", url.PathEscape(cloudServiceName))
+	if roleInstanceName == "" {
+		return nil, errors.New("parameter roleInstanceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{roleInstanceName}", url.PathEscape(roleInstanceName))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if ipConfigurationName == "" {
+		return nil, errors.New("parameter ipConfigurationName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{ipConfigurationName}", url.PathEscape(ipConfigurationName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -598,8 +704,17 @@ func (client *PublicIPAddressesClient) ListVirtualMachineScaleSetPublicIPAddress
 // listVirtualMachineScaleSetPublicIPAddressesCreateRequest creates the ListVirtualMachineScaleSetPublicIPAddresses request.
 func (client *PublicIPAddressesClient) listVirtualMachineScaleSetPublicIPAddressesCreateRequest(ctx context.Context, resourceGroupName string, virtualMachineScaleSetName string, options *PublicIPAddressesListVirtualMachineScaleSetPublicIPAddressesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/publicipaddresses"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualMachineScaleSetName == "" {
+		return nil, errors.New("parameter virtualMachineScaleSetName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualMachineScaleSetName}", url.PathEscape(virtualMachineScaleSetName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -631,16 +746,16 @@ func (client *PublicIPAddressesClient) listVirtualMachineScaleSetPublicIPAddress
 	return azcore.NewResponseError(&err, resp.Response)
 }
 
-// ListVirtualMachineScaleSetVMPublicIPaddresses - Gets information about all public IP addresses in a virtual machine IP configuration in a virtual machine
+// ListVirtualMachineScaleSetVMPublicIPAddresses - Gets information about all public IP addresses in a virtual machine IP configuration in a virtual machine
 // scale set.
-func (client *PublicIPAddressesClient) ListVirtualMachineScaleSetVMPublicIPaddresses(resourceGroupName string, virtualMachineScaleSetName string, virtualmachineIndex string, networkInterfaceName string, ipConfigurationName string, options *PublicIPAddressesListVirtualMachineScaleSetVMPublicIPaddressesOptions) PublicIPAddressListResultPager {
+func (client *PublicIPAddressesClient) ListVirtualMachineScaleSetVMPublicIPAddresses(resourceGroupName string, virtualMachineScaleSetName string, virtualmachineIndex string, networkInterfaceName string, ipConfigurationName string, options *PublicIPAddressesListVirtualMachineScaleSetVMPublicIPAddressesOptions) PublicIPAddressListResultPager {
 	return &publicIPAddressListResultPager{
 		pipeline: client.con.Pipeline(),
 		requester: func(ctx context.Context) (*azcore.Request, error) {
-			return client.listVirtualMachineScaleSetVMPublicIpaddressesCreateRequest(ctx, resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, ipConfigurationName, options)
+			return client.listVirtualMachineScaleSetVMPublicIPAddressesCreateRequest(ctx, resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, ipConfigurationName, options)
 		},
-		responder: client.listVirtualMachineScaleSetVMPublicIpaddressesHandleResponse,
-		errorer:   client.listVirtualMachineScaleSetVMPublicIpaddressesHandleError,
+		responder: client.listVirtualMachineScaleSetVMPublicIPAddressesHandleResponse,
+		errorer:   client.listVirtualMachineScaleSetVMPublicIPAddressesHandleError,
 		advancer: func(ctx context.Context, resp PublicIPAddressListResultResponse) (*azcore.Request, error) {
 			return azcore.NewRequest(ctx, http.MethodGet, *resp.PublicIPAddressListResult.NextLink)
 		},
@@ -648,14 +763,32 @@ func (client *PublicIPAddressesClient) ListVirtualMachineScaleSetVMPublicIPaddre
 	}
 }
 
-// listVirtualMachineScaleSetVMPublicIpaddressesCreateRequest creates the ListVirtualMachineScaleSetVMPublicIPaddresses request.
-func (client *PublicIPAddressesClient) listVirtualMachineScaleSetVMPublicIpaddressesCreateRequest(ctx context.Context, resourceGroupName string, virtualMachineScaleSetName string, virtualmachineIndex string, networkInterfaceName string, ipConfigurationName string, options *PublicIPAddressesListVirtualMachineScaleSetVMPublicIPaddressesOptions) (*azcore.Request, error) {
+// listVirtualMachineScaleSetVMPublicIPAddressesCreateRequest creates the ListVirtualMachineScaleSetVMPublicIPAddresses request.
+func (client *PublicIPAddressesClient) listVirtualMachineScaleSetVMPublicIPAddressesCreateRequest(ctx context.Context, resourceGroupName string, virtualMachineScaleSetName string, virtualmachineIndex string, networkInterfaceName string, ipConfigurationName string, options *PublicIPAddressesListVirtualMachineScaleSetVMPublicIPAddressesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/virtualMachines/{virtualmachineIndex}/networkInterfaces/{networkInterfaceName}/ipconfigurations/{ipConfigurationName}/publicipaddresses"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualMachineScaleSetName == "" {
+		return nil, errors.New("parameter virtualMachineScaleSetName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualMachineScaleSetName}", url.PathEscape(virtualMachineScaleSetName))
+	if virtualmachineIndex == "" {
+		return nil, errors.New("parameter virtualmachineIndex cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualmachineIndex}", url.PathEscape(virtualmachineIndex))
+	if networkInterfaceName == "" {
+		return nil, errors.New("parameter networkInterfaceName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{networkInterfaceName}", url.PathEscape(networkInterfaceName))
+	if ipConfigurationName == "" {
+		return nil, errors.New("parameter ipConfigurationName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{ipConfigurationName}", url.PathEscape(ipConfigurationName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -669,8 +802,8 @@ func (client *PublicIPAddressesClient) listVirtualMachineScaleSetVMPublicIpaddre
 	return req, nil
 }
 
-// listVirtualMachineScaleSetVMPublicIpaddressesHandleResponse handles the ListVirtualMachineScaleSetVMPublicIPaddresses response.
-func (client *PublicIPAddressesClient) listVirtualMachineScaleSetVMPublicIpaddressesHandleResponse(resp *azcore.Response) (PublicIPAddressListResultResponse, error) {
+// listVirtualMachineScaleSetVMPublicIPAddressesHandleResponse handles the ListVirtualMachineScaleSetVMPublicIPAddresses response.
+func (client *PublicIPAddressesClient) listVirtualMachineScaleSetVMPublicIPAddressesHandleResponse(resp *azcore.Response) (PublicIPAddressListResultResponse, error) {
 	var val *PublicIPAddressListResult
 	if err := resp.UnmarshalAsJSON(&val); err != nil {
 		return PublicIPAddressListResultResponse{}, err
@@ -678,8 +811,8 @@ func (client *PublicIPAddressesClient) listVirtualMachineScaleSetVMPublicIpaddre
 	return PublicIPAddressListResultResponse{RawResponse: resp.Response, PublicIPAddressListResult: val}, nil
 }
 
-// listVirtualMachineScaleSetVMPublicIpaddressesHandleError handles the ListVirtualMachineScaleSetVMPublicIPaddresses error response.
-func (client *PublicIPAddressesClient) listVirtualMachineScaleSetVMPublicIpaddressesHandleError(resp *azcore.Response) error {
+// listVirtualMachineScaleSetVMPublicIPAddressesHandleError handles the ListVirtualMachineScaleSetVMPublicIPAddresses error response.
+func (client *PublicIPAddressesClient) listVirtualMachineScaleSetVMPublicIPAddressesHandleError(resp *azcore.Response) error {
 	var err CloudError
 	if err := resp.UnmarshalAsJSON(&err); err != nil {
 		return err
@@ -706,8 +839,17 @@ func (client *PublicIPAddressesClient) UpdateTags(ctx context.Context, resourceG
 // updateTagsCreateRequest creates the UpdateTags request.
 func (client *PublicIPAddressesClient) updateTagsCreateRequest(ctx context.Context, resourceGroupName string, publicIPAddressName string, parameters TagsObject, options *PublicIPAddressesUpdateTagsOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses/{publicIpAddressName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if publicIPAddressName == "" {
+		return nil, errors.New("parameter publicIPAddressName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{publicIpAddressName}", url.PathEscape(publicIPAddressName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPatch, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {

@@ -107,10 +107,10 @@ func dataSourceSubnetRead(d *schema.ResourceData, meta interface{}) error {
 				d.Set("address_prefixes", []string{})
 			}
 		} else {
-			d.Set("address_prefixes", utils.FlattenStringSlice(props.AddressPrefixes))
+			d.Set("address_prefixes", utils.FlattenStringPtrSlice(props.AddressPrefixes))
 		}
 
-		d.Set("enforce_private_link_endpoint_network_policies", flattenSubnetPrivateLinkNetworkPolicy(props.PrivateEndpointNetworkPolicies))
+		d.Set("enforce_private_link_endpoint_network_policies", flattenSubnetPrivateEndpointNetworkPolicy(props.PrivateEndpointNetworkPolicies))
 		d.Set("enforce_private_link_service_network_policies", flattenSubnetPrivateLinkNetworkPolicy(props.PrivateLinkServiceNetworkPolicies))
 
 		networkSecurityGroupId := ""

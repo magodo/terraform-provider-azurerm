@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -48,8 +49,17 @@ func (client *VirtualHubBgpConnectionsClient) List(resourceGroupName string, vir
 // listCreateRequest creates the List request.
 func (client *VirtualHubBgpConnectionsClient) listCreateRequest(ctx context.Context, resourceGroupName string, virtualHubName string, options *VirtualHubBgpConnectionsListOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualHubs/{virtualHubName}/bgpConnections"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if virtualHubName == "" {
+		return nil, errors.New("parameter virtualHubName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{virtualHubName}", url.PathEscape(virtualHubName))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -137,9 +147,21 @@ func (client *VirtualHubBgpConnectionsClient) listAdvertisedRoutes(ctx context.C
 // listAdvertisedRoutesCreateRequest creates the ListAdvertisedRoutes request.
 func (client *VirtualHubBgpConnectionsClient) listAdvertisedRoutesCreateRequest(ctx context.Context, resourceGroupName string, hubName string, connectionName string, options *VirtualHubBgpConnectionsBeginListAdvertisedRoutesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualHubs/{hubName}/bgpConnections/{connectionName}/advertisedRoutes"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if hubName == "" {
+		return nil, errors.New("parameter hubName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{hubName}", url.PathEscape(hubName))
+	if connectionName == "" {
+		return nil, errors.New("parameter connectionName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{connectionName}", url.PathEscape(connectionName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -227,9 +249,21 @@ func (client *VirtualHubBgpConnectionsClient) listLearnedRoutes(ctx context.Cont
 // listLearnedRoutesCreateRequest creates the ListLearnedRoutes request.
 func (client *VirtualHubBgpConnectionsClient) listLearnedRoutesCreateRequest(ctx context.Context, resourceGroupName string, hubName string, connectionName string, options *VirtualHubBgpConnectionsBeginListLearnedRoutesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualHubs/{hubName}/bgpConnections/{connectionName}/learnedRoutes"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if hubName == "" {
+		return nil, errors.New("parameter hubName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{hubName}", url.PathEscape(hubName))
+	if connectionName == "" {
+		return nil, errors.New("parameter connectionName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{connectionName}", url.PathEscape(connectionName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {

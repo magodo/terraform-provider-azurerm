@@ -2,7 +2,7 @@ module github.com/terraform-providers/terraform-provider-azurerm
 
 require (
 	github.com/Azure/azure-sdk-for-go v52.5.0+incompatible
-	github.com/Azure/azure-sdk-for-go/sdk/arm/network/2020-07-01/armnetwork v0.2.0
+	github.com/Azure/azure-sdk-for-go/sdk/arm/network v0.2.0
 	github.com/Azure/azure-sdk-for-go/sdk/armcore v0.7.0
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.14.2
 	github.com/Azure/go-autorest/autorest v0.11.18
@@ -30,5 +30,7 @@ require (
 )
 
 replace github.com/hashicorp/go-azure-helpers => github.com/ArcturusZhang/go-azure-helpers v0.15.0
+
+replace github.com/Azure/azure-sdk-for-go/sdk/arm/network => github.com/ArcturusZhang/azure-sdk-for-go/sdk/arm/network v0.4.1
 
 go 1.16

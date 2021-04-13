@@ -9,6 +9,7 @@ package armnetwork
 
 import (
 	"context"
+	"errors"
 	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"net/http"
@@ -85,8 +86,17 @@ func (client *ApplicationGatewaysClient) backendHealth(ctx context.Context, reso
 // backendHealthCreateRequest creates the BackendHealth request.
 func (client *ApplicationGatewaysClient) backendHealthCreateRequest(ctx context.Context, resourceGroupName string, applicationGatewayName string, options *ApplicationGatewaysBeginBackendHealthOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/backendhealth"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if applicationGatewayName == "" {
+		return nil, errors.New("parameter applicationGatewayName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{applicationGatewayName}", url.PathEscape(applicationGatewayName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -179,8 +189,17 @@ func (client *ApplicationGatewaysClient) backendHealthOnDemand(ctx context.Conte
 // backendHealthOnDemandCreateRequest creates the BackendHealthOnDemand request.
 func (client *ApplicationGatewaysClient) backendHealthOnDemandCreateRequest(ctx context.Context, resourceGroupName string, applicationGatewayName string, probeRequest ApplicationGatewayOnDemandProbe, options *ApplicationGatewaysBeginBackendHealthOnDemandOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/getBackendHealthOnDemand"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if applicationGatewayName == "" {
+		return nil, errors.New("parameter applicationGatewayName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{applicationGatewayName}", url.PathEscape(applicationGatewayName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -271,8 +290,17 @@ func (client *ApplicationGatewaysClient) createOrUpdate(ctx context.Context, res
 // createOrUpdateCreateRequest creates the CreateOrUpdate request.
 func (client *ApplicationGatewaysClient) createOrUpdateCreateRequest(ctx context.Context, resourceGroupName string, applicationGatewayName string, parameters ApplicationGateway, options *ApplicationGatewaysBeginCreateOrUpdateOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if applicationGatewayName == "" {
+		return nil, errors.New("parameter applicationGatewayName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{applicationGatewayName}", url.PathEscape(applicationGatewayName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPut, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -360,8 +388,17 @@ func (client *ApplicationGatewaysClient) delete(ctx context.Context, resourceGro
 // deleteCreateRequest creates the Delete request.
 func (client *ApplicationGatewaysClient) deleteCreateRequest(ctx context.Context, resourceGroupName string, applicationGatewayName string, options *ApplicationGatewaysBeginDeleteOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if applicationGatewayName == "" {
+		return nil, errors.New("parameter applicationGatewayName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{applicationGatewayName}", url.PathEscape(applicationGatewayName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodDelete, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -403,8 +440,17 @@ func (client *ApplicationGatewaysClient) Get(ctx context.Context, resourceGroupN
 // getCreateRequest creates the Get request.
 func (client *ApplicationGatewaysClient) getCreateRequest(ctx context.Context, resourceGroupName string, applicationGatewayName string, options *ApplicationGatewaysGetOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if applicationGatewayName == "" {
+		return nil, errors.New("parameter applicationGatewayName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{applicationGatewayName}", url.PathEscape(applicationGatewayName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -436,26 +482,32 @@ func (client *ApplicationGatewaysClient) getHandleError(resp *azcore.Response) e
 	return azcore.NewResponseError(&err, resp.Response)
 }
 
-// GetSslPredefinedPolicy - Gets Ssl predefined policy with the specified policy name.
-func (client *ApplicationGatewaysClient) GetSslPredefinedPolicy(ctx context.Context, predefinedPolicyName string, options *ApplicationGatewaysGetSslPredefinedPolicyOptions) (ApplicationGatewaySslPredefinedPolicyResponse, error) {
-	req, err := client.getSslPredefinedPolicyCreateRequest(ctx, predefinedPolicyName, options)
+// GetSSLPredefinedPolicy - Gets Ssl predefined policy with the specified policy name.
+func (client *ApplicationGatewaysClient) GetSSLPredefinedPolicy(ctx context.Context, predefinedPolicyName string, options *ApplicationGatewaysGetSSLPredefinedPolicyOptions) (ApplicationGatewaySSLPredefinedPolicyResponse, error) {
+	req, err := client.getSSLPredefinedPolicyCreateRequest(ctx, predefinedPolicyName, options)
 	if err != nil {
-		return ApplicationGatewaySslPredefinedPolicyResponse{}, err
+		return ApplicationGatewaySSLPredefinedPolicyResponse{}, err
 	}
 	resp, err := client.con.Pipeline().Do(req)
 	if err != nil {
-		return ApplicationGatewaySslPredefinedPolicyResponse{}, err
+		return ApplicationGatewaySSLPredefinedPolicyResponse{}, err
 	}
 	if !resp.HasStatusCode(http.StatusOK) {
-		return ApplicationGatewaySslPredefinedPolicyResponse{}, client.getSslPredefinedPolicyHandleError(resp)
+		return ApplicationGatewaySSLPredefinedPolicyResponse{}, client.getSSLPredefinedPolicyHandleError(resp)
 	}
-	return client.getSslPredefinedPolicyHandleResponse(resp)
+	return client.getSSLPredefinedPolicyHandleResponse(resp)
 }
 
-// getSslPredefinedPolicyCreateRequest creates the GetSslPredefinedPolicy request.
-func (client *ApplicationGatewaysClient) getSslPredefinedPolicyCreateRequest(ctx context.Context, predefinedPolicyName string, options *ApplicationGatewaysGetSslPredefinedPolicyOptions) (*azcore.Request, error) {
+// getSSLPredefinedPolicyCreateRequest creates the GetSSLPredefinedPolicy request.
+func (client *ApplicationGatewaysClient) getSSLPredefinedPolicyCreateRequest(ctx context.Context, predefinedPolicyName string, options *ApplicationGatewaysGetSSLPredefinedPolicyOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableSslOptions/default/predefinedPolicies/{predefinedPolicyName}"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	if predefinedPolicyName == "" {
+		return nil, errors.New("parameter predefinedPolicyName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{predefinedPolicyName}", url.PathEscape(predefinedPolicyName))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -469,17 +521,17 @@ func (client *ApplicationGatewaysClient) getSslPredefinedPolicyCreateRequest(ctx
 	return req, nil
 }
 
-// getSslPredefinedPolicyHandleResponse handles the GetSslPredefinedPolicy response.
-func (client *ApplicationGatewaysClient) getSslPredefinedPolicyHandleResponse(resp *azcore.Response) (ApplicationGatewaySslPredefinedPolicyResponse, error) {
-	var val *ApplicationGatewaySslPredefinedPolicy
+// getSSLPredefinedPolicyHandleResponse handles the GetSSLPredefinedPolicy response.
+func (client *ApplicationGatewaysClient) getSSLPredefinedPolicyHandleResponse(resp *azcore.Response) (ApplicationGatewaySSLPredefinedPolicyResponse, error) {
+	var val *ApplicationGatewaySSLPredefinedPolicy
 	if err := resp.UnmarshalAsJSON(&val); err != nil {
-		return ApplicationGatewaySslPredefinedPolicyResponse{}, err
+		return ApplicationGatewaySSLPredefinedPolicyResponse{}, err
 	}
-	return ApplicationGatewaySslPredefinedPolicyResponse{RawResponse: resp.Response, ApplicationGatewaySslPredefinedPolicy: val}, nil
+	return ApplicationGatewaySSLPredefinedPolicyResponse{RawResponse: resp.Response, ApplicationGatewaySSLPredefinedPolicy: val}, nil
 }
 
-// getSslPredefinedPolicyHandleError handles the GetSslPredefinedPolicy error response.
-func (client *ApplicationGatewaysClient) getSslPredefinedPolicyHandleError(resp *azcore.Response) error {
+// getSSLPredefinedPolicyHandleError handles the GetSSLPredefinedPolicy error response.
+func (client *ApplicationGatewaysClient) getSSLPredefinedPolicyHandleError(resp *azcore.Response) error {
 	var err CloudError
 	if err := resp.UnmarshalAsJSON(&err); err != nil {
 		return err
@@ -506,7 +558,13 @@ func (client *ApplicationGatewaysClient) List(resourceGroupName string, options 
 // listCreateRequest creates the List request.
 func (client *ApplicationGatewaysClient) listCreateRequest(ctx context.Context, resourceGroupName string, options *ApplicationGatewaysListOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -557,6 +615,9 @@ func (client *ApplicationGatewaysClient) ListAll(options *ApplicationGatewaysLis
 // listAllCreateRequest creates the ListAll request.
 func (client *ApplicationGatewaysClient) listAllCreateRequest(ctx context.Context, options *ApplicationGatewaysListAllOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGateways"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -607,6 +668,9 @@ func (client *ApplicationGatewaysClient) ListAvailableRequestHeaders(ctx context
 // listAvailableRequestHeadersCreateRequest creates the ListAvailableRequestHeaders request.
 func (client *ApplicationGatewaysClient) listAvailableRequestHeadersCreateRequest(ctx context.Context, options *ApplicationGatewaysListAvailableRequestHeadersOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableRequestHeaders"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -622,7 +686,7 @@ func (client *ApplicationGatewaysClient) listAvailableRequestHeadersCreateReques
 
 // listAvailableRequestHeadersHandleResponse handles the ListAvailableRequestHeaders response.
 func (client *ApplicationGatewaysClient) listAvailableRequestHeadersHandleResponse(resp *azcore.Response) (StringArrayResponse, error) {
-	var val *[]string
+	var val []*string
 	if err := resp.UnmarshalAsJSON(&val); err != nil {
 		return StringArrayResponse{}, err
 	}
@@ -657,6 +721,9 @@ func (client *ApplicationGatewaysClient) ListAvailableResponseHeaders(ctx contex
 // listAvailableResponseHeadersCreateRequest creates the ListAvailableResponseHeaders request.
 func (client *ApplicationGatewaysClient) listAvailableResponseHeadersCreateRequest(ctx context.Context, options *ApplicationGatewaysListAvailableResponseHeadersOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableResponseHeaders"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -672,7 +739,7 @@ func (client *ApplicationGatewaysClient) listAvailableResponseHeadersCreateReque
 
 // listAvailableResponseHeadersHandleResponse handles the ListAvailableResponseHeaders response.
 func (client *ApplicationGatewaysClient) listAvailableResponseHeadersHandleResponse(resp *azcore.Response) (StringArrayResponse, error) {
-	var val *[]string
+	var val []*string
 	if err := resp.UnmarshalAsJSON(&val); err != nil {
 		return StringArrayResponse{}, err
 	}
@@ -682,6 +749,112 @@ func (client *ApplicationGatewaysClient) listAvailableResponseHeadersHandleRespo
 // listAvailableResponseHeadersHandleError handles the ListAvailableResponseHeaders error response.
 func (client *ApplicationGatewaysClient) listAvailableResponseHeadersHandleError(resp *azcore.Response) error {
 	var err Error
+	if err := resp.UnmarshalAsJSON(&err); err != nil {
+		return err
+	}
+	return azcore.NewResponseError(&err, resp.Response)
+}
+
+// ListAvailableSSLOptions - Lists available Ssl options for configuring Ssl policy.
+func (client *ApplicationGatewaysClient) ListAvailableSSLOptions(ctx context.Context, options *ApplicationGatewaysListAvailableSSLOptionsOptions) (ApplicationGatewayAvailableSSLOptionsResponse, error) {
+	req, err := client.listAvailableSSLOptionsCreateRequest(ctx, options)
+	if err != nil {
+		return ApplicationGatewayAvailableSSLOptionsResponse{}, err
+	}
+	resp, err := client.con.Pipeline().Do(req)
+	if err != nil {
+		return ApplicationGatewayAvailableSSLOptionsResponse{}, err
+	}
+	if !resp.HasStatusCode(http.StatusOK) {
+		return ApplicationGatewayAvailableSSLOptionsResponse{}, client.listAvailableSSLOptionsHandleError(resp)
+	}
+	return client.listAvailableSSLOptionsHandleResponse(resp)
+}
+
+// listAvailableSSLOptionsCreateRequest creates the ListAvailableSSLOptions request.
+func (client *ApplicationGatewaysClient) listAvailableSSLOptionsCreateRequest(ctx context.Context, options *ApplicationGatewaysListAvailableSSLOptionsOptions) (*azcore.Request, error) {
+	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableSslOptions/default"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Telemetry(telemetryInfo)
+	query := req.URL.Query()
+	query.Set("api-version", "2020-07-01")
+	req.URL.RawQuery = query.Encode()
+	req.Header.Set("Accept", "application/json")
+	return req, nil
+}
+
+// listAvailableSSLOptionsHandleResponse handles the ListAvailableSSLOptions response.
+func (client *ApplicationGatewaysClient) listAvailableSSLOptionsHandleResponse(resp *azcore.Response) (ApplicationGatewayAvailableSSLOptionsResponse, error) {
+	var val *ApplicationGatewayAvailableSSLOptions
+	if err := resp.UnmarshalAsJSON(&val); err != nil {
+		return ApplicationGatewayAvailableSSLOptionsResponse{}, err
+	}
+	return ApplicationGatewayAvailableSSLOptionsResponse{RawResponse: resp.Response, ApplicationGatewayAvailableSSLOptions: val}, nil
+}
+
+// listAvailableSSLOptionsHandleError handles the ListAvailableSSLOptions error response.
+func (client *ApplicationGatewaysClient) listAvailableSSLOptionsHandleError(resp *azcore.Response) error {
+	var err CloudError
+	if err := resp.UnmarshalAsJSON(&err); err != nil {
+		return err
+	}
+	return azcore.NewResponseError(&err, resp.Response)
+}
+
+// ListAvailableSSLPredefinedPolicies - Lists all SSL predefined policies for configuring Ssl policy.
+func (client *ApplicationGatewaysClient) ListAvailableSSLPredefinedPolicies(options *ApplicationGatewaysListAvailableSSLPredefinedPoliciesOptions) ApplicationGatewayAvailableSSLPredefinedPoliciesPager {
+	return &applicationGatewayAvailableSSLPredefinedPoliciesPager{
+		pipeline: client.con.Pipeline(),
+		requester: func(ctx context.Context) (*azcore.Request, error) {
+			return client.listAvailableSSLPredefinedPoliciesCreateRequest(ctx, options)
+		},
+		responder: client.listAvailableSSLPredefinedPoliciesHandleResponse,
+		errorer:   client.listAvailableSSLPredefinedPoliciesHandleError,
+		advancer: func(ctx context.Context, resp ApplicationGatewayAvailableSSLPredefinedPoliciesResponse) (*azcore.Request, error) {
+			return azcore.NewRequest(ctx, http.MethodGet, *resp.ApplicationGatewayAvailableSSLPredefinedPolicies.NextLink)
+		},
+		statusCodes: []int{http.StatusOK},
+	}
+}
+
+// listAvailableSSLPredefinedPoliciesCreateRequest creates the ListAvailableSSLPredefinedPolicies request.
+func (client *ApplicationGatewaysClient) listAvailableSSLPredefinedPoliciesCreateRequest(ctx context.Context, options *ApplicationGatewaysListAvailableSSLPredefinedPoliciesOptions) (*azcore.Request, error) {
+	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableSslOptions/default/predefinedPolicies"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
+	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
+	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
+	if err != nil {
+		return nil, err
+	}
+	req.Telemetry(telemetryInfo)
+	query := req.URL.Query()
+	query.Set("api-version", "2020-07-01")
+	req.URL.RawQuery = query.Encode()
+	req.Header.Set("Accept", "application/json")
+	return req, nil
+}
+
+// listAvailableSSLPredefinedPoliciesHandleResponse handles the ListAvailableSSLPredefinedPolicies response.
+func (client *ApplicationGatewaysClient) listAvailableSSLPredefinedPoliciesHandleResponse(resp *azcore.Response) (ApplicationGatewayAvailableSSLPredefinedPoliciesResponse, error) {
+	var val *ApplicationGatewayAvailableSSLPredefinedPolicies
+	if err := resp.UnmarshalAsJSON(&val); err != nil {
+		return ApplicationGatewayAvailableSSLPredefinedPoliciesResponse{}, err
+	}
+	return ApplicationGatewayAvailableSSLPredefinedPoliciesResponse{RawResponse: resp.Response, ApplicationGatewayAvailableSSLPredefinedPolicies: val}, nil
+}
+
+// listAvailableSSLPredefinedPoliciesHandleError handles the ListAvailableSSLPredefinedPolicies error response.
+func (client *ApplicationGatewaysClient) listAvailableSSLPredefinedPoliciesHandleError(resp *azcore.Response) error {
+	var err CloudError
 	if err := resp.UnmarshalAsJSON(&err); err != nil {
 		return err
 	}
@@ -707,6 +880,9 @@ func (client *ApplicationGatewaysClient) ListAvailableServerVariables(ctx contex
 // listAvailableServerVariablesCreateRequest creates the ListAvailableServerVariables request.
 func (client *ApplicationGatewaysClient) listAvailableServerVariablesCreateRequest(ctx context.Context, options *ApplicationGatewaysListAvailableServerVariablesOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableServerVariables"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -722,7 +898,7 @@ func (client *ApplicationGatewaysClient) listAvailableServerVariablesCreateReque
 
 // listAvailableServerVariablesHandleResponse handles the ListAvailableServerVariables response.
 func (client *ApplicationGatewaysClient) listAvailableServerVariablesHandleResponse(resp *azcore.Response) (StringArrayResponse, error) {
-	var val *[]string
+	var val []*string
 	if err := resp.UnmarshalAsJSON(&val); err != nil {
 		return StringArrayResponse{}, err
 	}
@@ -732,106 +908,6 @@ func (client *ApplicationGatewaysClient) listAvailableServerVariablesHandleRespo
 // listAvailableServerVariablesHandleError handles the ListAvailableServerVariables error response.
 func (client *ApplicationGatewaysClient) listAvailableServerVariablesHandleError(resp *azcore.Response) error {
 	var err Error
-	if err := resp.UnmarshalAsJSON(&err); err != nil {
-		return err
-	}
-	return azcore.NewResponseError(&err, resp.Response)
-}
-
-// ListAvailableSslOptions - Lists available Ssl options for configuring Ssl policy.
-func (client *ApplicationGatewaysClient) ListAvailableSslOptions(ctx context.Context, options *ApplicationGatewaysListAvailableSslOptionsOptions) (ApplicationGatewayAvailableSslOptionsResponse, error) {
-	req, err := client.listAvailableSslOptionsCreateRequest(ctx, options)
-	if err != nil {
-		return ApplicationGatewayAvailableSslOptionsResponse{}, err
-	}
-	resp, err := client.con.Pipeline().Do(req)
-	if err != nil {
-		return ApplicationGatewayAvailableSslOptionsResponse{}, err
-	}
-	if !resp.HasStatusCode(http.StatusOK) {
-		return ApplicationGatewayAvailableSslOptionsResponse{}, client.listAvailableSslOptionsHandleError(resp)
-	}
-	return client.listAvailableSslOptionsHandleResponse(resp)
-}
-
-// listAvailableSslOptionsCreateRequest creates the ListAvailableSslOptions request.
-func (client *ApplicationGatewaysClient) listAvailableSslOptionsCreateRequest(ctx context.Context, options *ApplicationGatewaysListAvailableSslOptionsOptions) (*azcore.Request, error) {
-	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableSslOptions/default"
-	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
-	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
-	if err != nil {
-		return nil, err
-	}
-	req.Telemetry(telemetryInfo)
-	query := req.URL.Query()
-	query.Set("api-version", "2020-07-01")
-	req.URL.RawQuery = query.Encode()
-	req.Header.Set("Accept", "application/json")
-	return req, nil
-}
-
-// listAvailableSslOptionsHandleResponse handles the ListAvailableSslOptions response.
-func (client *ApplicationGatewaysClient) listAvailableSslOptionsHandleResponse(resp *azcore.Response) (ApplicationGatewayAvailableSslOptionsResponse, error) {
-	var val *ApplicationGatewayAvailableSslOptions
-	if err := resp.UnmarshalAsJSON(&val); err != nil {
-		return ApplicationGatewayAvailableSslOptionsResponse{}, err
-	}
-	return ApplicationGatewayAvailableSslOptionsResponse{RawResponse: resp.Response, ApplicationGatewayAvailableSslOptions: val}, nil
-}
-
-// listAvailableSslOptionsHandleError handles the ListAvailableSslOptions error response.
-func (client *ApplicationGatewaysClient) listAvailableSslOptionsHandleError(resp *azcore.Response) error {
-	var err CloudError
-	if err := resp.UnmarshalAsJSON(&err); err != nil {
-		return err
-	}
-	return azcore.NewResponseError(&err, resp.Response)
-}
-
-// ListAvailableSslPredefinedPolicies - Lists all SSL predefined policies for configuring Ssl policy.
-func (client *ApplicationGatewaysClient) ListAvailableSslPredefinedPolicies(options *ApplicationGatewaysListAvailableSslPredefinedPoliciesOptions) ApplicationGatewayAvailableSslPredefinedPoliciesPager {
-	return &applicationGatewayAvailableSslPredefinedPoliciesPager{
-		pipeline: client.con.Pipeline(),
-		requester: func(ctx context.Context) (*azcore.Request, error) {
-			return client.listAvailableSslPredefinedPoliciesCreateRequest(ctx, options)
-		},
-		responder: client.listAvailableSslPredefinedPoliciesHandleResponse,
-		errorer:   client.listAvailableSslPredefinedPoliciesHandleError,
-		advancer: func(ctx context.Context, resp ApplicationGatewayAvailableSslPredefinedPoliciesResponse) (*azcore.Request, error) {
-			return azcore.NewRequest(ctx, http.MethodGet, *resp.ApplicationGatewayAvailableSslPredefinedPolicies.NextLink)
-		},
-		statusCodes: []int{http.StatusOK},
-	}
-}
-
-// listAvailableSslPredefinedPoliciesCreateRequest creates the ListAvailableSslPredefinedPolicies request.
-func (client *ApplicationGatewaysClient) listAvailableSslPredefinedPoliciesCreateRequest(ctx context.Context, options *ApplicationGatewaysListAvailableSslPredefinedPoliciesOptions) (*azcore.Request, error) {
-	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableSslOptions/default/predefinedPolicies"
-	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
-	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
-	if err != nil {
-		return nil, err
-	}
-	req.Telemetry(telemetryInfo)
-	query := req.URL.Query()
-	query.Set("api-version", "2020-07-01")
-	req.URL.RawQuery = query.Encode()
-	req.Header.Set("Accept", "application/json")
-	return req, nil
-}
-
-// listAvailableSslPredefinedPoliciesHandleResponse handles the ListAvailableSslPredefinedPolicies response.
-func (client *ApplicationGatewaysClient) listAvailableSslPredefinedPoliciesHandleResponse(resp *azcore.Response) (ApplicationGatewayAvailableSslPredefinedPoliciesResponse, error) {
-	var val *ApplicationGatewayAvailableSslPredefinedPolicies
-	if err := resp.UnmarshalAsJSON(&val); err != nil {
-		return ApplicationGatewayAvailableSslPredefinedPoliciesResponse{}, err
-	}
-	return ApplicationGatewayAvailableSslPredefinedPoliciesResponse{RawResponse: resp.Response, ApplicationGatewayAvailableSslPredefinedPolicies: val}, nil
-}
-
-// listAvailableSslPredefinedPoliciesHandleError handles the ListAvailableSslPredefinedPolicies error response.
-func (client *ApplicationGatewaysClient) listAvailableSslPredefinedPoliciesHandleError(resp *azcore.Response) error {
-	var err CloudError
 	if err := resp.UnmarshalAsJSON(&err); err != nil {
 		return err
 	}
@@ -857,6 +933,9 @@ func (client *ApplicationGatewaysClient) ListAvailableWafRuleSets(ctx context.Co
 // listAvailableWafRuleSetsCreateRequest creates the ListAvailableWafRuleSets request.
 func (client *ApplicationGatewaysClient) listAvailableWafRuleSetsCreateRequest(ctx context.Context, options *ApplicationGatewaysListAvailableWafRuleSetsOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableWafRuleSets"
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodGet, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -944,8 +1023,17 @@ func (client *ApplicationGatewaysClient) start(ctx context.Context, resourceGrou
 // startCreateRequest creates the Start request.
 func (client *ApplicationGatewaysClient) startCreateRequest(ctx context.Context, resourceGroupName string, applicationGatewayName string, options *ApplicationGatewaysBeginStartOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/start"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if applicationGatewayName == "" {
+		return nil, errors.New("parameter applicationGatewayName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{applicationGatewayName}", url.PathEscape(applicationGatewayName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -1024,8 +1112,17 @@ func (client *ApplicationGatewaysClient) stop(ctx context.Context, resourceGroup
 // stopCreateRequest creates the Stop request.
 func (client *ApplicationGatewaysClient) stopCreateRequest(ctx context.Context, resourceGroupName string, applicationGatewayName string, options *ApplicationGatewaysBeginStopOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/stop"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if applicationGatewayName == "" {
+		return nil, errors.New("parameter applicationGatewayName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{applicationGatewayName}", url.PathEscape(applicationGatewayName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPost, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
@@ -1067,8 +1164,17 @@ func (client *ApplicationGatewaysClient) UpdateTags(ctx context.Context, resourc
 // updateTagsCreateRequest creates the UpdateTags request.
 func (client *ApplicationGatewaysClient) updateTagsCreateRequest(ctx context.Context, resourceGroupName string, applicationGatewayName string, parameters TagsObject, options *ApplicationGatewaysUpdateTagsOptions) (*azcore.Request, error) {
 	urlPath := "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}"
+	if resourceGroupName == "" {
+		return nil, errors.New("parameter resourceGroupName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{resourceGroupName}", url.PathEscape(resourceGroupName))
+	if applicationGatewayName == "" {
+		return nil, errors.New("parameter applicationGatewayName cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{applicationGatewayName}", url.PathEscape(applicationGatewayName))
+	if client.subscriptionID == "" {
+		return nil, errors.New("parameter client.subscriptionID cannot be empty")
+	}
 	urlPath = strings.ReplaceAll(urlPath, "{subscriptionId}", url.PathEscape(client.subscriptionID))
 	req, err := azcore.NewRequest(ctx, http.MethodPatch, azcore.JoinPaths(client.con.Endpoint(), urlPath))
 	if err != nil {
