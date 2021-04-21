@@ -521,20 +521,20 @@ func flattenSubnetDelegation(delegations *[]*armnetwork.Delegation) []interface{
 
 // TODO: confirm this logic below
 
-func expandSubnetPrivateEndpointNetworkPolicy(enabled bool) *armnetwork.VirtualNetworkPrivateEndpointNetworkPolicies {
+func expandSubnetPrivateEndpointNetworkPolicy(enabled bool) *string {
 	// This is strange logic, but to get the schema to make sense for the end user
 	// I exposed it with the same name that the Azure CLI does to be consistent
 	// between the tool sets, which means true == Disabled.
-	var ret armnetwork.VirtualNetworkPrivateEndpointNetworkPolicies
+	var ret *string
 	if enabled {
-		ret = armnetwork.VirtualNetworkPrivateEndpointNetworkPoliciesDisabled
+		ret = utils.String("Disabled")
 	} else {
-		ret  = armnetwork.VirtualNetworkPrivateEndpointNetworkPoliciesEnabled
+		ret = utils.String("Enabled")
 	}
-	return &ret
+	return ret
 }
 
-func flattenSubnetPrivateEndpointNetworkPolicy(input *armnetwork.VirtualNetworkPrivateEndpointNetworkPolicies) bool {
+func flattenSubnetPrivateEndpointNetworkPolicy(input *string) bool {
 	// This is strange logic, but to get the schema to make sense for the end user
 	// I exposed it with the same name that the Azure CLI does to be consistent
 	// between the tool sets, which means true == Disabled.
@@ -542,23 +542,23 @@ func flattenSubnetPrivateEndpointNetworkPolicy(input *armnetwork.VirtualNetworkP
 		return false
 	}
 
-	return strings.EqualFold(string(*input), string(armnetwork.VirtualNetworkPrivateEndpointNetworkPoliciesDisabled))
+	return strings.EqualFold(*input, "Disabled")
 }
 
-func expandSubnetPrivateLinkNetworkPolicy(enabled bool) *armnetwork.VirtualNetworkPrivateLinkServiceNetworkPolicies {
+func expandSubnetPrivateLinkNetworkPolicy(enabled bool) *string {
 	// This is strange logic, but to get the schema to make sense for the end user
 	// I exposed it with the same name that the Azure CLI does to be consistent
 	// between the tool sets, which means true == Disabled.
-	var ret armnetwork.VirtualNetworkPrivateLinkServiceNetworkPolicies
+	var ret *string
 	if enabled {
-		ret = armnetwork.VirtualNetworkPrivateLinkServiceNetworkPoliciesDisabled
+		ret = utils.String("Disabled")
 	} else {
-		ret  = armnetwork.VirtualNetworkPrivateLinkServiceNetworkPoliciesEnabled
+		ret = utils.String("Enabled")
 	}
-	return &ret
+	return ret
 }
 
-func flattenSubnetPrivateLinkNetworkPolicy(input *armnetwork.VirtualNetworkPrivateLinkServiceNetworkPolicies) bool {
+func flattenSubnetPrivateLinkNetworkPolicy(input *string) bool {
 	// This is strange logic, but to get the schema to make sense for the end user
 	// I exposed it with the same name that the Azure CLI does to be consistent
 	// between the tool sets, which means true == Disabled.
@@ -566,7 +566,7 @@ func flattenSubnetPrivateLinkNetworkPolicy(input *armnetwork.VirtualNetworkPriva
 		return false
 	}
 
-	return strings.EqualFold(string(*input), string(armnetwork.VirtualNetworkPrivateLinkServiceNetworkPoliciesDisabled))
+	return strings.EqualFold(*input, "Disabled")
 }
 
 func expandSubnetServiceEndpointPolicies(input []interface{}) *[]*armnetwork.ServiceEndpointPolicy {

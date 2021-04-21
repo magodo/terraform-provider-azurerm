@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-// AAD Vpn authentication type related parameters.
+// AADAuthenticationParameters - AAD Vpn authentication type related parameters.
 type AADAuthenticationParameters struct {
 	// AAD Vpn authentication parameter AAD audience.
 	AADAudience *string `json:"aadAudience,omitempty"`
@@ -35,7 +35,7 @@ type AddressSpace struct {
 	AddressPrefixes *[]*string `json:"addressPrefixes,omitempty"`
 }
 
-// Application gateway resource.
+// ApplicationGateway - Application gateway resource.
 type ApplicationGateway struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -51,7 +51,7 @@ type ApplicationGateway struct {
 	Zones *[]*string `json:"zones,omitempty"`
 }
 
-// Authentication certificates of an application gateway.
+// ApplicationGatewayAuthenticationCertificate - Authentication certificates of an application gateway.
 type ApplicationGatewayAuthenticationCertificate struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -67,7 +67,7 @@ type ApplicationGatewayAuthenticationCertificate struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Authentication certificates properties of an application gateway.
+// ApplicationGatewayAuthenticationCertificatePropertiesFormat - Authentication certificates properties of an application gateway.
 type ApplicationGatewayAuthenticationCertificatePropertiesFormat struct {
 	// Certificate public data.
 	Data *string `json:"data,omitempty"`
@@ -76,7 +76,7 @@ type ApplicationGatewayAuthenticationCertificatePropertiesFormat struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// Application Gateway autoscale configuration.
+// ApplicationGatewayAutoscaleConfiguration - Application Gateway autoscale configuration.
 type ApplicationGatewayAutoscaleConfiguration struct {
 	// Upper bound on number of Application Gateway capacity.
 	MaxCapacity *int32 `json:"maxCapacity,omitempty"`
@@ -85,14 +85,14 @@ type ApplicationGatewayAutoscaleConfiguration struct {
 	MinCapacity *int32 `json:"minCapacity,omitempty"`
 }
 
-// Response for ApplicationGatewayAvailableSslOptions API service call.
+// ApplicationGatewayAvailableSSLOptions - Response for ApplicationGatewayAvailableSslOptions API service call.
 type ApplicationGatewayAvailableSSLOptions struct {
 	Resource
 	// Properties of the application gateway available SSL options.
 	Properties *ApplicationGatewayAvailableSSLOptionsPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Properties of ApplicationGatewayAvailableSslOptions.
+// ApplicationGatewayAvailableSSLOptionsPropertiesFormat - Properties of ApplicationGatewayAvailableSslOptions.
 type ApplicationGatewayAvailableSSLOptionsPropertiesFormat struct {
 	// List of available Ssl cipher suites.
 	AvailableCipherSuites *[]*ApplicationGatewaySSLCipherSuite `json:"availableCipherSuites,omitempty"`
@@ -116,7 +116,7 @@ type ApplicationGatewayAvailableSSLOptionsResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for ApplicationGatewayAvailableSslOptions API service call.
+// ApplicationGatewayAvailableSSLPredefinedPolicies - Response for ApplicationGatewayAvailableSslOptions API service call.
 type ApplicationGatewayAvailableSSLPredefinedPolicies struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -135,7 +135,7 @@ type ApplicationGatewayAvailableSSLPredefinedPoliciesResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for ApplicationGatewayAvailableWafRuleSets API service call.
+// ApplicationGatewayAvailableWafRuleSetsResult - Response for ApplicationGatewayAvailableWafRuleSets API service call.
 type ApplicationGatewayAvailableWafRuleSetsResult struct {
 	// The list of application gateway rule sets.
 	Value *[]*ApplicationGatewayFirewallRuleSet `json:"value,omitempty"`
@@ -151,7 +151,7 @@ type ApplicationGatewayAvailableWafRuleSetsResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Backend address of an application gateway.
+// ApplicationGatewayBackendAddress - Backend address of an application gateway.
 type ApplicationGatewayBackendAddress struct {
 	// Fully qualified domain name (FQDN).
 	Fqdn *string `json:"fqdn,omitempty"`
@@ -160,7 +160,7 @@ type ApplicationGatewayBackendAddress struct {
 	IPAddress *string `json:"ipAddress,omitempty"`
 }
 
-// Backend Address Pool of an application gateway.
+// ApplicationGatewayBackendAddressPool - Backend Address Pool of an application gateway.
 type ApplicationGatewayBackendAddressPool struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -176,7 +176,7 @@ type ApplicationGatewayBackendAddressPool struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of Backend Address Pool of an application gateway.
+// ApplicationGatewayBackendAddressPoolPropertiesFormat - Properties of Backend Address Pool of an application gateway.
 type ApplicationGatewayBackendAddressPoolPropertiesFormat struct {
 	// Backend addresses.
 	BackendAddresses *[]*ApplicationGatewayBackendAddress `json:"backendAddresses,omitempty"`
@@ -188,7 +188,7 @@ type ApplicationGatewayBackendAddressPoolPropertiesFormat struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// Backend address pool settings of an application gateway.
+// ApplicationGatewayBackendHTTPSettings - Backend address pool settings of an application gateway.
 type ApplicationGatewayBackendHTTPSettings struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -204,7 +204,7 @@ type ApplicationGatewayBackendHTTPSettings struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of Backend address pool settings of an application gateway.
+// ApplicationGatewayBackendHTTPSettingsPropertiesFormat - Properties of Backend address pool settings of an application gateway.
 type ApplicationGatewayBackendHTTPSettingsPropertiesFormat struct {
 	// Cookie name to use for the affinity cookie.
 	AffinityCookieName *string `json:"affinityCookieName,omitempty"`
@@ -250,13 +250,13 @@ type ApplicationGatewayBackendHTTPSettingsPropertiesFormat struct {
 	TrustedRootCertificates *[]*SubResource `json:"trustedRootCertificates,omitempty"`
 }
 
-// Response for ApplicationGatewayBackendHealth API service call.
+// ApplicationGatewayBackendHealth - Response for ApplicationGatewayBackendHealth API service call.
 type ApplicationGatewayBackendHealth struct {
 	// A list of ApplicationGatewayBackendHealthPool resources.
 	BackendAddressPools *[]*ApplicationGatewayBackendHealthPool `json:"backendAddressPools,omitempty"`
 }
 
-// Application gateway BackendHealthHttp settings.
+// ApplicationGatewayBackendHealthHTTPSettings - Application gateway BackendHealthHttp settings.
 type ApplicationGatewayBackendHealthHTTPSettings struct {
 	// Reference to an ApplicationGatewayBackendHttpSettings resource.
 	BackendHTTPSettings *ApplicationGatewayBackendHTTPSettings `json:"backendHttpSettings,omitempty"`
@@ -265,7 +265,7 @@ type ApplicationGatewayBackendHealthHTTPSettings struct {
 	Servers *[]*ApplicationGatewayBackendHealthServer `json:"servers,omitempty"`
 }
 
-// Result of on demand test probe.
+// ApplicationGatewayBackendHealthOnDemand - Result of on demand test probe.
 type ApplicationGatewayBackendHealthOnDemand struct {
 	// Reference to an ApplicationGatewayBackendAddressPool resource.
 	BackendAddressPool *ApplicationGatewayBackendAddressPool `json:"backendAddressPool,omitempty"`
@@ -308,7 +308,7 @@ type ApplicationGatewayBackendHealthPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Application gateway BackendHealth pool.
+// ApplicationGatewayBackendHealthPool - Application gateway BackendHealth pool.
 type ApplicationGatewayBackendHealthPool struct {
 	// Reference to an ApplicationGatewayBackendAddressPool resource.
 	BackendAddressPool *ApplicationGatewayBackendAddressPool `json:"backendAddressPool,omitempty"`
@@ -326,7 +326,7 @@ type ApplicationGatewayBackendHealthResponse struct {
 	RawResponse *http.Response
 }
 
-// Application gateway backendhealth http settings.
+// ApplicationGatewayBackendHealthServer - Application gateway backendhealth http settings.
 type ApplicationGatewayBackendHealthServer struct {
 	// IP address or FQDN of backend server.
 	Address *string `json:"address,omitempty"`
@@ -341,13 +341,14 @@ type ApplicationGatewayBackendHealthServer struct {
 	IPConfiguration *NetworkInterfaceIPConfiguration `json:"ipConfiguration,omitempty"`
 }
 
-// Application gateway client authentication configuration.
+// ApplicationGatewayClientAuthConfiguration - Application gateway client authentication configuration.
 type ApplicationGatewayClientAuthConfiguration struct {
 	// Verify client certificate issuer name on the application gateway.
 	VerifyClientCertIssuerDN *bool `json:"verifyClientCertIssuerDN,omitempty"`
 }
 
-// Connection draining allows open connections to a backend server to be active for a specified time after the backend server got removed from the configuration.
+// ApplicationGatewayConnectionDraining - Connection draining allows open connections to a backend server to be active for a specified time after the backend
+// server got removed from the configuration.
 type ApplicationGatewayConnectionDraining struct {
 	// The number of seconds connection draining is active. Acceptable values are from 1 second to 3600 seconds.
 	DrainTimeoutInSec *int32 `json:"drainTimeoutInSec,omitempty"`
@@ -356,7 +357,7 @@ type ApplicationGatewayConnectionDraining struct {
 	Enabled *bool `json:"enabled,omitempty"`
 }
 
-// Customer error of an application gateway.
+// ApplicationGatewayCustomError - Customer error of an application gateway.
 type ApplicationGatewayCustomError struct {
 	// Error page URL of the application gateway customer error.
 	CustomErrorPageURL *string `json:"customErrorPageUrl,omitempty"`
@@ -365,7 +366,7 @@ type ApplicationGatewayCustomError struct {
 	StatusCode *ApplicationGatewayCustomErrorStatusCode `json:"statusCode,omitempty"`
 }
 
-// Allows to disable rules within a rule group or an entire rule group.
+// ApplicationGatewayFirewallDisabledRuleGroup - Allows to disable rules within a rule group or an entire rule group.
 type ApplicationGatewayFirewallDisabledRuleGroup struct {
 	// The name of the rule group that will be disabled.
 	RuleGroupName *string `json:"ruleGroupName,omitempty"`
@@ -374,7 +375,7 @@ type ApplicationGatewayFirewallDisabledRuleGroup struct {
 	Rules *[]*int32 `json:"rules,omitempty"`
 }
 
-// Allow to exclude some variable satisfy the condition for the WAF check.
+// ApplicationGatewayFirewallExclusion - Allow to exclude some variable satisfy the condition for the WAF check.
 type ApplicationGatewayFirewallExclusion struct {
 	// The variable to be excluded.
 	MatchVariable *string `json:"matchVariable,omitempty"`
@@ -386,7 +387,7 @@ type ApplicationGatewayFirewallExclusion struct {
 	SelectorMatchOperator *string `json:"selectorMatchOperator,omitempty"`
 }
 
-// A web application firewall rule.
+// ApplicationGatewayFirewallRule - A web application firewall rule.
 type ApplicationGatewayFirewallRule struct {
 	// The description of the web application firewall rule.
 	Description *string `json:"description,omitempty"`
@@ -395,7 +396,7 @@ type ApplicationGatewayFirewallRule struct {
 	RuleID *int32 `json:"ruleId,omitempty"`
 }
 
-// A web application firewall rule group.
+// ApplicationGatewayFirewallRuleGroup - A web application firewall rule group.
 type ApplicationGatewayFirewallRuleGroup struct {
 	// The description of the web application firewall rule group.
 	Description *string `json:"description,omitempty"`
@@ -407,14 +408,14 @@ type ApplicationGatewayFirewallRuleGroup struct {
 	Rules *[]*ApplicationGatewayFirewallRule `json:"rules,omitempty"`
 }
 
-// A web application firewall rule set.
+// ApplicationGatewayFirewallRuleSet - A web application firewall rule set.
 type ApplicationGatewayFirewallRuleSet struct {
 	Resource
 	// Properties of the application gateway firewall rule set.
 	Properties *ApplicationGatewayFirewallRuleSetPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Properties of the web application firewall rule set.
+// ApplicationGatewayFirewallRuleSetPropertiesFormat - Properties of the web application firewall rule set.
 type ApplicationGatewayFirewallRuleSetPropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the web application firewall rule set.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -429,7 +430,7 @@ type ApplicationGatewayFirewallRuleSetPropertiesFormat struct {
 	RuleSetVersion *string `json:"ruleSetVersion,omitempty"`
 }
 
-// Frontend IP configuration of an application gateway.
+// ApplicationGatewayFrontendIPConfiguration - Frontend IP configuration of an application gateway.
 type ApplicationGatewayFrontendIPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -445,7 +446,7 @@ type ApplicationGatewayFrontendIPConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of Frontend IP configuration of an application gateway.
+// ApplicationGatewayFrontendIPConfigurationPropertiesFormat - Properties of Frontend IP configuration of an application gateway.
 type ApplicationGatewayFrontendIPConfigurationPropertiesFormat struct {
 	// PrivateIPAddress of the network interface IP Configuration.
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty"`
@@ -466,7 +467,7 @@ type ApplicationGatewayFrontendIPConfigurationPropertiesFormat struct {
 	Subnet *SubResource `json:"subnet,omitempty"`
 }
 
-// Frontend port of an application gateway.
+// ApplicationGatewayFrontendPort - Frontend port of an application gateway.
 type ApplicationGatewayFrontendPort struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -482,7 +483,7 @@ type ApplicationGatewayFrontendPort struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of Frontend port of an application gateway.
+// ApplicationGatewayFrontendPortPropertiesFormat - Properties of Frontend port of an application gateway.
 type ApplicationGatewayFrontendPortPropertiesFormat struct {
 	// Frontend port.
 	Port *int32 `json:"port,omitempty"`
@@ -491,7 +492,7 @@ type ApplicationGatewayFrontendPortPropertiesFormat struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// Http listener of an application gateway.
+// ApplicationGatewayHTTPListener - Http listener of an application gateway.
 type ApplicationGatewayHTTPListener struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -507,7 +508,7 @@ type ApplicationGatewayHTTPListener struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of HTTP listener of an application gateway.
+// ApplicationGatewayHTTPListenerPropertiesFormat - Properties of HTTP listener of an application gateway.
 type ApplicationGatewayHTTPListenerPropertiesFormat struct {
 	// Custom error configurations of the HTTP listener.
 	CustomErrorConfigurations *[]*ApplicationGatewayCustomError `json:"customErrorConfigurations,omitempty"`
@@ -543,7 +544,7 @@ type ApplicationGatewayHTTPListenerPropertiesFormat struct {
 	SSLProfile *SubResource `json:"sslProfile,omitempty"`
 }
 
-// Header configuration of the Actions set in Application Gateway.
+// ApplicationGatewayHeaderConfiguration - Header configuration of the Actions set in Application Gateway.
 type ApplicationGatewayHeaderConfiguration struct {
 	// Header name of the header configuration.
 	HeaderName *string `json:"headerName,omitempty"`
@@ -552,7 +553,7 @@ type ApplicationGatewayHeaderConfiguration struct {
 	HeaderValue *string `json:"headerValue,omitempty"`
 }
 
-// IP configuration of an application gateway. Currently 1 public and 1 private IP configuration is allowed.
+// ApplicationGatewayIPConfiguration - IP configuration of an application gateway. Currently 1 public and 1 private IP configuration is allowed.
 type ApplicationGatewayIPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -568,7 +569,7 @@ type ApplicationGatewayIPConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of IP configuration of an application gateway.
+// ApplicationGatewayIPConfigurationPropertiesFormat - Properties of IP configuration of an application gateway.
 type ApplicationGatewayIPConfigurationPropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the application gateway IP configuration resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -577,7 +578,7 @@ type ApplicationGatewayIPConfigurationPropertiesFormat struct {
 	Subnet *SubResource `json:"subnet,omitempty"`
 }
 
-// Response for ListApplicationGateways API service call.
+// ApplicationGatewayListResult - Response for ListApplicationGateways API service call.
 type ApplicationGatewayListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -595,7 +596,7 @@ type ApplicationGatewayListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Details of on demand test probe request.
+// ApplicationGatewayOnDemandProbe - Details of on demand test probe request.
 type ApplicationGatewayOnDemandProbe struct {
 	// Reference to backend pool of application gateway to which probe request will be sent.
 	BackendAddressPool *SubResource `json:"backendAddressPool,omitempty"`
@@ -623,7 +624,7 @@ type ApplicationGatewayOnDemandProbe struct {
 	Timeout *int32 `json:"timeout,omitempty"`
 }
 
-// Path rule of URL path map of an application gateway.
+// ApplicationGatewayPathRule - Path rule of URL path map of an application gateway.
 type ApplicationGatewayPathRule struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -639,7 +640,7 @@ type ApplicationGatewayPathRule struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of path rule of an application gateway.
+// ApplicationGatewayPathRulePropertiesFormat - Properties of path rule of an application gateway.
 type ApplicationGatewayPathRulePropertiesFormat struct {
 	// Backend address pool resource of URL path map path rule.
 	BackendAddressPool *SubResource `json:"backendAddressPool,omitempty"`
@@ -675,7 +676,7 @@ type ApplicationGatewayPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Private Endpoint connection on an application gateway.
+// ApplicationGatewayPrivateEndpointConnection - Private Endpoint connection on an application gateway.
 type ApplicationGatewayPrivateEndpointConnection struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -691,7 +692,8 @@ type ApplicationGatewayPrivateEndpointConnection struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for ListApplicationGatewayPrivateEndpointConnection API service call. Gets all private endpoint connections for an application gateway.
+// ApplicationGatewayPrivateEndpointConnectionListResult - Response for ListApplicationGatewayPrivateEndpointConnection API service call. Gets all private
+// endpoint connections for an application gateway.
 type ApplicationGatewayPrivateEndpointConnectionListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -723,7 +725,7 @@ type ApplicationGatewayPrivateEndpointConnectionPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of Private Link Resource of an application gateway.
+// ApplicationGatewayPrivateEndpointConnectionProperties - Properties of Private Link Resource of an application gateway.
 type ApplicationGatewayPrivateEndpointConnectionProperties struct {
 	// READ-ONLY; The consumer link id.
 	LinkIdentifier *string `json:"linkIdentifier,omitempty" azure:"ro"`
@@ -770,7 +772,7 @@ type ApplicationGatewayPrivateEndpointConnectionsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Private Link Configuration on an application gateway.
+// ApplicationGatewayPrivateLinkConfiguration - Private Link Configuration on an application gateway.
 type ApplicationGatewayPrivateLinkConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -786,7 +788,7 @@ type ApplicationGatewayPrivateLinkConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of private link configuration on an application gateway.
+// ApplicationGatewayPrivateLinkConfigurationProperties - Properties of private link configuration on an application gateway.
 type ApplicationGatewayPrivateLinkConfigurationProperties struct {
 	// An array of application gateway private link ip configurations.
 	IPConfigurations *[]*ApplicationGatewayPrivateLinkIPConfiguration `json:"ipConfigurations,omitempty"`
@@ -795,7 +797,7 @@ type ApplicationGatewayPrivateLinkConfigurationProperties struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// The application gateway private link ip configuration.
+// ApplicationGatewayPrivateLinkIPConfiguration - The application gateway private link ip configuration.
 type ApplicationGatewayPrivateLinkIPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -811,7 +813,7 @@ type ApplicationGatewayPrivateLinkIPConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of an application gateway private link IP configuration.
+// ApplicationGatewayPrivateLinkIPConfigurationProperties - Properties of an application gateway private link IP configuration.
 type ApplicationGatewayPrivateLinkIPConfigurationProperties struct {
 	// Whether the ip configuration is primary or not.
 	Primary *bool `json:"primary,omitempty"`
@@ -829,7 +831,7 @@ type ApplicationGatewayPrivateLinkIPConfigurationProperties struct {
 	Subnet *SubResource `json:"subnet,omitempty"`
 }
 
-// PrivateLink Resource of an application gateway.
+// ApplicationGatewayPrivateLinkResource - PrivateLink Resource of an application gateway.
 type ApplicationGatewayPrivateLinkResource struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -845,7 +847,8 @@ type ApplicationGatewayPrivateLinkResource struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for ListApplicationGatewayPrivateLinkResources API service call. Gets all private link resources for an application gateway.
+// ApplicationGatewayPrivateLinkResourceListResult - Response for ListApplicationGatewayPrivateLinkResources API service call. Gets all private link resources
+// for an application gateway.
 type ApplicationGatewayPrivateLinkResourceListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -864,7 +867,7 @@ type ApplicationGatewayPrivateLinkResourceListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of a private link resource.
+// ApplicationGatewayPrivateLinkResourceProperties - Properties of a private link resource.
 type ApplicationGatewayPrivateLinkResourceProperties struct {
 	// READ-ONLY; Group identifier of private link resource.
 	GroupID *string `json:"groupId,omitempty" azure:"ro"`
@@ -881,7 +884,7 @@ type ApplicationGatewayPrivateLinkResourcesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Probe of the application gateway.
+// ApplicationGatewayProbe - Probe of the application gateway.
 type ApplicationGatewayProbe struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -897,7 +900,7 @@ type ApplicationGatewayProbe struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Application gateway probe health response match.
+// ApplicationGatewayProbeHealthResponseMatch - Application gateway probe health response match.
 type ApplicationGatewayProbeHealthResponseMatch struct {
 	// Body that must be contained in the health response. Default value is empty.
 	Body *string `json:"body,omitempty"`
@@ -906,7 +909,7 @@ type ApplicationGatewayProbeHealthResponseMatch struct {
 	StatusCodes *[]*string `json:"statusCodes,omitempty"`
 }
 
-// Properties of probe of an application gateway.
+// ApplicationGatewayProbePropertiesFormat - Properties of probe of an application gateway.
 type ApplicationGatewayProbePropertiesFormat struct {
 	// Host name to send the probe to.
 	Host *string `json:"host,omitempty"`
@@ -946,7 +949,7 @@ type ApplicationGatewayProbePropertiesFormat struct {
 	UnhealthyThreshold *int32 `json:"unhealthyThreshold,omitempty"`
 }
 
-// Properties of the application gateway.
+// ApplicationGatewayPropertiesFormat - Properties of the application gateway.
 type ApplicationGatewayPropertiesFormat struct {
 	// Authentication certificates of the application gateway resource. For default limits, see Application Gateway limits
 	// [https://docs.microsoft.com/azure/azure-subscription-service-limits#application-gateway-limits].
@@ -1047,7 +1050,7 @@ type ApplicationGatewayPropertiesFormat struct {
 	WebApplicationFirewallConfiguration *ApplicationGatewayWebApplicationFirewallConfiguration `json:"webApplicationFirewallConfiguration,omitempty"`
 }
 
-// Redirect configuration of an application gateway.
+// ApplicationGatewayRedirectConfiguration - Redirect configuration of an application gateway.
 type ApplicationGatewayRedirectConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -1063,7 +1066,7 @@ type ApplicationGatewayRedirectConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of redirect configuration of the application gateway.
+// ApplicationGatewayRedirectConfigurationPropertiesFormat - Properties of redirect configuration of the application gateway.
 type ApplicationGatewayRedirectConfigurationPropertiesFormat struct {
 	// Include path in the redirected url.
 	IncludePath *bool `json:"includePath,omitempty"`
@@ -1090,7 +1093,7 @@ type ApplicationGatewayRedirectConfigurationPropertiesFormat struct {
 	URLPathMaps *[]*SubResource `json:"urlPathMaps,omitempty"`
 }
 
-// Request routing rule of an application gateway.
+// ApplicationGatewayRequestRoutingRule - Request routing rule of an application gateway.
 type ApplicationGatewayRequestRoutingRule struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -1106,7 +1109,7 @@ type ApplicationGatewayRequestRoutingRule struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of request routing rule of the application gateway.
+// ApplicationGatewayRequestRoutingRulePropertiesFormat - Properties of request routing rule of the application gateway.
 type ApplicationGatewayRequestRoutingRulePropertiesFormat struct {
 	// Backend address pool resource of the application gateway.
 	BackendAddressPool *SubResource `json:"backendAddressPool,omitempty"`
@@ -1145,7 +1148,7 @@ type ApplicationGatewayResponse struct {
 	RawResponse *http.Response
 }
 
-// Rewrite rule of an application gateway.
+// ApplicationGatewayRewriteRule - Rewrite rule of an application gateway.
 type ApplicationGatewayRewriteRule struct {
 	// Set of actions to be done as part of the rewrite Rule.
 	ActionSet *ApplicationGatewayRewriteRuleActionSet `json:"actionSet,omitempty"`
@@ -1160,7 +1163,7 @@ type ApplicationGatewayRewriteRule struct {
 	RuleSequence *int32 `json:"ruleSequence,omitempty"`
 }
 
-// Set of actions in the Rewrite Rule in Application Gateway.
+// ApplicationGatewayRewriteRuleActionSet - Set of actions in the Rewrite Rule in Application Gateway.
 type ApplicationGatewayRewriteRuleActionSet struct {
 	// Request Header Actions in the Action Set.
 	RequestHeaderConfigurations *[]*ApplicationGatewayHeaderConfiguration `json:"requestHeaderConfigurations,omitempty"`
@@ -1172,7 +1175,7 @@ type ApplicationGatewayRewriteRuleActionSet struct {
 	URLConfiguration *ApplicationGatewayURLConfiguration `json:"urlConfiguration,omitempty"`
 }
 
-// Set of conditions in the Rewrite Rule in Application Gateway.
+// ApplicationGatewayRewriteRuleCondition - Set of conditions in the Rewrite Rule in Application Gateway.
 type ApplicationGatewayRewriteRuleCondition struct {
 	// Setting this paramter to truth value with force the pattern to do a case in-sensitive comparison.
 	IgnoreCase *bool `json:"ignoreCase,omitempty"`
@@ -1187,7 +1190,7 @@ type ApplicationGatewayRewriteRuleCondition struct {
 	Variable *string `json:"variable,omitempty"`
 }
 
-// Rewrite rule set of an application gateway.
+// ApplicationGatewayRewriteRuleSet - Rewrite rule set of an application gateway.
 type ApplicationGatewayRewriteRuleSet struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -1200,7 +1203,7 @@ type ApplicationGatewayRewriteRuleSet struct {
 	Properties *ApplicationGatewayRewriteRuleSetPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Properties of rewrite rule set of the application gateway.
+// ApplicationGatewayRewriteRuleSetPropertiesFormat - Properties of rewrite rule set of the application gateway.
 type ApplicationGatewayRewriteRuleSetPropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the rewrite rule set resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -1209,7 +1212,7 @@ type ApplicationGatewayRewriteRuleSetPropertiesFormat struct {
 	RewriteRules *[]*ApplicationGatewayRewriteRule `json:"rewriteRules,omitempty"`
 }
 
-// SKU of an application gateway.
+// ApplicationGatewaySKU - SKU of an application gateway.
 type ApplicationGatewaySKU struct {
 	// Capacity (instance count) of an application gateway.
 	Capacity *int32 `json:"capacity,omitempty"`
@@ -1221,7 +1224,7 @@ type ApplicationGatewaySKU struct {
 	Tier *ApplicationGatewayTier `json:"tier,omitempty"`
 }
 
-// SSL certificates of an application gateway.
+// ApplicationGatewaySSLCertificate - SSL certificates of an application gateway.
 type ApplicationGatewaySSLCertificate struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -1237,7 +1240,7 @@ type ApplicationGatewaySSLCertificate struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of SSL certificates of an application gateway.
+// ApplicationGatewaySSLCertificatePropertiesFormat - Properties of SSL certificates of an application gateway.
 type ApplicationGatewaySSLCertificatePropertiesFormat struct {
 	// Base-64 encoded pfx certificate. Only applicable in PUT Request.
 	Data *string `json:"data,omitempty"`
@@ -1255,7 +1258,7 @@ type ApplicationGatewaySSLCertificatePropertiesFormat struct {
 	PublicCertData *string `json:"publicCertData,omitempty" azure:"ro"`
 }
 
-// Application Gateway Ssl policy.
+// ApplicationGatewaySSLPolicy - Application Gateway Ssl policy.
 type ApplicationGatewaySSLPolicy struct {
 	// Ssl cipher suites to be enabled in the specified order to application gateway.
 	CipherSuites *[]*ApplicationGatewaySSLCipherSuite `json:"cipherSuites,omitempty"`
@@ -1273,7 +1276,7 @@ type ApplicationGatewaySSLPolicy struct {
 	PolicyType *ApplicationGatewaySSLPolicyType `json:"policyType,omitempty"`
 }
 
-// An Ssl predefined policy.
+// ApplicationGatewaySSLPredefinedPolicy - An Ssl predefined policy.
 type ApplicationGatewaySSLPredefinedPolicy struct {
 	SubResource
 	// Name of the Ssl predefined policy.
@@ -1283,7 +1286,7 @@ type ApplicationGatewaySSLPredefinedPolicy struct {
 	Properties *ApplicationGatewaySSLPredefinedPolicyPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Properties of ApplicationGatewaySslPredefinedPolicy.
+// ApplicationGatewaySSLPredefinedPolicyPropertiesFormat - Properties of ApplicationGatewaySslPredefinedPolicy.
 type ApplicationGatewaySSLPredefinedPolicyPropertiesFormat struct {
 	// Ssl cipher suites to be enabled in the specified order for application gateway.
 	CipherSuites *[]*ApplicationGatewaySSLCipherSuite `json:"cipherSuites,omitempty"`
@@ -1301,7 +1304,7 @@ type ApplicationGatewaySSLPredefinedPolicyResponse struct {
 	RawResponse *http.Response
 }
 
-// SSL profile of an application gateway.
+// ApplicationGatewaySSLProfile - SSL profile of an application gateway.
 type ApplicationGatewaySSLProfile struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -1317,7 +1320,7 @@ type ApplicationGatewaySSLProfile struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of SSL profile of an application gateway.
+// ApplicationGatewaySSLProfilePropertiesFormat - Properties of SSL profile of an application gateway.
 type ApplicationGatewaySSLProfilePropertiesFormat struct {
 	// Client authentication configuration of the application gateway resource.
 	ClientAuthConfiguration *ApplicationGatewayClientAuthConfiguration `json:"clientAuthConfiguration,omitempty"`
@@ -1332,7 +1335,7 @@ type ApplicationGatewaySSLProfilePropertiesFormat struct {
 	TrustedClientCertificates *[]*SubResource `json:"trustedClientCertificates,omitempty"`
 }
 
-// Trusted client certificates of an application gateway.
+// ApplicationGatewayTrustedClientCertificate - Trusted client certificates of an application gateway.
 type ApplicationGatewayTrustedClientCertificate struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -1348,7 +1351,7 @@ type ApplicationGatewayTrustedClientCertificate struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Trusted client certificates properties of an application gateway.
+// ApplicationGatewayTrustedClientCertificatePropertiesFormat - Trusted client certificates properties of an application gateway.
 type ApplicationGatewayTrustedClientCertificatePropertiesFormat struct {
 	// Certificate public data.
 	Data *string `json:"data,omitempty"`
@@ -1357,7 +1360,7 @@ type ApplicationGatewayTrustedClientCertificatePropertiesFormat struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// Trusted Root certificates of an application gateway.
+// ApplicationGatewayTrustedRootCertificate - Trusted Root certificates of an application gateway.
 type ApplicationGatewayTrustedRootCertificate struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -1373,7 +1376,7 @@ type ApplicationGatewayTrustedRootCertificate struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Trusted Root certificates properties of an application gateway.
+// ApplicationGatewayTrustedRootCertificatePropertiesFormat - Trusted Root certificates properties of an application gateway.
 type ApplicationGatewayTrustedRootCertificatePropertiesFormat struct {
 	// Certificate public data.
 	Data *string `json:"data,omitempty"`
@@ -1385,7 +1388,7 @@ type ApplicationGatewayTrustedRootCertificatePropertiesFormat struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// Url configuration of the Actions set in Application Gateway.
+// ApplicationGatewayURLConfiguration - Url configuration of the Actions set in Application Gateway.
 type ApplicationGatewayURLConfiguration struct {
 	// Url path which user has provided for url rewrite. Null means no path will be updated. Default value is null.
 	ModifiedPath *string `json:"modifiedPath,omitempty"`
@@ -1397,7 +1400,7 @@ type ApplicationGatewayURLConfiguration struct {
 	Reroute *bool `json:"reroute,omitempty"`
 }
 
-// UrlPathMaps give a url path to the backend mapping information for PathBasedRouting.
+// ApplicationGatewayURLPathMap - UrlPathMaps give a url path to the backend mapping information for PathBasedRouting.
 type ApplicationGatewayURLPathMap struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -1413,7 +1416,7 @@ type ApplicationGatewayURLPathMap struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of UrlPathMap of the application gateway.
+// ApplicationGatewayURLPathMapPropertiesFormat - Properties of UrlPathMap of the application gateway.
 type ApplicationGatewayURLPathMapPropertiesFormat struct {
 	// Default backend address pool resource of URL path map.
 	DefaultBackendAddressPool *SubResource `json:"defaultBackendAddressPool,omitempty"`
@@ -1434,7 +1437,7 @@ type ApplicationGatewayURLPathMapPropertiesFormat struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// Application gateway web application firewall configuration.
+// ApplicationGatewayWebApplicationFirewallConfiguration - Application gateway web application firewall configuration.
 type ApplicationGatewayWebApplicationFirewallConfiguration struct {
 	// The disabled rule groups.
 	DisabledRuleGroups *[]*ApplicationGatewayFirewallDisabledRuleGroup `json:"disabledRuleGroups,omitempty"`
@@ -1555,7 +1558,7 @@ type ApplicationGatewaysUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Rule of type application.
+// ApplicationRule - Rule of type application.
 type ApplicationRule struct {
 	FirewallPolicyRule
 	// List of destination IP addresses or Service Tags.
@@ -1645,7 +1648,7 @@ func (a *ApplicationRule) UnmarshalJSON(data []byte) error {
 	return a.FirewallPolicyRule.unmarshalInternal(rawMsg)
 }
 
-// An application security group in a resource group.
+// ApplicationSecurityGroup - An application security group in a resource group.
 type ApplicationSecurityGroup struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -1655,7 +1658,7 @@ type ApplicationSecurityGroup struct {
 	Properties *ApplicationSecurityGroupPropertiesFormat `json:"properties,omitempty"`
 }
 
-// A list of application security groups.
+// ApplicationSecurityGroupListResult - A list of application security groups.
 type ApplicationSecurityGroupListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -1685,7 +1688,7 @@ type ApplicationSecurityGroupPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Application security group properties.
+// ApplicationSecurityGroupPropertiesFormat - Application security group properties.
 type ApplicationSecurityGroupPropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the application security group resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -1735,7 +1738,7 @@ type ApplicationSecurityGroupsUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for ListAuthorizations API service call retrieves all authorizations that belongs to an ExpressRouteCircuit.
+// AuthorizationListResult - Response for ListAuthorizations API service call retrieves all authorizations that belongs to an ExpressRouteCircuit.
 type AuthorizationListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -1753,7 +1756,7 @@ type AuthorizationListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of ExpressRouteCircuitAuthorization.
+// AuthorizationPropertiesFormat - Properties of ExpressRouteCircuitAuthorization.
 type AuthorizationPropertiesFormat struct {
 	// The authorization key.
 	AuthorizationKey *string `json:"authorizationKey,omitempty"`
@@ -1765,13 +1768,13 @@ type AuthorizationPropertiesFormat struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// The information of an AutoApprovedPrivateLinkService.
+// AutoApprovedPrivateLinkService - The information of an AutoApprovedPrivateLinkService.
 type AutoApprovedPrivateLinkService struct {
 	// The id of the private link service resource.
 	PrivateLinkService *string `json:"privateLinkService,omitempty"`
 }
 
-// An array of private link service id that can be linked to a private end point with auto approved.
+// AutoApprovedPrivateLinkServicesResult - An array of private link service id that can be linked to a private end point with auto approved.
 type AutoApprovedPrivateLinkServicesResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -1801,7 +1804,7 @@ type Availability struct {
 	TimeGrain *string `json:"timeGrain,omitempty"`
 }
 
-// The serviceName of an AvailableDelegation indicates a possible delegation for a subnet.
+// AvailableDelegation - The serviceName of an AvailableDelegation indicates a possible delegation for a subnet.
 type AvailableDelegation struct {
 	// The actions permitted to the service upon delegation.
 	Actions *[]*string `json:"actions,omitempty"`
@@ -1824,7 +1827,7 @@ type AvailableDelegationsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// An array of available delegations.
+// AvailableDelegationsResult - An array of available delegations.
 type AvailableDelegationsResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -1847,11 +1850,8 @@ type AvailableEndpointServicesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// The information of an AvailablePrivateEndpointType.
+// AvailablePrivateEndpointType - The information of an AvailablePrivateEndpointType.
 type AvailablePrivateEndpointType struct {
-	// Display name of the resource.
-	DisplayName *string `json:"displayName,omitempty"`
-
 	// A unique identifier of the AvailablePrivateEndpoint Type resource.
 	ID *string `json:"id,omitempty"`
 
@@ -1875,7 +1875,7 @@ type AvailablePrivateEndpointTypesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// An array of available PrivateEndpoint types.
+// AvailablePrivateEndpointTypesResult - An array of available PrivateEndpoint types.
 type AvailablePrivateEndpointTypesResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -1893,13 +1893,13 @@ type AvailablePrivateEndpointTypesResultResponse struct {
 	RawResponse *http.Response
 }
 
-// List of available countries with details.
+// AvailableProvidersList - List of available countries with details.
 type AvailableProvidersList struct {
 	// List of available countries.
 	Countries *[]*AvailableProvidersListCountry `json:"countries,omitempty"`
 }
 
-// City or town details.
+// AvailableProvidersListCity - City or town details.
 type AvailableProvidersListCity struct {
 	// The city or town name.
 	CityName *string `json:"cityName,omitempty"`
@@ -1908,7 +1908,7 @@ type AvailableProvidersListCity struct {
 	Providers *[]*string `json:"providers,omitempty"`
 }
 
-// Country details.
+// AvailableProvidersListCountry - Country details.
 type AvailableProvidersListCountry struct {
 	// The country name.
 	CountryName *string `json:"countryName,omitempty"`
@@ -1920,7 +1920,7 @@ type AvailableProvidersListCountry struct {
 	States *[]*AvailableProvidersListState `json:"states,omitempty"`
 }
 
-// Constraints that determine the list of available Internet service providers.
+// AvailableProvidersListParameters - Constraints that determine the list of available Internet service providers.
 type AvailableProvidersListParameters struct {
 	// A list of Azure regions.
 	AzureLocations *[]*string `json:"azureLocations,omitempty"`
@@ -1956,7 +1956,7 @@ type AvailableProvidersListResponse struct {
 	RawResponse *http.Response
 }
 
-// State details.
+// AvailableProvidersListState - State details.
 type AvailableProvidersListState struct {
 	// List of available cities or towns in the state.
 	Cities *[]*AvailableProvidersListCity `json:"cities,omitempty"`
@@ -1973,7 +1973,7 @@ type AvailableResourceGroupDelegationsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// The available service alias.
+// AvailableServiceAlias - The available service alias.
 type AvailableServiceAlias struct {
 	// The ID of the service alias.
 	ID *string `json:"id,omitempty"`
@@ -1998,7 +1998,7 @@ type AvailableServiceAliasesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// An array of available service aliases.
+// AvailableServiceAliasesResult - An array of available service aliases.
 type AvailableServiceAliasesResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -2016,8 +2016,8 @@ type AvailableServiceAliasesResultResponse struct {
 	RawResponse *http.Response
 }
 
-// The response body contains the status of the specified asynchronous operation, indicating whether it has succeeded, is in progress, or has failed. Note
-// that this status is distinct from the HTTP
+// AzureAsyncOperationResult - The response body contains the status of the specified asynchronous operation, indicating whether it has succeeded, is in
+// progress, or has failed. Note that this status is distinct from the HTTP
 // status code returned for the Get Operation Status operation itself. If the asynchronous operation succeeded, the response body includes the HTTP status
 // code for the successful request. If the
 // asynchronous operation failed, the response body includes the HTTP status code for the failed request and error information regarding the failure.
@@ -2029,7 +2029,7 @@ type AzureAsyncOperationResult struct {
 	Status *NetworkOperationStatus `json:"status,omitempty"`
 }
 
-// Azure Firewall resource.
+// AzureFirewall - Azure Firewall resource.
 type AzureFirewall struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -2042,7 +2042,7 @@ type AzureFirewall struct {
 	Zones *[]*string `json:"zones,omitempty"`
 }
 
-// Properties of an application rule.
+// AzureFirewallApplicationRule - Properties of an application rule.
 type AzureFirewallApplicationRule struct {
 	// Description of the rule.
 	Description *string `json:"description,omitempty"`
@@ -2066,7 +2066,7 @@ type AzureFirewallApplicationRule struct {
 	TargetFqdns *[]*string `json:"targetFqdns,omitempty"`
 }
 
-// Application rule collection resource.
+// AzureFirewallApplicationRuleCollection - Application rule collection resource.
 type AzureFirewallApplicationRuleCollection struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -2079,7 +2079,7 @@ type AzureFirewallApplicationRuleCollection struct {
 	Properties *AzureFirewallApplicationRuleCollectionPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Properties of the application rule collection.
+// AzureFirewallApplicationRuleCollectionPropertiesFormat - Properties of the application rule collection.
 type AzureFirewallApplicationRuleCollectionPropertiesFormat struct {
 	// The action type of a rule collection.
 	Action *AzureFirewallRCAction `json:"action,omitempty"`
@@ -2094,7 +2094,7 @@ type AzureFirewallApplicationRuleCollectionPropertiesFormat struct {
 	Rules *[]*AzureFirewallApplicationRule `json:"rules,omitempty"`
 }
 
-// Properties of the application rule protocol.
+// AzureFirewallApplicationRuleProtocol - Properties of the application rule protocol.
 type AzureFirewallApplicationRuleProtocol struct {
 	// Port number for the protocol, cannot be greater than 64000. This field is optional.
 	Port *int32 `json:"port,omitempty"`
@@ -2103,7 +2103,7 @@ type AzureFirewallApplicationRuleProtocol struct {
 	ProtocolType *AzureFirewallApplicationRuleProtocolType `json:"protocolType,omitempty"`
 }
 
-// Azure Firewall FQDN Tag Resource.
+// AzureFirewallFqdnTag - Azure Firewall FQDN Tag Resource.
 type AzureFirewallFqdnTag struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -2113,7 +2113,7 @@ type AzureFirewallFqdnTag struct {
 	Properties *AzureFirewallFqdnTagPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListAzureFirewallFqdnTags API service call.
+// AzureFirewallFqdnTagListResult - Response for ListAzureFirewallFqdnTags API service call.
 type AzureFirewallFqdnTagListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -2131,7 +2131,7 @@ type AzureFirewallFqdnTagListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Azure Firewall FQDN Tag Properties.
+// AzureFirewallFqdnTagPropertiesFormat - Azure Firewall FQDN Tag Properties.
 type AzureFirewallFqdnTagPropertiesFormat struct {
 	// READ-ONLY; The name of this FQDN Tag.
 	FqdnTagName *string `json:"fqdnTagName,omitempty" azure:"ro"`
@@ -2145,7 +2145,7 @@ type AzureFirewallFqdnTagsListAllOptions struct {
 	// placeholder for future optional parameters
 }
 
-// IP configuration of an Azure Firewall.
+// AzureFirewallIPConfiguration - IP configuration of an Azure Firewall.
 type AzureFirewallIPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -2161,7 +2161,7 @@ type AzureFirewallIPConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of IP configuration of an Azure Firewall.
+// AzureFirewallIPConfigurationPropertiesFormat - Properties of IP configuration of an Azure Firewall.
 type AzureFirewallIPConfigurationPropertiesFormat struct {
 	// READ-ONLY; The Firewall Internal Load Balancer IP to be used as the next hop in User Defined Routes.
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty" azure:"ro"`
@@ -2176,7 +2176,7 @@ type AzureFirewallIPConfigurationPropertiesFormat struct {
 	Subnet *SubResource `json:"subnet,omitempty"`
 }
 
-// IpGroups associated with azure firewall.
+// AzureFirewallIPGroups - IpGroups associated with azure firewall.
 type AzureFirewallIPGroups struct {
 	// READ-ONLY; The iteration number.
 	ChangeNumber *string `json:"changeNumber,omitempty" azure:"ro"`
@@ -2185,7 +2185,7 @@ type AzureFirewallIPGroups struct {
 	ID *string `json:"id,omitempty" azure:"ro"`
 }
 
-// Response for ListAzureFirewalls API service call.
+// AzureFirewallListResult - Response for ListAzureFirewalls API service call.
 type AzureFirewallListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -2203,13 +2203,13 @@ type AzureFirewallListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// AzureFirewall NAT Rule Collection Action.
+// AzureFirewallNatRCAction - AzureFirewall NAT Rule Collection Action.
 type AzureFirewallNatRCAction struct {
 	// The type of action.
 	Type *AzureFirewallNatRCActionType `json:"type,omitempty"`
 }
 
-// Properties of a NAT rule.
+// AzureFirewallNatRule - Properties of a NAT rule.
 type AzureFirewallNatRule struct {
 	// Description of the rule.
 	Description *string `json:"description,omitempty"`
@@ -2242,7 +2242,7 @@ type AzureFirewallNatRule struct {
 	TranslatedPort *string `json:"translatedPort,omitempty"`
 }
 
-// NAT rule collection resource.
+// AzureFirewallNatRuleCollection - NAT rule collection resource.
 type AzureFirewallNatRuleCollection struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -2255,7 +2255,7 @@ type AzureFirewallNatRuleCollection struct {
 	Properties *AzureFirewallNatRuleCollectionProperties `json:"properties,omitempty"`
 }
 
-// Properties of the NAT rule collection.
+// AzureFirewallNatRuleCollectionProperties - Properties of the NAT rule collection.
 type AzureFirewallNatRuleCollectionProperties struct {
 	// The action type of a NAT rule collection.
 	Action *AzureFirewallNatRCAction `json:"action,omitempty"`
@@ -2270,7 +2270,7 @@ type AzureFirewallNatRuleCollectionProperties struct {
 	Rules *[]*AzureFirewallNatRule `json:"rules,omitempty"`
 }
 
-// Properties of the network rule.
+// AzureFirewallNetworkRule - Properties of the network rule.
 type AzureFirewallNetworkRule struct {
 	// Description of the rule.
 	Description *string `json:"description,omitempty"`
@@ -2300,7 +2300,7 @@ type AzureFirewallNetworkRule struct {
 	SourceIPGroups *[]*string `json:"sourceIpGroups,omitempty"`
 }
 
-// Network rule collection resource.
+// AzureFirewallNetworkRuleCollection - Network rule collection resource.
 type AzureFirewallNetworkRuleCollection struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -2313,7 +2313,7 @@ type AzureFirewallNetworkRuleCollection struct {
 	Properties *AzureFirewallNetworkRuleCollectionPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Properties of the network rule collection.
+// AzureFirewallNetworkRuleCollectionPropertiesFormat - Properties of the network rule collection.
 type AzureFirewallNetworkRuleCollectionPropertiesFormat struct {
 	// The action type of a rule collection.
 	Action *AzureFirewallRCAction `json:"action,omitempty"`
@@ -2340,7 +2340,7 @@ type AzureFirewallPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the Azure Firewall.
+// AzureFirewallPropertiesFormat - Properties of the Azure Firewall.
 type AzureFirewallPropertiesFormat struct {
 	// The additional properties used to further config this azure firewall.
 	AdditionalProperties *map[string]*string `json:"additionalProperties,omitempty"`
@@ -2382,13 +2382,13 @@ type AzureFirewallPropertiesFormat struct {
 	VirtualHub *SubResource `json:"virtualHub,omitempty"`
 }
 
-// Public IP Address associated with azure firewall.
+// AzureFirewallPublicIPAddress - Public IP Address associated with azure firewall.
 type AzureFirewallPublicIPAddress struct {
 	// Public IP Address value.
 	Address *string `json:"address,omitempty"`
 }
 
-// Properties of the AzureFirewallRCAction.
+// AzureFirewallRCAction - Properties of the AzureFirewallRCAction.
 type AzureFirewallRCAction struct {
 	// The type of action.
 	Type *AzureFirewallRCActionType `json:"type,omitempty"`
@@ -2403,7 +2403,7 @@ type AzureFirewallResponse struct {
 	RawResponse *http.Response
 }
 
-// SKU of an Azure Firewall.
+// AzureFirewallSKU - SKU of an Azure Firewall.
 type AzureFirewallSKU struct {
 	// Name of an Azure Firewall SKU.
 	Name *AzureFirewallSKUName `json:"name,omitempty"`
@@ -2442,7 +2442,7 @@ type AzureFirewallsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Azure reachability report details.
+// AzureReachabilityReport - Azure reachability report details.
 type AzureReachabilityReport struct {
 	// The aggregation level of Azure reachability report. Can be Country, State or City.
 	AggregationLevel *string `json:"aggregationLevel,omitempty"`
@@ -2454,7 +2454,7 @@ type AzureReachabilityReport struct {
 	ReachabilityReport *[]*AzureReachabilityReportItem `json:"reachabilityReport,omitempty"`
 }
 
-// Azure reachability report details for a given provider location.
+// AzureReachabilityReportItem - Azure reachability report details for a given provider location.
 type AzureReachabilityReportItem struct {
 	// The Azure region.
 	AzureLocation *string `json:"azureLocation,omitempty"`
@@ -2466,7 +2466,7 @@ type AzureReachabilityReportItem struct {
 	Provider *string `json:"provider,omitempty"`
 }
 
-// Details on latency for a time series.
+// AzureReachabilityReportLatencyInfo - Details on latency for a time series.
 type AzureReachabilityReportLatencyInfo struct {
 	// The relative latency score between 1 and 100, higher values indicating a faster connection.
 	Score *int32 `json:"score,omitempty"`
@@ -2508,7 +2508,7 @@ func (a *AzureReachabilityReportLatencyInfo) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Parameters that define a geographic location.
+// AzureReachabilityReportLocation - Parameters that define a geographic location.
 type AzureReachabilityReportLocation struct {
 	// The name of the city or town.
 	City *string `json:"city,omitempty"`
@@ -2520,7 +2520,7 @@ type AzureReachabilityReportLocation struct {
 	State *string `json:"state,omitempty"`
 }
 
-// Geographic and time constraints for Azure reachability report.
+// AzureReachabilityReportParameters - Geographic and time constraints for Azure reachability report.
 type AzureReachabilityReportParameters struct {
 	// Optional Azure regions to scope the query to.
 	AzureLocations *[]*string `json:"azureLocations,omitempty"`
@@ -2606,7 +2606,7 @@ type AzureReachabilityReportResponse struct {
 	RawResponse *http.Response
 }
 
-// Azure Web Category Resource.
+// AzureWebCategory - Azure Web Category Resource.
 type AzureWebCategory struct {
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
 	Etag *string `json:"etag,omitempty" azure:"ro"`
@@ -2624,7 +2624,7 @@ type AzureWebCategory struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for ListAzureWebCategories API service call.
+// AzureWebCategoryListResult - Response for ListAzureWebCategories API service call.
 type AzureWebCategoryListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -2642,7 +2642,7 @@ type AzureWebCategoryListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Azure Web Category Properties.
+// AzureWebCategoryPropertiesFormat - Azure Web Category Properties.
 type AzureWebCategoryPropertiesFormat struct {
 	// READ-ONLY; The name of the group that the category belongs to.
 	Group *string `json:"group,omitempty" azure:"ro"`
@@ -2657,7 +2657,7 @@ type AzureWebCategoryResponse struct {
 	RawResponse *http.Response
 }
 
-// Contains bgp community information offered in Service Community resources.
+// BGPCommunity - Contains bgp community information offered in Service Community resources.
 type BGPCommunity struct {
 	// The name of the bgp community. e.g. Skype.
 	CommunityName *string `json:"communityName,omitempty"`
@@ -2678,7 +2678,7 @@ type BGPCommunity struct {
 	ServiceSupportedRegion *string `json:"serviceSupportedRegion,omitempty"`
 }
 
-// Pool of backend IP addresses.
+// BackendAddressPool - Pool of backend IP addresses.
 type BackendAddressPool struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -2706,7 +2706,7 @@ type BackendAddressPoolPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the backend address pool.
+// BackendAddressPoolPropertiesFormat - Properties of the backend address pool.
 type BackendAddressPoolPropertiesFormat struct {
 	// READ-ONLY; An array of references to IP addresses defined in network interfaces.
 	BackendIPConfigurations *[]*NetworkInterfaceIPConfiguration `json:"backendIPConfigurations,omitempty" azure:"ro"`
@@ -2736,7 +2736,7 @@ type BackendAddressPoolResponse struct {
 	RawResponse *http.Response
 }
 
-// The session detail for a target.
+// BastionActiveSession - The session detail for a target.
 type BastionActiveSession struct {
 	// READ-ONLY; The protocol used to connect to the target.
 	Protocol *BastionConnectProtocol `json:"protocol,omitempty" azure:"ro"`
@@ -2772,7 +2772,7 @@ type BastionActiveSession struct {
 	UserName *string `json:"userName,omitempty" azure:"ro"`
 }
 
-// Response for GetActiveSessions.
+// BastionActiveSessionListResult - Response for GetActiveSessions.
 type BastionActiveSessionListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -2803,7 +2803,7 @@ type BastionActiveSessionListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Bastion Host resource.
+// BastionHost - Bastion Host resource.
 type BastionHost struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -2813,7 +2813,7 @@ type BastionHost struct {
 	Properties *BastionHostPropertiesFormat `json:"properties,omitempty"`
 }
 
-// IP configuration of an Bastion Host.
+// BastionHostIPConfiguration - IP configuration of an Bastion Host.
 type BastionHostIPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -2829,7 +2829,7 @@ type BastionHostIPConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of IP configuration of an Bastion Host.
+// BastionHostIPConfigurationPropertiesFormat - Properties of IP configuration of an Bastion Host.
 type BastionHostIPConfigurationPropertiesFormat struct {
 	// Private IP allocation method.
 	PrivateIPAllocationMethod *IPAllocationMethod `json:"privateIPAllocationMethod,omitempty"`
@@ -2844,7 +2844,7 @@ type BastionHostIPConfigurationPropertiesFormat struct {
 	Subnet *SubResource `json:"subnet,omitempty"`
 }
 
-// Response for ListBastionHosts API service call.
+// BastionHostListResult - Response for ListBastionHosts API service call.
 type BastionHostListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -2874,7 +2874,7 @@ type BastionHostPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the Bastion Host.
+// BastionHostPropertiesFormat - Properties of the Bastion Host.
 type BastionHostPropertiesFormat struct {
 	// FQDN for the endpoint on which bastion host is accessible.
 	DNSName *string `json:"dnsName,omitempty"`
@@ -2920,7 +2920,7 @@ type BastionHostsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for DisconnectActiveSessions.
+// BastionSessionDeleteResult - Response for DisconnectActiveSessions.
 type BastionSessionDeleteResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -2938,7 +2938,7 @@ type BastionSessionDeleteResultResponse struct {
 	RawResponse *http.Response
 }
 
-// The session state detail for a target.
+// BastionSessionState - The session state detail for a target.
 type BastionSessionState struct {
 	// READ-ONLY; Used for extra information.
 	Message *string `json:"message,omitempty" azure:"ro"`
@@ -2950,7 +2950,7 @@ type BastionSessionState struct {
 	State *string `json:"state,omitempty" azure:"ro"`
 }
 
-// Bastion Shareable Link.
+// BastionShareableLink - Bastion Shareable Link.
 type BastionShareableLink struct {
 	// READ-ONLY; The unique Bastion Shareable Link to the virtual machine.
 	Bsl *string `json:"bsl,omitempty" azure:"ro"`
@@ -2965,13 +2965,13 @@ type BastionShareableLink struct {
 	VM *VM `json:"vm,omitempty"`
 }
 
-// Post request for all the Bastion Shareable Link endpoints.
+// BastionShareableLinkListRequest - Post request for all the Bastion Shareable Link endpoints.
 type BastionShareableLinkListRequest struct {
 	// List of VM references.
 	VMs *[]*BastionShareableLink `json:"vms,omitempty"`
 }
 
-// Response for all the Bastion Shareable Link endpoints.
+// BastionShareableLinkListResult - Response for all the Bastion Shareable Link endpoints.
 type BastionShareableLinkListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -3002,7 +3002,7 @@ type BastionShareableLinkListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Virtual Appliance Site resource.
+// BgpConnection - Virtual Appliance Site resource.
 type BgpConnection struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -3030,7 +3030,7 @@ type BgpConnectionPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the bgp connection.
+// BgpConnectionProperties - Properties of the bgp connection.
 type BgpConnectionProperties struct {
 	// READ-ONLY; The current state of the VirtualHub to Peer.
 	ConnectionState *HubBgpConnectionStatus `json:"connectionState,omitempty" azure:"ro"`
@@ -3054,7 +3054,7 @@ type BgpConnectionResponse struct {
 	RawResponse *http.Response
 }
 
-// BGP peer status details.
+// BgpPeerStatus - BGP peer status details.
 type BgpPeerStatus struct {
 	// READ-ONLY; The autonomous system number of the remote BGP peer.
 	Asn *int64 `json:"asn,omitempty" azure:"ro"`
@@ -3081,7 +3081,7 @@ type BgpPeerStatus struct {
 	State *BgpPeerState `json:"state,omitempty" azure:"ro"`
 }
 
-// Response for list BGP peer status API service call.
+// BgpPeerStatusListResult - Response for list BGP peer status API service call.
 type BgpPeerStatusListResult struct {
 	// List of BGP peers.
 	Value *[]*BgpPeerStatus `json:"value,omitempty"`
@@ -3113,14 +3113,14 @@ type BgpServiceCommunitiesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Service Community Properties.
+// BgpServiceCommunity - Service Community Properties.
 type BgpServiceCommunity struct {
 	Resource
 	// Properties of the BGP service community.
 	Properties *BgpServiceCommunityPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for the ListServiceCommunity API service call.
+// BgpServiceCommunityListResult - Response for the ListServiceCommunity API service call.
 type BgpServiceCommunityListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -3138,7 +3138,7 @@ type BgpServiceCommunityListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of Service Community.
+// BgpServiceCommunityPropertiesFormat - Properties of Service Community.
 type BgpServiceCommunityPropertiesFormat struct {
 	// A list of bgp communities.
 	BgpCommunities *[]*BGPCommunity `json:"bgpCommunities,omitempty"`
@@ -3147,7 +3147,7 @@ type BgpServiceCommunityPropertiesFormat struct {
 	ServiceName *string `json:"serviceName,omitempty"`
 }
 
-// BGP settings details.
+// BgpSettings - BGP settings details.
 type BgpSettings struct {
 	// The BGP speaker's ASN.
 	Asn *int64 `json:"asn,omitempty"`
@@ -3162,7 +3162,7 @@ type BgpSettings struct {
 	PeerWeight *int32 `json:"peerWeight,omitempty"`
 }
 
-// Network Virtual Appliance Sku Properties.
+// BreakOutCategoryPolicies - Network Virtual Appliance Sku Properties.
 type BreakOutCategoryPolicies struct {
 	// Flag to control breakout of o365 allow category.
 	Allow *bool `json:"allow,omitempty"`
@@ -3174,13 +3174,13 @@ type BreakOutCategoryPolicies struct {
 	Optimize *bool `json:"optimize,omitempty"`
 }
 
-// Request body of the CheckPrivateLinkServiceVisibility API service call.
+// CheckPrivateLinkServiceVisibilityRequest - Request body of the CheckPrivateLinkServiceVisibility API service call.
 type CheckPrivateLinkServiceVisibilityRequest struct {
 	// The alias of the private link service.
 	PrivateLinkServiceAlias *string `json:"privateLinkServiceAlias,omitempty"`
 }
 
-// An error response from the service.
+// CloudError - An error response from the service.
 type CloudError struct {
 	// Cloud error body.
 	InnerError *CloudErrorBody `json:"error,omitempty"`
@@ -3210,7 +3210,7 @@ func (e CloudError) Error() string {
 	return msg
 }
 
-// An error response from the service.
+// CloudErrorBody - An error response from the service.
 type CloudErrorBody struct {
 	// An identifier for the error. Codes are invariant and are intended to be consumed programmatically.
 	Code *string `json:"code,omitempty"`
@@ -3233,7 +3233,7 @@ type Components1Jq1T4ISchemasManagedserviceidentityPropertiesUserassignedidentit
 	PrincipalID *string `json:"principalId,omitempty" azure:"ro"`
 }
 
-// Parameters that define the operation to create a connection monitor.
+// ConnectionMonitor - Parameters that define the operation to create a connection monitor.
 type ConnectionMonitor struct {
 	// Connection monitor location.
 	Location *string `json:"location,omitempty"`
@@ -3245,7 +3245,7 @@ type ConnectionMonitor struct {
 	Tags *map[string]*string `json:"tags,omitempty"`
 }
 
-// Describes the destination of connection monitor.
+// ConnectionMonitorDestination - Describes the destination of connection monitor.
 type ConnectionMonitorDestination struct {
 	// Address of the connection monitor destination (IP or domain name).
 	Address *string `json:"address,omitempty"`
@@ -3257,7 +3257,7 @@ type ConnectionMonitorDestination struct {
 	ResourceID *string `json:"resourceId,omitempty"`
 }
 
-// Describes the connection monitor endpoint.
+// ConnectionMonitorEndpoint - Describes the connection monitor endpoint.
 type ConnectionMonitorEndpoint struct {
 	// Address of the connection monitor endpoint (IP or domain name).
 	Address *string `json:"address,omitempty"`
@@ -3281,7 +3281,7 @@ type ConnectionMonitorEndpoint struct {
 	Type *EndpointType `json:"type,omitempty"`
 }
 
-// Describes the connection monitor endpoint filter.
+// ConnectionMonitorEndpointFilter - Describes the connection monitor endpoint filter.
 type ConnectionMonitorEndpointFilter struct {
 	// List of items in the filter.
 	Items *[]*ConnectionMonitorEndpointFilterItem `json:"items,omitempty"`
@@ -3290,7 +3290,7 @@ type ConnectionMonitorEndpointFilter struct {
 	Type *ConnectionMonitorEndpointFilterType `json:"type,omitempty"`
 }
 
-// Describes the connection monitor endpoint filter item.
+// ConnectionMonitorEndpointFilterItem - Describes the connection monitor endpoint filter item.
 type ConnectionMonitorEndpointFilterItem struct {
 	// The address of the filter item.
 	Address *string `json:"address,omitempty"`
@@ -3299,7 +3299,7 @@ type ConnectionMonitorEndpointFilterItem struct {
 	Type *ConnectionMonitorEndpointFilterItemType `json:"type,omitempty"`
 }
 
-// Describes the connection monitor endpoint scope.
+// ConnectionMonitorEndpointScope - Describes the connection monitor endpoint scope.
 type ConnectionMonitorEndpointScope struct {
 	// List of items which needs to be excluded from the endpoint scope.
 	Exclude *[]*ConnectionMonitorEndpointScopeItem `json:"exclude,omitempty"`
@@ -3308,13 +3308,13 @@ type ConnectionMonitorEndpointScope struct {
 	Include *[]*ConnectionMonitorEndpointScopeItem `json:"include,omitempty"`
 }
 
-// Describes the connection monitor endpoint scope item.
+// ConnectionMonitorEndpointScopeItem - Describes the connection monitor endpoint scope item.
 type ConnectionMonitorEndpointScopeItem struct {
 	// The address of the endpoint item. Supported types are IPv4/IPv6 subnet mask or IPv4/IPv6 IP address.
 	Address *string `json:"address,omitempty"`
 }
 
-// Describes the HTTP configuration.
+// ConnectionMonitorHTTPConfiguration - Describes the HTTP configuration.
 type ConnectionMonitorHTTPConfiguration struct {
 	// The HTTP method to use.
 	Method *HTTPConfigurationMethod `json:"method,omitempty"`
@@ -3335,13 +3335,13 @@ type ConnectionMonitorHTTPConfiguration struct {
 	ValidStatusCodeRanges *[]*string `json:"validStatusCodeRanges,omitempty"`
 }
 
-// Describes the ICMP configuration.
+// ConnectionMonitorIcmpConfiguration - Describes the ICMP configuration.
 type ConnectionMonitorIcmpConfiguration struct {
 	// Value indicating whether path evaluation with trace route should be disabled.
 	DisableTraceRoute *bool `json:"disableTraceRoute,omitempty"`
 }
 
-// List of connection monitors.
+// ConnectionMonitorListResult - List of connection monitors.
 type ConnectionMonitorListResult struct {
 	// Information about connection monitors.
 	Value *[]*ConnectionMonitorResult `json:"value,omitempty"`
@@ -3356,7 +3356,7 @@ type ConnectionMonitorListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Describes a connection monitor output destination.
+// ConnectionMonitorOutput - Describes a connection monitor output destination.
 type ConnectionMonitorOutput struct {
 	// Connection monitor output destination type. Currently, only "Workspace" is supported.
 	Type *OutputType `json:"type,omitempty"`
@@ -3365,7 +3365,7 @@ type ConnectionMonitorOutput struct {
 	WorkspaceSettings *ConnectionMonitorWorkspaceSettings `json:"workspaceSettings,omitempty"`
 }
 
-// Parameters that define the operation to create a connection monitor.
+// ConnectionMonitorParameters - Parameters that define the operation to create a connection monitor.
 type ConnectionMonitorParameters struct {
 	// Determines if the connection monitor will start automatically once created.
 	AutoStart *bool `json:"autoStart,omitempty"`
@@ -3448,7 +3448,7 @@ func (c *ConnectionMonitorParameters) unmarshalInternal(rawMsg map[string]*json.
 	return nil
 }
 
-// List of connection states snapshots.
+// ConnectionMonitorQueryResult - List of connection states snapshots.
 type ConnectionMonitorQueryResult struct {
 	// Status of connection monitor source.
 	SourceStatus *ConnectionMonitorSourceStatus `json:"sourceStatus,omitempty"`
@@ -3478,7 +3478,7 @@ type ConnectionMonitorQueryResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Information about the connection monitor.
+// ConnectionMonitorResult - Information about the connection monitor.
 type ConnectionMonitorResult struct {
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
 	Etag *string `json:"etag,omitempty" azure:"ro"`
@@ -3514,7 +3514,7 @@ type ConnectionMonitorResultPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Describes the properties of a connection monitor.
+// ConnectionMonitorResultProperties - Describes the properties of a connection monitor.
 type ConnectionMonitorResultProperties struct {
 	ConnectionMonitorParameters
 	// READ-ONLY; Type of connection monitor.
@@ -3580,7 +3580,7 @@ type ConnectionMonitorResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Describes the source of connection monitor.
+// ConnectionMonitorSource - Describes the source of connection monitor.
 type ConnectionMonitorSource struct {
 	// The source port used by connection monitor.
 	Port *int32 `json:"port,omitempty"`
@@ -3589,7 +3589,7 @@ type ConnectionMonitorSource struct {
 	ResourceID *string `json:"resourceId,omitempty"`
 }
 
-// Describes the threshold for declaring a test successful.
+// ConnectionMonitorSuccessThreshold - Describes the threshold for declaring a test successful.
 type ConnectionMonitorSuccessThreshold struct {
 	// The maximum percentage of failed checks permitted for a test to evaluate as successful.
 	ChecksFailedPercent *int32 `json:"checksFailedPercent,omitempty"`
@@ -3598,7 +3598,7 @@ type ConnectionMonitorSuccessThreshold struct {
 	RoundTripTimeMs *float32 `json:"roundTripTimeMs,omitempty"`
 }
 
-// Describes the TCP configuration.
+// ConnectionMonitorTCPConfiguration - Describes the TCP configuration.
 type ConnectionMonitorTCPConfiguration struct {
 	// Destination port behavior.
 	DestinationPortBehavior *DestinationPortBehavior `json:"destinationPortBehavior,omitempty"`
@@ -3610,7 +3610,7 @@ type ConnectionMonitorTCPConfiguration struct {
 	Port *int32 `json:"port,omitempty"`
 }
 
-// Describes a connection monitor test configuration.
+// ConnectionMonitorTestConfiguration - Describes a connection monitor test configuration.
 type ConnectionMonitorTestConfiguration struct {
 	// The parameters used to perform test evaluation over HTTP.
 	HTTPConfiguration *ConnectionMonitorHTTPConfiguration `json:"httpConfiguration,omitempty"`
@@ -3637,7 +3637,7 @@ type ConnectionMonitorTestConfiguration struct {
 	TestFrequencySec *int32 `json:"testFrequencySec,omitempty"`
 }
 
-// Describes the connection monitor test group.
+// ConnectionMonitorTestGroup - Describes the connection monitor test group.
 type ConnectionMonitorTestGroup struct {
 	// List of destination endpoint names.
 	Destinations *[]*string `json:"destinations,omitempty"`
@@ -3655,7 +3655,7 @@ type ConnectionMonitorTestGroup struct {
 	TestConfigurations *[]*string `json:"testConfigurations,omitempty"`
 }
 
-// Describes the settings for producing output into a log analytics workspace.
+// ConnectionMonitorWorkspaceSettings - Describes the settings for producing output into a log analytics workspace.
 type ConnectionMonitorWorkspaceSettings struct {
 	// Log analytics workspace resource ID.
 	WorkspaceResourceID *string `json:"workspaceResourceId,omitempty"`
@@ -3702,7 +3702,7 @@ type ConnectionMonitorsUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// The virtual network connection reset shared key.
+// ConnectionResetSharedKey - The virtual network connection reset shared key.
 type ConnectionResetSharedKey struct {
 	// The virtual network connection reset shared key length, should between 1 and 128.
 	KeyLength *int32 `json:"keyLength,omitempty"`
@@ -3729,7 +3729,7 @@ type ConnectionResetSharedKeyResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for GetConnectionSharedKey API service call.
+// ConnectionSharedKey - Response for GetConnectionSharedKey API service call.
 type ConnectionSharedKey struct {
 	SubResource
 	// The virtual network connection shared key value.
@@ -3757,7 +3757,7 @@ type ConnectionSharedKeyResponse struct {
 	RawResponse *http.Response
 }
 
-// Connection state snapshot.
+// ConnectionStateSnapshot - Connection state snapshot.
 type ConnectionStateSnapshot struct {
 	// Average latency in ms.
 	AvgLatencyInMs *int64 `json:"avgLatencyInMs,omitempty"`
@@ -3857,7 +3857,7 @@ func (c *ConnectionStateSnapshot) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Parameters that define destination of connection.
+// ConnectivityDestination - Parameters that define destination of connection.
 type ConnectivityDestination struct {
 	// The IP address or URI the resource to which a connection attempt will be made.
 	Address *string `json:"address,omitempty"`
@@ -3869,7 +3869,7 @@ type ConnectivityDestination struct {
 	ResourceID *string `json:"resourceId,omitempty"`
 }
 
-// Information about a hop between the source and the destination.
+// ConnectivityHop - Information about a hop between the source and the destination.
 type ConnectivityHop struct {
 	// READ-ONLY; The IP address of the hop.
 	Address *string `json:"address,omitempty" azure:"ro"`
@@ -3899,7 +3899,7 @@ type ConnectivityHop struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Information on the connectivity status.
+// ConnectivityInformation - Information on the connectivity status.
 type ConnectivityInformation struct {
 	// READ-ONLY; Average latency in milliseconds.
 	AvgLatencyInMs *int32 `json:"avgLatencyInMs,omitempty" azure:"ro"`
@@ -3944,7 +3944,7 @@ type ConnectivityInformationResponse struct {
 	RawResponse *http.Response
 }
 
-// Information about an issue encountered in the process of checking for connectivity.
+// ConnectivityIssue - Information about an issue encountered in the process of checking for connectivity.
 type ConnectivityIssue struct {
 	// READ-ONLY; Provides additional context on the issue.
 	Context *[]map[string]*string `json:"context,omitempty" azure:"ro"`
@@ -3959,7 +3959,7 @@ type ConnectivityIssue struct {
 	Type *IssueType `json:"type,omitempty" azure:"ro"`
 }
 
-// Parameters that determine how the connectivity check will be performed.
+// ConnectivityParameters - Parameters that determine how the connectivity check will be performed.
 type ConnectivityParameters struct {
 	// The destination of connection.
 	Destination *ConnectivityDestination `json:"destination,omitempty"`
@@ -3977,7 +3977,7 @@ type ConnectivityParameters struct {
 	Source *ConnectivitySource `json:"source,omitempty"`
 }
 
-// Parameters that define the source of the connection.
+// ConnectivitySource - Parameters that define the source of the connection.
 type ConnectivitySource struct {
 	// The source port from which a connectivity check will be performed.
 	Port *int32 `json:"port,omitempty"`
@@ -3986,12 +3986,12 @@ type ConnectivitySource struct {
 	ResourceID *string `json:"resourceId,omitempty"`
 }
 
-// Reference to container resource in remote resource provider.
+// Container - Reference to container resource in remote resource provider.
 type Container struct {
 	SubResource
 }
 
-// Container network interface child resource.
+// ContainerNetworkInterface - Container network interface child resource.
 type ContainerNetworkInterface struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -4007,7 +4007,7 @@ type ContainerNetworkInterface struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Container network interface configuration child resource.
+// ContainerNetworkInterfaceConfiguration - Container network interface configuration child resource.
 type ContainerNetworkInterfaceConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -4023,7 +4023,7 @@ type ContainerNetworkInterfaceConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Container network interface configuration properties.
+// ContainerNetworkInterfaceConfigurationPropertiesFormat - Container network interface configuration properties.
 type ContainerNetworkInterfaceConfigurationPropertiesFormat struct {
 	// A list of container network interfaces created from this container network interface configuration.
 	ContainerNetworkInterfaces *[]*SubResource `json:"containerNetworkInterfaces,omitempty"`
@@ -4035,7 +4035,7 @@ type ContainerNetworkInterfaceConfigurationPropertiesFormat struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// The ip configuration for a container network interface.
+// ContainerNetworkInterfaceIPConfiguration - The ip configuration for a container network interface.
 type ContainerNetworkInterfaceIPConfiguration struct {
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
 	Etag *string `json:"etag,omitempty" azure:"ro"`
@@ -4050,13 +4050,13 @@ type ContainerNetworkInterfaceIPConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of the container network interface IP configuration.
+// ContainerNetworkInterfaceIPConfigurationPropertiesFormat - Properties of the container network interface IP configuration.
 type ContainerNetworkInterfaceIPConfigurationPropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the container network interface IP configuration resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// Properties of container network interface.
+// ContainerNetworkInterfacePropertiesFormat - Properties of container network interface.
 type ContainerNetworkInterfacePropertiesFormat struct {
 	// Reference to the container to which this container network interface is attached.
 	Container *Container `json:"container,omitempty"`
@@ -4071,7 +4071,7 @@ type ContainerNetworkInterfacePropertiesFormat struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// Contains custom Dns resolution configuration from customer.
+// CustomDNSConfigPropertiesFormat - Contains custom Dns resolution configuration from customer.
 type CustomDNSConfigPropertiesFormat struct {
 	// Fqdn that resolves to private endpoint ip address.
 	Fqdn *string `json:"fqdn,omitempty"`
@@ -4080,7 +4080,7 @@ type CustomDNSConfigPropertiesFormat struct {
 	IPAddresses *[]*string `json:"ipAddresses,omitempty"`
 }
 
-// Custom IP prefix resource.
+// CustomIPPrefix - Custom IP prefix resource.
 type CustomIPPrefix struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -4093,7 +4093,7 @@ type CustomIPPrefix struct {
 	Zones *[]*string `json:"zones,omitempty"`
 }
 
-// Response for ListCustomIpPrefixes API service call.
+// CustomIPPrefixListResult - Response for ListCustomIpPrefixes API service call.
 type CustomIPPrefixListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -4123,7 +4123,7 @@ type CustomIPPrefixPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Custom IP prefix properties.
+// CustomIPPrefixPropertiesFormat - Custom IP prefix properties.
 type CustomIPPrefixPropertiesFormat struct {
 	// The prefix range in CIDR notation. Should include the start address and the prefix length.
 	Cidr *string `json:"cidr,omitempty"`
@@ -4181,7 +4181,7 @@ type CustomIPPrefixesUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for the CheckDnsNameAvailability API service call.
+// DNSNameAvailabilityResult - Response for the CheckDnsNameAvailability API service call.
 type DNSNameAvailabilityResult struct {
 	// Domain availability (True/False).
 	Available *bool `json:"available,omitempty"`
@@ -4196,7 +4196,7 @@ type DNSNameAvailabilityResultResponse struct {
 	RawResponse *http.Response
 }
 
-// DNS Proxy Settings in Firewall Policy.
+// DNSSettings - DNS Proxy Settings in Firewall Policy.
 type DNSSettings struct {
 	// Enable DNS Proxy on Firewalls attached to the Firewall Policy.
 	EnableProxy *bool `json:"enableProxy,omitempty"`
@@ -4228,7 +4228,7 @@ type DdosCustomPoliciesUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// A DDoS custom policy in a resource group.
+// DdosCustomPolicy - A DDoS custom policy in a resource group.
 type DdosCustomPolicy struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -4250,7 +4250,7 @@ type DdosCustomPolicyPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// DDoS custom policy properties.
+// DdosCustomPolicyPropertiesFormat - DDoS custom policy properties.
 type DdosCustomPolicyPropertiesFormat struct {
 	// The protocol-specific DDoS policy customization parameters.
 	ProtocolCustomSettings *[]*ProtocolCustomSettingsFormat `json:"protocolCustomSettings,omitempty"`
@@ -4275,7 +4275,7 @@ type DdosCustomPolicyResponse struct {
 	RawResponse *http.Response
 }
 
-// A DDoS protection plan in a resource group.
+// DdosProtectionPlan - A DDoS protection plan in a resource group.
 type DdosProtectionPlan struct {
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
 	Etag *string `json:"etag,omitempty" azure:"ro"`
@@ -4299,7 +4299,7 @@ type DdosProtectionPlan struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// A list of DDoS protection plans.
+// DdosProtectionPlanListResult - A list of DDoS protection plans.
 type DdosProtectionPlanListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -4329,7 +4329,7 @@ type DdosProtectionPlanPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// DDoS protection plan properties.
+// DdosProtectionPlanPropertiesFormat - DDoS protection plan properties.
 type DdosProtectionPlanPropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the DDoS protection plan resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -4381,7 +4381,7 @@ type DdosProtectionPlansUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Contains the DDoS protection settings of the public IP.
+// DdosSettings - Contains the DDoS protection settings of the public IP.
 type DdosSettings struct {
 	// The DDoS custom policy associated with the public IP.
 	DdosCustomPolicy *SubResource `json:"ddosCustomPolicy,omitempty"`
@@ -4403,7 +4403,7 @@ type DefaultSecurityRulesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Details the service to which the subnet is delegated.
+// Delegation - Details the service to which the subnet is delegated.
 type Delegation struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -4416,7 +4416,7 @@ type Delegation struct {
 	Properties *ServiceDelegationPropertiesFormat `json:"properties,omitempty"`
 }
 
-// List of properties of the device.
+// DeviceProperties - List of properties of the device.
 type DeviceProperties struct {
 	// Model of the device.
 	DeviceModel *string `json:"deviceModel,omitempty"`
@@ -4447,7 +4447,7 @@ type Dimension struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// DSCP Configuration in a resource group.
+// DscpConfiguration - DSCP Configuration in a resource group.
 type DscpConfiguration struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -4482,7 +4482,7 @@ type DscpConfigurationListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for the DscpConfigurationList API service call.
+// DscpConfigurationListResult - Response for the DscpConfigurationList API service call.
 type DscpConfigurationListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -4512,7 +4512,7 @@ type DscpConfigurationPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// DSCP Configuration properties.
+// DscpConfigurationPropertiesFormat - DSCP Configuration properties.
 type DscpConfigurationPropertiesFormat struct {
 	// READ-ONLY; Associated Network Interfaces to the DSCP Configuration.
 	AssociatedNetworkInterfaces *[]*NetworkInterface `json:"associatedNetworkInterfaces,omitempty" azure:"ro"`
@@ -4554,7 +4554,7 @@ type DscpConfigurationResponse struct {
 	RawResponse *http.Response
 }
 
-// Effective network security group.
+// EffectiveNetworkSecurityGroup - Effective network security group.
 type EffectiveNetworkSecurityGroup struct {
 	// Associated resources.
 	Association *EffectiveNetworkSecurityGroupAssociation `json:"association,omitempty"`
@@ -4569,7 +4569,7 @@ type EffectiveNetworkSecurityGroup struct {
 	TagMap *string `json:"tagMap,omitempty"`
 }
 
-// The effective network security group association.
+// EffectiveNetworkSecurityGroupAssociation - The effective network security group association.
 type EffectiveNetworkSecurityGroupAssociation struct {
 	// The ID of the network interface if assigned.
 	NetworkInterface *SubResource `json:"networkInterface,omitempty"`
@@ -4578,7 +4578,7 @@ type EffectiveNetworkSecurityGroupAssociation struct {
 	Subnet *SubResource `json:"subnet,omitempty"`
 }
 
-// Response for list effective network security groups API service call.
+// EffectiveNetworkSecurityGroupListResult - Response for list effective network security groups API service call.
 type EffectiveNetworkSecurityGroupListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -4609,7 +4609,7 @@ type EffectiveNetworkSecurityGroupListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Effective network security rules.
+// EffectiveNetworkSecurityRule - Effective network security rules.
 type EffectiveNetworkSecurityRule struct {
 	// Whether network traffic is allowed or denied.
 	Access *SecurityRuleAccess `json:"access,omitempty"`
@@ -4660,7 +4660,7 @@ type EffectiveNetworkSecurityRule struct {
 	SourcePortRanges *[]*string `json:"sourcePortRanges,omitempty"`
 }
 
-// Effective Route.
+// EffectiveRoute - Effective Route.
 type EffectiveRoute struct {
 	// The address prefixes of the effective routes in CIDR notation.
 	AddressPrefix *[]*string `json:"addressPrefix,omitempty"`
@@ -4684,7 +4684,7 @@ type EffectiveRoute struct {
 	State *EffectiveRouteState `json:"state,omitempty"`
 }
 
-// Response for list effective route API service call.
+// EffectiveRouteListResult - Response for list effective route API service call.
 type EffectiveRouteListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -4714,7 +4714,7 @@ type EffectiveRouteListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// The parameters specifying the resource whose effective routes are being requested.
+// EffectiveRoutesParameters - The parameters specifying the resource whose effective routes are being requested.
 type EffectiveRoutesParameters struct {
 	// The resource whose effective routes are being requested.
 	ResourceID *string `json:"resourceId,omitempty"`
@@ -4723,7 +4723,7 @@ type EffectiveRoutesParameters struct {
 	VirtualWanResourceType *string `json:"virtualWanResourceType,omitempty"`
 }
 
-// Endpoint service.
+// EndpointServiceResult - Endpoint service.
 type EndpointServiceResult struct {
 	SubResource
 	// READ-ONLY; Name of the endpoint service.
@@ -4733,7 +4733,7 @@ type EndpointServiceResult struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for the ListAvailableEndpointServices API service call.
+// EndpointServicesListResult - Response for the ListAvailableEndpointServices API service call.
 type EndpointServicesListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -4751,7 +4751,7 @@ type EndpointServicesListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Common error representation.
+// Error - Common error representation.
 type Error struct {
 	// Error code.
 	Code *string `json:"code,omitempty"`
@@ -4793,7 +4793,7 @@ func (e Error) Error() string {
 	return msg
 }
 
-// Common error details representation.
+// ErrorDetails - Common error details representation.
 type ErrorDetails struct {
 	// Error code.
 	Code *string `json:"code,omitempty"`
@@ -4805,7 +4805,7 @@ type ErrorDetails struct {
 	Target *string `json:"target,omitempty"`
 }
 
-// The error object.
+// ErrorResponse - The error object.
 type ErrorResponse struct {
 	// The error details object.
 	InnerError *ErrorDetails `json:"error,omitempty"`
@@ -4832,7 +4832,7 @@ func (e ErrorResponse) Error() string {
 	return msg
 }
 
-// Results of network security group evaluation.
+// EvaluatedNetworkSecurityGroup - Results of network security group evaluation.
 type EvaluatedNetworkSecurityGroup struct {
 	// Resource ID of nic or subnet to which network security group is applied.
 	AppliedTo *string `json:"appliedTo,omitempty"`
@@ -4860,7 +4860,7 @@ type ExpressRouteCircuit struct {
 	SKU *ExpressRouteCircuitSKU `json:"sku,omitempty"`
 }
 
-// The ARP table associated with the ExpressRouteCircuit.
+// ExpressRouteCircuitArpTable - The ARP table associated with the ExpressRouteCircuit.
 type ExpressRouteCircuitArpTable struct {
 	// Entry age in minutes.
 	Age *int32 `json:"age,omitempty"`
@@ -4875,7 +4875,7 @@ type ExpressRouteCircuitArpTable struct {
 	MacAddress *string `json:"macAddress,omitempty"`
 }
 
-// Authorization in an ExpressRouteCircuit resource.
+// ExpressRouteCircuitAuthorization - Authorization in an ExpressRouteCircuit resource.
 type ExpressRouteCircuitAuthorization struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -4934,7 +4934,7 @@ type ExpressRouteCircuitAuthorizationsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Express Route Circuit Connection in an ExpressRouteCircuitPeering resource.
+// ExpressRouteCircuitConnection - Express Route Circuit Connection in an ExpressRouteCircuitPeering resource.
 type ExpressRouteCircuitConnection struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -4950,7 +4950,8 @@ type ExpressRouteCircuitConnection struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for ListConnections API service call retrieves all global reach connections that belongs to a Private Peering for an ExpressRouteCircuit.
+// ExpressRouteCircuitConnectionListResult - Response for ListConnections API service call retrieves all global reach connections that belongs to a Private
+// Peering for an ExpressRouteCircuit.
 type ExpressRouteCircuitConnectionListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -4980,7 +4981,7 @@ type ExpressRouteCircuitConnectionPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the express route circuit connection.
+// ExpressRouteCircuitConnectionPropertiesFormat - Properties of the express route circuit connection.
 type ExpressRouteCircuitConnectionPropertiesFormat struct {
 	// /29 IP address space to carve out Customer addresses for tunnels.
 	AddressPrefix *string `json:"addressPrefix,omitempty"`
@@ -5034,7 +5035,7 @@ type ExpressRouteCircuitConnectionsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for ListExpressRouteCircuit API service call.
+// ExpressRouteCircuitListResult - Response for ListExpressRouteCircuit API service call.
 type ExpressRouteCircuitListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -5052,7 +5053,7 @@ type ExpressRouteCircuitListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Peering in an ExpressRouteCircuit resource.
+// ExpressRouteCircuitPeering - Peering in an ExpressRouteCircuit resource.
 type ExpressRouteCircuitPeering struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -5068,7 +5069,7 @@ type ExpressRouteCircuitPeering struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Specifies the peering configuration.
+// ExpressRouteCircuitPeeringConfig - Specifies the peering configuration.
 type ExpressRouteCircuitPeeringConfig struct {
 	// The communities of bgp peering. Specified for microsoft peering.
 	AdvertisedCommunities *[]*string `json:"advertisedCommunities,omitempty"`
@@ -5089,13 +5090,13 @@ type ExpressRouteCircuitPeeringConfig struct {
 	RoutingRegistryName *string `json:"routingRegistryName,omitempty"`
 }
 
-// ExpressRoute circuit peering identifier.
+// ExpressRouteCircuitPeeringID - ExpressRoute circuit peering identifier.
 type ExpressRouteCircuitPeeringID struct {
 	// The ID of the ExpressRoute circuit peering.
 	ID *string `json:"id,omitempty"`
 }
 
-// Response for ListPeering API service call retrieves all peerings that belong to an ExpressRouteCircuit.
+// ExpressRouteCircuitPeeringListResult - Response for ListPeering API service call retrieves all peerings that belong to an ExpressRouteCircuit.
 type ExpressRouteCircuitPeeringListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -5125,7 +5126,7 @@ type ExpressRouteCircuitPeeringPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the express route circuit peering.
+// ExpressRouteCircuitPeeringPropertiesFormat - Properties of the express route circuit peering.
 type ExpressRouteCircuitPeeringPropertiesFormat struct {
 	// The Azure ASN.
 	AzureASN *int32 `json:"azureASN,omitempty"`
@@ -5229,7 +5230,7 @@ type ExpressRouteCircuitPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of ExpressRouteCircuit.
+// ExpressRouteCircuitPropertiesFormat - Properties of ExpressRouteCircuit.
 type ExpressRouteCircuitPropertiesFormat struct {
 	// Allow classic operations.
 	AllowClassicOperations *bool `json:"allowClassicOperations,omitempty"`
@@ -5274,7 +5275,7 @@ type ExpressRouteCircuitPropertiesFormat struct {
 	Stag *int32 `json:"stag,omitempty" azure:"ro"`
 }
 
-// Reference to an express route circuit.
+// ExpressRouteCircuitReference - Reference to an express route circuit.
 type ExpressRouteCircuitReference struct {
 	// Corresponding Express Route Circuit Id.
 	ID *string `json:"id,omitempty"`
@@ -5289,7 +5290,7 @@ type ExpressRouteCircuitResponse struct {
 	RawResponse *http.Response
 }
 
-// The routes table associated with the ExpressRouteCircuit.
+// ExpressRouteCircuitRoutesTable - The routes table associated with the ExpressRouteCircuit.
 type ExpressRouteCircuitRoutesTable struct {
 	// Local preference value as set with the set local-preference route-map configuration command.
 	LocPrf *string `json:"locPrf,omitempty"`
@@ -5307,7 +5308,7 @@ type ExpressRouteCircuitRoutesTable struct {
 	Weight *int32 `json:"weight,omitempty"`
 }
 
-// The routes table associated with the ExpressRouteCircuit.
+// ExpressRouteCircuitRoutesTableSummary - The routes table associated with the ExpressRouteCircuit.
 type ExpressRouteCircuitRoutesTableSummary struct {
 	// Autonomous system number.
 	As *int32 `json:"as,omitempty"`
@@ -5325,7 +5326,7 @@ type ExpressRouteCircuitRoutesTableSummary struct {
 	V *int32 `json:"v,omitempty"`
 }
 
-// Contains SKU in an ExpressRouteCircuit.
+// ExpressRouteCircuitSKU - Contains SKU in an ExpressRouteCircuit.
 type ExpressRouteCircuitSKU struct {
 	// The family of the SKU.
 	Family *ExpressRouteCircuitSKUFamily `json:"family,omitempty"`
@@ -5337,7 +5338,7 @@ type ExpressRouteCircuitSKU struct {
 	Tier *ExpressRouteCircuitSKUTier `json:"tier,omitempty"`
 }
 
-// Contains ServiceProviderProperties in an ExpressRouteCircuit.
+// ExpressRouteCircuitServiceProviderProperties - Contains ServiceProviderProperties in an ExpressRouteCircuit.
 type ExpressRouteCircuitServiceProviderProperties struct {
 	// The BandwidthInMbps.
 	BandwidthInMbps *int32 `json:"bandwidthInMbps,omitempty"`
@@ -5349,7 +5350,7 @@ type ExpressRouteCircuitServiceProviderProperties struct {
 	ServiceProviderName *string `json:"serviceProviderName,omitempty"`
 }
 
-// Contains stats associated with the peering.
+// ExpressRouteCircuitStats - Contains stats associated with the peering.
 type ExpressRouteCircuitStats struct {
 	// The Primary BytesIn of the peering.
 	PrimarybytesIn *int64 `json:"primarybytesIn,omitempty"`
@@ -5373,7 +5374,7 @@ type ExpressRouteCircuitStatsResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for ListArpTable associated with the Express Route Circuits API.
+// ExpressRouteCircuitsArpTableListResult - Response for ListArpTable associated with the Express Route Circuits API.
 type ExpressRouteCircuitsArpTableListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -5454,7 +5455,7 @@ type ExpressRouteCircuitsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for ListRoutesTable associated with the Express Route Circuits API.
+// ExpressRouteCircuitsRoutesTableListResult - Response for ListRoutesTable associated with the Express Route Circuits API.
 type ExpressRouteCircuitsRoutesTableListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -5485,7 +5486,7 @@ type ExpressRouteCircuitsRoutesTableListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for ListRoutesTable associated with the Express Route Circuits API.
+// ExpressRouteCircuitsRoutesTableSummaryListResult - Response for ListRoutesTable associated with the Express Route Circuits API.
 type ExpressRouteCircuitsRoutesTableSummaryListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -5532,13 +5533,13 @@ type ExpressRouteConnection struct {
 	Properties *ExpressRouteConnectionProperties `json:"properties,omitempty"`
 }
 
-// The ID of the ExpressRouteConnection.
+// ExpressRouteConnectionID - The ID of the ExpressRouteConnection.
 type ExpressRouteConnectionID struct {
 	// READ-ONLY; The ID of the ExpressRouteConnection.
 	ID *string `json:"id,omitempty" azure:"ro"`
 }
 
-// ExpressRouteConnection list.
+// ExpressRouteConnectionList - ExpressRouteConnection list.
 type ExpressRouteConnectionList struct {
 	// The list of ExpressRoute connections.
 	Value *[]*ExpressRouteConnection `json:"value,omitempty"`
@@ -5565,7 +5566,7 @@ type ExpressRouteConnectionPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the ExpressRouteConnection subresource.
+// ExpressRouteConnectionProperties - Properties of the ExpressRouteConnection subresource.
 type ExpressRouteConnectionProperties struct {
 	// Authorization key to establish the connection.
 	AuthorizationKey *string `json:"authorizationKey,omitempty"`
@@ -5625,7 +5626,7 @@ type ExpressRouteCrossConnection struct {
 	Properties *ExpressRouteCrossConnectionProperties `json:"properties,omitempty"`
 }
 
-// Response for ListExpressRouteCrossConnection API service call.
+// ExpressRouteCrossConnectionListResult - Response for ListExpressRouteCrossConnection API service call.
 type ExpressRouteCrossConnectionListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -5643,7 +5644,7 @@ type ExpressRouteCrossConnectionListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Peering in an ExpressRoute Cross Connection resource.
+// ExpressRouteCrossConnectionPeering - Peering in an ExpressRoute Cross Connection resource.
 type ExpressRouteCrossConnectionPeering struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -5656,7 +5657,7 @@ type ExpressRouteCrossConnectionPeering struct {
 	Properties *ExpressRouteCrossConnectionPeeringProperties `json:"properties,omitempty"`
 }
 
-// Response for ListPeering API service call retrieves all peerings that belong to an ExpressRouteCrossConnection.
+// ExpressRouteCrossConnectionPeeringList - Response for ListPeering API service call retrieves all peerings that belong to an ExpressRouteCrossConnection.
 type ExpressRouteCrossConnectionPeeringList struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -5687,7 +5688,7 @@ type ExpressRouteCrossConnectionPeeringPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of express route cross connection peering.
+// ExpressRouteCrossConnectionPeeringProperties - Properties of express route cross connection peering.
 type ExpressRouteCrossConnectionPeeringProperties struct {
 	// READ-ONLY; The Azure ASN.
 	AzureASN *int32 `json:"azureASN,omitempty" azure:"ro"`
@@ -5777,7 +5778,7 @@ type ExpressRouteCrossConnectionPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of ExpressRouteCrossConnection.
+// ExpressRouteCrossConnectionProperties - Properties of ExpressRouteCrossConnection.
 type ExpressRouteCrossConnectionProperties struct {
 	// READ-ONLY; The circuit bandwidth In Mbps.
 	BandwidthInMbps *int32 `json:"bandwidthInMbps,omitempty" azure:"ro"`
@@ -5819,7 +5820,7 @@ type ExpressRouteCrossConnectionResponse struct {
 	RawResponse *http.Response
 }
 
-// The routes table associated with the ExpressRouteCircuit.
+// ExpressRouteCrossConnectionRoutesTableSummary - The routes table associated with the ExpressRouteCircuit.
 type ExpressRouteCrossConnectionRoutesTableSummary struct {
 	// Autonomous system number.
 	Asn *int32 `json:"asn,omitempty"`
@@ -5870,7 +5871,7 @@ type ExpressRouteCrossConnectionsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for ListRoutesTable associated with the Express Route Cross Connections.
+// ExpressRouteCrossConnectionsRoutesTableSummaryListResult - Response for ListRoutesTable associated with the Express Route Cross Connections.
 type ExpressRouteCrossConnectionsRoutesTableSummaryListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -5907,7 +5908,7 @@ type ExpressRouteCrossConnectionsUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// ExpressRoute gateway resource.
+// ExpressRouteGateway - ExpressRoute gateway resource.
 type ExpressRouteGateway struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -5917,7 +5918,7 @@ type ExpressRouteGateway struct {
 	Properties *ExpressRouteGatewayProperties `json:"properties,omitempty"`
 }
 
-// List of ExpressRoute gateways.
+// ExpressRouteGatewayList - List of ExpressRoute gateways.
 type ExpressRouteGatewayList struct {
 	// List of ExpressRoute gateways.
 	Value *[]*ExpressRouteGateway `json:"value,omitempty"`
@@ -5944,7 +5945,7 @@ type ExpressRouteGatewayPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// ExpressRoute gateway resource properties.
+// ExpressRouteGatewayProperties - ExpressRoute gateway resource properties.
 type ExpressRouteGatewayProperties struct {
 	// Configuration for auto scaling.
 	AutoScaleConfiguration *ExpressRouteGatewayPropertiesAutoScaleConfiguration `json:"autoScaleConfiguration,omitempty"`
@@ -5959,13 +5960,13 @@ type ExpressRouteGatewayProperties struct {
 	VirtualHub *VirtualHubID `json:"virtualHub,omitempty"`
 }
 
-// Configuration for auto scaling.
+// ExpressRouteGatewayPropertiesAutoScaleConfiguration - Configuration for auto scaling.
 type ExpressRouteGatewayPropertiesAutoScaleConfiguration struct {
 	// Minimum and maximum number of scale units to deploy.
 	Bounds *ExpressRouteGatewayPropertiesAutoScaleConfigurationBounds `json:"bounds,omitempty"`
 }
 
-// Minimum and maximum number of scale units to deploy.
+// ExpressRouteGatewayPropertiesAutoScaleConfigurationBounds - Minimum and maximum number of scale units to deploy.
 type ExpressRouteGatewayPropertiesAutoScaleConfigurationBounds struct {
 	// Maximum number of scale units deployed for ExpressRoute gateway.
 	Max *int32 `json:"max,omitempty"`
@@ -6021,7 +6022,7 @@ type ExpressRouteLink struct {
 	Properties *ExpressRouteLinkPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListExpressRouteLinks API service call.
+// ExpressRouteLinkListResult - Response for ListExpressRouteLinks API service call.
 type ExpressRouteLinkListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -6039,7 +6040,7 @@ type ExpressRouteLinkListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// ExpressRouteLink Mac Security Configuration.
+// ExpressRouteLinkMacSecConfig - ExpressRouteLink Mac Security Configuration.
 type ExpressRouteLinkMacSecConfig struct {
 	// Keyvault Secret Identifier URL containing Mac security CAK key.
 	CakSecretIdentifier *string `json:"cakSecretIdentifier,omitempty"`
@@ -6054,7 +6055,7 @@ type ExpressRouteLinkMacSecConfig struct {
 	SciState *ExpressRouteLinkMacSecSciState `json:"sciState,omitempty"`
 }
 
-// Properties specific to ExpressRouteLink resources.
+// ExpressRouteLinkPropertiesFormat - Properties specific to ExpressRouteLink resources.
 type ExpressRouteLinkPropertiesFormat struct {
 	// Administrative state of the physical port.
 	AdminState *ExpressRouteLinkAdminState `json:"adminState,omitempty"`
@@ -6113,7 +6114,7 @@ type ExpressRoutePort struct {
 	Properties *ExpressRoutePortPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListExpressRoutePorts API service call.
+// ExpressRoutePortListResult - Response for ListExpressRoutePorts API service call.
 type ExpressRoutePortListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -6143,7 +6144,7 @@ type ExpressRoutePortPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties specific to ExpressRoutePort resources.
+// ExpressRoutePortPropertiesFormat - Properties specific to ExpressRoutePort resources.
 type ExpressRoutePortPropertiesFormat struct {
 	// READ-ONLY; Date of the physical port allocation to be used in Letter of Authorization.
 	AllocationDate *string `json:"allocationDate,omitempty" azure:"ro"`
@@ -6218,14 +6219,14 @@ type ExpressRoutePortsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Definition of the ExpressRoutePorts peering location resource.
+// ExpressRoutePortsLocation - Definition of the ExpressRoutePorts peering location resource.
 type ExpressRoutePortsLocation struct {
 	Resource
 	// ExpressRoutePort peering location properties.
 	Properties *ExpressRoutePortsLocationPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Real-time inventory of available ExpressRoute port bandwidths.
+// ExpressRoutePortsLocationBandwidths - Real-time inventory of available ExpressRoute port bandwidths.
 type ExpressRoutePortsLocationBandwidths struct {
 	// READ-ONLY; Bandwidth descriptive name.
 	OfferName *string `json:"offerName,omitempty" azure:"ro"`
@@ -6234,7 +6235,7 @@ type ExpressRoutePortsLocationBandwidths struct {
 	ValueInGbps *int32 `json:"valueInGbps,omitempty" azure:"ro"`
 }
 
-// Response for ListExpressRoutePortsLocations API service call.
+// ExpressRoutePortsLocationListResult - Response for ListExpressRoutePortsLocations API service call.
 type ExpressRoutePortsLocationListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -6252,7 +6253,7 @@ type ExpressRoutePortsLocationListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties specific to ExpressRoutePorts peering location resources.
+// ExpressRoutePortsLocationPropertiesFormat - Properties specific to ExpressRoutePorts peering location resources.
 type ExpressRoutePortsLocationPropertiesFormat struct {
 	// READ-ONLY; Address of peering location.
 	Address *string `json:"address,omitempty" azure:"ro"`
@@ -6291,14 +6292,14 @@ type ExpressRoutePortsUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// A ExpressRouteResourceProvider object.
+// ExpressRouteServiceProvider - A ExpressRouteResourceProvider object.
 type ExpressRouteServiceProvider struct {
 	Resource
 	// Properties of the express route service provider.
 	Properties *ExpressRouteServiceProviderPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Contains bandwidths offered in ExpressRouteServiceProvider resources.
+// ExpressRouteServiceProviderBandwidthsOffered - Contains bandwidths offered in ExpressRouteServiceProvider resources.
 type ExpressRouteServiceProviderBandwidthsOffered struct {
 	// The OfferName.
 	OfferName *string `json:"offerName,omitempty"`
@@ -6307,7 +6308,7 @@ type ExpressRouteServiceProviderBandwidthsOffered struct {
 	ValueInMbps *int32 `json:"valueInMbps,omitempty"`
 }
 
-// Response for the ListExpressRouteServiceProvider API service call.
+// ExpressRouteServiceProviderListResult - Response for the ListExpressRouteServiceProvider API service call.
 type ExpressRouteServiceProviderListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -6325,7 +6326,7 @@ type ExpressRouteServiceProviderListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of ExpressRouteServiceProvider.
+// ExpressRouteServiceProviderPropertiesFormat - Properties of ExpressRouteServiceProvider.
 type ExpressRouteServiceProviderPropertiesFormat struct {
 	// A list of bandwidths offered.
 	BandwidthsOffered *[]*ExpressRouteServiceProviderBandwidthsOffered `json:"bandwidthsOffered,omitempty"`
@@ -6390,7 +6391,7 @@ type FirewallPolicy struct {
 	Properties *FirewallPolicyPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Trusted Root certificates properties for tls.
+// FirewallPolicyCertificateAuthority - Trusted Root certificates properties for tls.
 type FirewallPolicyCertificateAuthority struct {
 	// Secret Id of (base-64 encoded unencrypted pfx) 'Secret' or 'Certificate' object stored in KeyVault.
 	KeyVaultSecretID *string `json:"keyVaultSecretId,omitempty"`
@@ -6399,7 +6400,7 @@ type FirewallPolicyCertificateAuthority struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// Firewall Policy Filter Rule Collection.
+// FirewallPolicyFilterRuleCollection - Firewall Policy Filter Rule Collection.
 type FirewallPolicyFilterRuleCollection struct {
 	FirewallPolicyRuleCollection
 	// The action type of a Filter rule collection.
@@ -6440,13 +6441,13 @@ func (f *FirewallPolicyFilterRuleCollection) UnmarshalJSON(data []byte) error {
 	return f.FirewallPolicyRuleCollection.unmarshalInternal(rawMsg)
 }
 
-// Properties of the FirewallPolicyFilterRuleCollectionAction.
+// FirewallPolicyFilterRuleCollectionAction - Properties of the FirewallPolicyFilterRuleCollectionAction.
 type FirewallPolicyFilterRuleCollectionAction struct {
 	// The type of action.
 	Type *FirewallPolicyFilterRuleCollectionActionType `json:"type,omitempty"`
 }
 
-// Configuration for intrusion detection mode and rules.
+// FirewallPolicyIntrusionDetection - Configuration for intrusion detection mode and rules.
 type FirewallPolicyIntrusionDetection struct {
 	// Intrusion detection configuration properties.
 	Configuration *FirewallPolicyIntrusionDetectionConfiguration `json:"configuration,omitempty"`
@@ -6455,7 +6456,7 @@ type FirewallPolicyIntrusionDetection struct {
 	Mode *FirewallPolicyIntrusionDetectionStateType `json:"mode,omitempty"`
 }
 
-// Intrusion detection bypass traffic specification.
+// FirewallPolicyIntrusionDetectionBypassTrafficSpecifications - Intrusion detection bypass traffic specification.
 type FirewallPolicyIntrusionDetectionBypassTrafficSpecifications struct {
 	// Description of the bypass traffic rule.
 	Description *string `json:"description,omitempty"`
@@ -6482,7 +6483,7 @@ type FirewallPolicyIntrusionDetectionBypassTrafficSpecifications struct {
 	SourceIPGroups *[]*string `json:"sourceIpGroups,omitempty"`
 }
 
-// The operation for configuring intrusion detection.
+// FirewallPolicyIntrusionDetectionConfiguration - The operation for configuring intrusion detection.
 type FirewallPolicyIntrusionDetectionConfiguration struct {
 	// List of rules for traffic to bypass.
 	BypassTrafficSettings *[]*FirewallPolicyIntrusionDetectionBypassTrafficSpecifications `json:"bypassTrafficSettings,omitempty"`
@@ -6491,7 +6492,7 @@ type FirewallPolicyIntrusionDetectionConfiguration struct {
 	SignatureOverrides *[]*FirewallPolicyIntrusionDetectionSignatureSpecification `json:"signatureOverrides,omitempty"`
 }
 
-// Intrusion detection signatures specification states.
+// FirewallPolicyIntrusionDetectionSignatureSpecification - Intrusion detection signatures specification states.
 type FirewallPolicyIntrusionDetectionSignatureSpecification struct {
 	// Signature id.
 	ID *string `json:"id,omitempty"`
@@ -6500,7 +6501,7 @@ type FirewallPolicyIntrusionDetectionSignatureSpecification struct {
 	Mode *FirewallPolicyIntrusionDetectionStateType `json:"mode,omitempty"`
 }
 
-// Response for ListFirewallPolicies API service call.
+// FirewallPolicyListResult - Response for ListFirewallPolicies API service call.
 type FirewallPolicyListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -6518,7 +6519,7 @@ type FirewallPolicyListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Firewall Policy NAT Rule Collection.
+// FirewallPolicyNatRuleCollection - Firewall Policy NAT Rule Collection.
 type FirewallPolicyNatRuleCollection struct {
 	FirewallPolicyRuleCollection
 	// The action type of a Nat rule collection.
@@ -6559,7 +6560,7 @@ func (f *FirewallPolicyNatRuleCollection) UnmarshalJSON(data []byte) error {
 	return f.FirewallPolicyRuleCollection.unmarshalInternal(rawMsg)
 }
 
-// Properties of the FirewallPolicyNatRuleCollectionAction.
+// FirewallPolicyNatRuleCollectionAction - Properties of the FirewallPolicyNatRuleCollectionAction.
 type FirewallPolicyNatRuleCollectionAction struct {
 	// The type of action.
 	Type *FirewallPolicyNatRuleCollectionActionType `json:"type,omitempty"`
@@ -6577,7 +6578,7 @@ type FirewallPolicyPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Firewall Policy definition.
+// FirewallPolicyPropertiesFormat - Firewall Policy definition.
 type FirewallPolicyPropertiesFormat struct {
 	// The parent firewall policy from which rules are inherited.
 	BasePolicy *SubResource `json:"basePolicy,omitempty"`
@@ -6627,11 +6628,11 @@ type FirewallPolicyResponse struct {
 // Use a type switch to determine the concrete type.  The possible types are:
 // - *FirewallPolicyRule, *ApplicationRule, *NatRule, *NetworkRule
 type FirewallPolicyRuleClassification interface {
-	// GetFirewallPolicyRule() returns the FirewallPolicyRule content of the underlying type.
+	// GetFirewallPolicyRule returns the FirewallPolicyRule content of the underlying type.
 	GetFirewallPolicyRule() *FirewallPolicyRule
 }
 
-// Properties of a rule.
+// FirewallPolicyRule - Properties of a rule.
 type FirewallPolicyRule struct {
 	// Description of the rule.
 	Description *string `json:"description,omitempty"`
@@ -6685,7 +6686,7 @@ func (f *FirewallPolicyRule) unmarshalInternal(rawMsg map[string]*json.RawMessag
 	return nil
 }
 
-// Properties of the application rule protocol.
+// FirewallPolicyRuleApplicationProtocol - Properties of the application rule protocol.
 type FirewallPolicyRuleApplicationProtocol struct {
 	// Port number for the protocol, cannot be greater than 64000.
 	Port *int32 `json:"port,omitempty"`
@@ -6699,11 +6700,11 @@ type FirewallPolicyRuleApplicationProtocol struct {
 // Use a type switch to determine the concrete type.  The possible types are:
 // - *FirewallPolicyRuleCollection, *FirewallPolicyFilterRuleCollection, *FirewallPolicyNatRuleCollection
 type FirewallPolicyRuleCollectionClassification interface {
-	// GetFirewallPolicyRuleCollection() returns the FirewallPolicyRuleCollection content of the underlying type.
+	// GetFirewallPolicyRuleCollection returns the FirewallPolicyRuleCollection content of the underlying type.
 	GetFirewallPolicyRuleCollection() *FirewallPolicyRuleCollection
 }
 
-// Properties of the rule collection.
+// FirewallPolicyRuleCollection - Properties of the rule collection.
 type FirewallPolicyRuleCollection struct {
 	// The name of the rule collection.
 	Name *string `json:"name,omitempty"`
@@ -6759,7 +6760,7 @@ func (f *FirewallPolicyRuleCollection) unmarshalInternal(rawMsg map[string]*json
 	return nil
 }
 
-// Rule Collection Group resource.
+// FirewallPolicyRuleCollectionGroup - Rule Collection Group resource.
 type FirewallPolicyRuleCollectionGroup struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -6775,7 +6776,7 @@ type FirewallPolicyRuleCollectionGroup struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for ListFirewallPolicyRuleCollectionGroups API service call.
+// FirewallPolicyRuleCollectionGroupListResult - Response for ListFirewallPolicyRuleCollectionGroups API service call.
 type FirewallPolicyRuleCollectionGroupListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -6807,7 +6808,7 @@ type FirewallPolicyRuleCollectionGroupPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the rule collection group.
+// FirewallPolicyRuleCollectionGroupProperties - Properties of the rule collection group.
 type FirewallPolicyRuleCollectionGroupProperties struct {
 	// Priority of the Firewall Policy Rule Collection Group resource.
 	Priority *int32 `json:"priority,omitempty"`
@@ -6875,13 +6876,13 @@ type FirewallPolicyRuleCollectionGroupsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// SKU of Firewall policy.
+// FirewallPolicySKU - SKU of Firewall policy.
 type FirewallPolicySKU struct {
 	// Tier of Firewall Policy.
 	Tier *FirewallPolicySKUTier `json:"tier,omitempty"`
 }
 
-// ThreatIntel Whitelist for Firewall Policy.
+// FirewallPolicyThreatIntelWhitelist - ThreatIntel Whitelist for Firewall Policy.
 type FirewallPolicyThreatIntelWhitelist struct {
 	// List of FQDNs for the ThreatIntel Whitelist.
 	Fqdns *[]*string `json:"fqdns,omitempty"`
@@ -6890,13 +6891,13 @@ type FirewallPolicyThreatIntelWhitelist struct {
 	IPAddresses *[]*string `json:"ipAddresses,omitempty"`
 }
 
-// Configuration needed to perform TLS termination & initiation.
+// FirewallPolicyTransportSecurity - Configuration needed to perform TLS termination & initiation.
 type FirewallPolicyTransportSecurity struct {
 	// The CA used for intermediate CA generation.
 	CertificateAuthority *FirewallPolicyCertificateAuthority `json:"certificateAuthority,omitempty"`
 }
 
-// A flow log resource.
+// FlowLog - A flow log resource.
 type FlowLog struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -6906,7 +6907,7 @@ type FlowLog struct {
 	Properties *FlowLogPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Parameters that define the flow log format.
+// FlowLogFormatParameters - Parameters that define the flow log format.
 type FlowLogFormatParameters struct {
 	// The file type of flow log.
 	Type *FlowLogFormatType `json:"type,omitempty"`
@@ -6915,7 +6916,7 @@ type FlowLogFormatParameters struct {
 	Version *int32 `json:"version,omitempty"`
 }
 
-// Information on the configuration of flow log and traffic analytics (optional) .
+// FlowLogInformation - Information on the configuration of flow log and traffic analytics (optional) .
 type FlowLogInformation struct {
 	// Parameters that define the configuration of traffic analytics.
 	FlowAnalyticsConfiguration *TrafficAnalyticsProperties `json:"flowAnalyticsConfiguration,omitempty"`
@@ -6948,7 +6949,7 @@ type FlowLogInformationResponse struct {
 	RawResponse *http.Response
 }
 
-// List of flow logs.
+// FlowLogListResult - List of flow logs.
 type FlowLogListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -6978,7 +6979,7 @@ type FlowLogPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters that define the configuration of flow log.
+// FlowLogProperties - Parameters that define the configuration of flow log.
 type FlowLogProperties struct {
 	// Flag to enable/disable flow logging.
 	Enabled *bool `json:"enabled,omitempty"`
@@ -6993,7 +6994,7 @@ type FlowLogProperties struct {
 	StorageID *string `json:"storageId,omitempty"`
 }
 
-// Parameters that define the configuration of flow log.
+// FlowLogPropertiesFormat - Parameters that define the configuration of flow log.
 type FlowLogPropertiesFormat struct {
 	// Flag to enable/disable flow logging.
 	Enabled *bool `json:"enabled,omitempty"`
@@ -7029,7 +7030,7 @@ type FlowLogResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters that define a resource to query flow log and traffic analytics (optional) status.
+// FlowLogStatusParameters - Parameters that define a resource to query flow log and traffic analytics (optional) status.
 type FlowLogStatusParameters struct {
 	// The target resource where getting the flow log and traffic analytics (optional) status.
 	TargetResourceID *string `json:"targetResourceId,omitempty"`
@@ -7060,7 +7061,7 @@ type FlowLogsUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Frontend IP address of the load balancer.
+// FrontendIPConfiguration - Frontend IP address of the load balancer.
 type FrontendIPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -7079,7 +7080,7 @@ type FrontendIPConfiguration struct {
 	Zones *[]*string `json:"zones,omitempty"`
 }
 
-// Properties of Frontend IP Configuration of the load balancer.
+// FrontendIPConfigurationPropertiesFormat - Properties of Frontend IP Configuration of the load balancer.
 type FrontendIPConfigurationPropertiesFormat struct {
 	// READ-ONLY; An array of references to inbound pools that use this frontend IP.
 	InboundNatPools *[]*SubResource `json:"inboundNatPools,omitempty" azure:"ro"`
@@ -7124,7 +7125,7 @@ type FrontendIPConfigurationResponse struct {
 	RawResponse *http.Response
 }
 
-// Gateway routing details.
+// GatewayRoute - Gateway routing details.
 type GatewayRoute struct {
 	// READ-ONLY; The route's AS path sequence.
 	AsPath *string `json:"asPath,omitempty" azure:"ro"`
@@ -7148,7 +7149,7 @@ type GatewayRoute struct {
 	Weight *int32 `json:"weight,omitempty" azure:"ro"`
 }
 
-// List of virtual network gateway routes.
+// GatewayRouteListResult - List of virtual network gateway routes.
 type GatewayRouteListResult struct {
 	// List of gateway routes.
 	Value *[]*GatewayRoute `json:"value,omitempty"`
@@ -7175,13 +7176,13 @@ type GatewayRouteListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// The customer name to be printed on a letter of authorization.
+// GenerateExpressRoutePortsLOARequest - The customer name to be printed on a letter of authorization.
 type GenerateExpressRoutePortsLOARequest struct {
 	// The customer name.
 	CustomerName *string `json:"customerName,omitempty"`
 }
 
-// Response for GenerateExpressRoutePortsLOA API service call.
+// GenerateExpressRoutePortsLOAResult - Response for GenerateExpressRoutePortsLOA API service call.
 type GenerateExpressRoutePortsLOAResult struct {
 	// The content as a base64 encoded string.
 	EncodedContent *string `json:"encodedContent,omitempty"`
@@ -7196,7 +7197,7 @@ type GenerateExpressRoutePortsLOAResultResponse struct {
 	RawResponse *http.Response
 }
 
-// List of Vpn-Sites.
+// GetVPNSitesConfigurationRequest - List of Vpn-Sites.
 type GetVPNSitesConfigurationRequest struct {
 	// The sas-url to download the configurations for vpn-sites.
 	OutputBlobSasURL *string `json:"outputBlobSasUrl,omitempty"`
@@ -7205,7 +7206,7 @@ type GetVPNSitesConfigurationRequest struct {
 	VPNSites *[]*string `json:"vpnSites,omitempty"`
 }
 
-// HTTP configuration of the connectivity check.
+// HTTPConfiguration - HTTP configuration of the connectivity check.
 type HTTPConfiguration struct {
 	// List of HTTP headers.
 	Headers *[]*HTTPHeader `json:"headers,omitempty"`
@@ -7217,7 +7218,7 @@ type HTTPConfiguration struct {
 	ValidStatusCodes *[]*int32 `json:"validStatusCodes,omitempty"`
 }
 
-// The HTTP header.
+// HTTPHeader - The HTTP header.
 type HTTPHeader struct {
 	// The name in HTTP header.
 	Name *string `json:"name,omitempty"`
@@ -7238,7 +7239,7 @@ type HTTPPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Hop link.
+// HopLink - Hop link.
 type HopLink struct {
 	// READ-ONLY; Provides additional context on links.
 	Context *map[string]*string `json:"context,omitempty" azure:"ro"`
@@ -7259,7 +7260,7 @@ type HopLink struct {
 	ResourceID *string `json:"resourceId,omitempty" azure:"ro"`
 }
 
-// Hop link properties.
+// HopLinkProperties - Hop link properties.
 type HopLinkProperties struct {
 	// READ-ONLY; Average roundtrip time in milliseconds.
 	RoundTripTimeAvg *int64 `json:"roundTripTimeAvg,omitempty" azure:"ro"`
@@ -7271,7 +7272,7 @@ type HopLinkProperties struct {
 	RoundTripTimeMin *int64 `json:"roundTripTimeMin,omitempty" azure:"ro"`
 }
 
-// IP addresses associated with azure firewall.
+// HubIPAddresses - IP addresses associated with azure firewall.
 type HubIPAddresses struct {
 	// Private IP Address associated with azure firewall.
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty"`
@@ -7280,7 +7281,7 @@ type HubIPAddresses struct {
 	PublicIPs *HubPublicIPAddresses `json:"publicIPs,omitempty"`
 }
 
-// IpConfigurations.
+// HubIPConfiguration - IpConfigurations.
 type HubIPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -7308,7 +7309,7 @@ type HubIPConfigurationPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of IP configuration.
+// HubIPConfigurationPropertiesFormat - Properties of IP configuration.
 type HubIPConfigurationPropertiesFormat struct {
 	// The private IP address of the IP configuration.
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty"`
@@ -7335,7 +7336,7 @@ type HubIPConfigurationResponse struct {
 	RawResponse *http.Response
 }
 
-// Public IP addresses associated with azure firewall.
+// HubPublicIPAddresses - Public IP addresses associated with azure firewall.
 type HubPublicIPAddresses struct {
 	// The list of Public IP addresses associated with azure firewall or IP addresses to be retained.
 	Addresses *[]*AzureFirewallPublicIPAddress `json:"addresses,omitempty"`
@@ -7344,7 +7345,7 @@ type HubPublicIPAddresses struct {
 	Count *int32 `json:"count,omitempty"`
 }
 
-// RouteTable route.
+// HubRoute - RouteTable route.
 type HubRoute struct {
 	// The type of destinations (eg: CIDR, ResourceId, Service).
 	DestinationType *string `json:"destinationType,omitempty"`
@@ -7362,7 +7363,7 @@ type HubRoute struct {
 	NextHopType *string `json:"nextHopType,omitempty"`
 }
 
-// RouteTable resource in a virtual hub.
+// HubRouteTable - RouteTable resource in a virtual hub.
 type HubRouteTable struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -7390,7 +7391,7 @@ type HubRouteTablePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters for RouteTable.
+// HubRouteTableProperties - Parameters for RouteTable.
 type HubRouteTableProperties struct {
 	// READ-ONLY; List of all connections associated with this route table.
 	AssociatedConnections *[]*string `json:"associatedConnections,omitempty" azure:"ro"`
@@ -7462,7 +7463,7 @@ type HubVirtualNetworkConnectionPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters for HubVirtualNetworkConnection.
+// HubVirtualNetworkConnectionProperties - Parameters for HubVirtualNetworkConnection.
 type HubVirtualNetworkConnectionProperties struct {
 	// Deprecated: VirtualHub to RemoteVnet transit to enabled or not.
 	AllowHubToRemoteVnetTransit *bool `json:"allowHubToRemoteVnetTransit,omitempty"`
@@ -7512,16 +7513,13 @@ type HubVirtualNetworkConnectionsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for CheckIPAddressAvailability API service call.
+// IPAddressAvailabilityResult - Response for CheckIPAddressAvailability API service call.
 type IPAddressAvailabilityResult struct {
 	// Private IP address availability.
 	Available *bool `json:"available,omitempty"`
 
 	// Contains other available private IP addresses if the asked for address is taken.
 	AvailableIPAddresses *[]*string `json:"availableIPAddresses,omitempty"`
-
-	// Private IP address platform reserved.
-	IsPlatformReserved *bool `json:"isPlatformReserved,omitempty"`
 }
 
 // IPAddressAvailabilityResultResponse is the response envelope for operations that return a IPAddressAvailabilityResult type.
@@ -7533,7 +7531,7 @@ type IPAddressAvailabilityResultResponse struct {
 	RawResponse *http.Response
 }
 
-// IpAllocation resource.
+// IPAllocation - IpAllocation resource.
 type IPAllocation struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -7543,7 +7541,7 @@ type IPAllocation struct {
 	Properties *IPAllocationPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for the ListIpAllocations API service call.
+// IPAllocationListResult - Response for the ListIpAllocations API service call.
 type IPAllocationListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -7573,7 +7571,7 @@ type IPAllocationPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the IpAllocation.
+// IPAllocationPropertiesFormat - Properties of the IpAllocation.
 type IPAllocationPropertiesFormat struct {
 	// IpAllocation tags.
 	AllocationTags *map[string]*string `json:"allocationTags,omitempty"`
@@ -7640,7 +7638,7 @@ type IPAllocationsUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// IP configuration.
+// IPConfiguration - IP configuration.
 type IPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -7653,7 +7651,7 @@ type IPConfiguration struct {
 	Properties *IPConfigurationPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Properties of IPConfigurationBgpPeeringAddress.
+// IPConfigurationBgpPeeringAddress - Properties of IPConfigurationBgpPeeringAddress.
 type IPConfigurationBgpPeeringAddress struct {
 	// The list of custom BGP peering addresses which belong to IP configuration.
 	CustomBgpIPAddresses *[]*string `json:"customBgpIpAddresses,omitempty"`
@@ -7668,7 +7666,7 @@ type IPConfigurationBgpPeeringAddress struct {
 	TunnelIPAddresses *[]*string `json:"tunnelIpAddresses,omitempty" azure:"ro"`
 }
 
-// IP configuration profile child resource.
+// IPConfigurationProfile - IP configuration profile child resource.
 type IPConfigurationProfile struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -7684,7 +7682,7 @@ type IPConfigurationProfile struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// IP configuration profile properties.
+// IPConfigurationProfilePropertiesFormat - IP configuration profile properties.
 type IPConfigurationProfilePropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the IP configuration profile resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -7693,7 +7691,7 @@ type IPConfigurationProfilePropertiesFormat struct {
 	Subnet *Subnet `json:"subnet,omitempty"`
 }
 
-// Properties of IP configuration.
+// IPConfigurationPropertiesFormat - Properties of IP configuration.
 type IPConfigurationPropertiesFormat struct {
 	// The private IP address of the IP configuration.
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty"`
@@ -7711,7 +7709,7 @@ type IPConfigurationPropertiesFormat struct {
 	Subnet *Subnet `json:"subnet,omitempty"`
 }
 
-// The IpGroups resource information.
+// IPGroup - The IpGroups resource information.
 type IPGroup struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -7721,7 +7719,7 @@ type IPGroup struct {
 	Properties *IPGroupPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for the ListIpGroups API service call.
+// IPGroupListResult - Response for the ListIpGroups API service call.
 type IPGroupListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -7751,7 +7749,7 @@ type IPGroupPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// The IpGroups property information.
+// IPGroupPropertiesFormat - The IpGroups property information.
 type IPGroupPropertiesFormat struct {
 	// READ-ONLY; List of references to Firewall Policies resources that this IpGroups is associated with.
 	FirewallPolicies *[]*SubResource `json:"firewallPolicies,omitempty" azure:"ro"`
@@ -7806,7 +7804,7 @@ type IPGroupsUpdateGroupsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// An IPSec Policy configuration for a virtual network gateway connection.
+// IPSecPolicy - An IPSec Policy configuration for a virtual network gateway connection.
 type IPSecPolicy struct {
 	// The DH Group used in IKE Phase 1 for initial SA.
 	DhGroup *DhGroup `json:"dhGroup,omitempty"`
@@ -7833,7 +7831,7 @@ type IPSecPolicy struct {
 	SaLifeTimeSeconds *int32 `json:"saLifeTimeSeconds,omitempty"`
 }
 
-// Contains the IpTag associated with the object.
+// IPTag - Contains the IpTag associated with the object.
 type IPTag struct {
 	// The IP tag type. Example: FirstPartyUsage.
 	IPTagType *string `json:"ipTagType,omitempty"`
@@ -7842,7 +7840,7 @@ type IPTag struct {
 	Tag *string `json:"tag,omitempty"`
 }
 
-// IPv6 Circuit Connection properties for global reach.
+// IPv6CircuitConnectionConfig - IPv6 Circuit Connection properties for global reach.
 type IPv6CircuitConnectionConfig struct {
 	// /125 IP address space to carve out customer addresses for global reach.
 	AddressPrefix *string `json:"addressPrefix,omitempty"`
@@ -7851,7 +7849,7 @@ type IPv6CircuitConnectionConfig struct {
 	CircuitConnectionStatus *CircuitConnectionStatus `json:"circuitConnectionStatus,omitempty" azure:"ro"`
 }
 
-// Contains IPv6 peering config.
+// IPv6ExpressRouteCircuitPeeringConfig - Contains IPv6 peering config.
 type IPv6ExpressRouteCircuitPeeringConfig struct {
 	// The Microsoft peering configuration.
 	MicrosoftPeeringConfig *ExpressRouteCircuitPeeringConfig `json:"microsoftPeeringConfig,omitempty"`
@@ -7869,7 +7867,7 @@ type IPv6ExpressRouteCircuitPeeringConfig struct {
 	State *ExpressRouteCircuitPeeringState `json:"state,omitempty"`
 }
 
-// Inbound NAT pool of the load balancer.
+// InboundNatPool - Inbound NAT pool of the load balancer.
 type InboundNatPool struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -7885,7 +7883,7 @@ type InboundNatPool struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of Inbound NAT pool.
+// InboundNatPoolPropertiesFormat - Properties of Inbound NAT pool.
 type InboundNatPoolPropertiesFormat struct {
 	// The port used for internal connections on the endpoint. Acceptable values are between 1 and 65535.
 	BackendPort *int32 `json:"backendPort,omitempty"`
@@ -7921,7 +7919,7 @@ type InboundNatPoolPropertiesFormat struct {
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
 }
 
-// Inbound NAT rule of the load balancer.
+// InboundNatRule - Inbound NAT rule of the load balancer.
 type InboundNatRule struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -7937,7 +7935,7 @@ type InboundNatRule struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for ListInboundNatRule API service call.
+// InboundNatRuleListResult - Response for ListInboundNatRule API service call.
 type InboundNatRuleListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -7967,7 +7965,7 @@ type InboundNatRulePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the inbound NAT rule.
+// InboundNatRulePropertiesFormat - Properties of the inbound NAT rule.
 type InboundNatRulePropertiesFormat struct {
 	// READ-ONLY; A reference to a private IP address defined on a network interface of a VM. Traffic sent to the frontend port of each of the frontend IP configurations
 	// is forwarded to the backend IP.
@@ -8032,7 +8030,7 @@ type InboundNatRulesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// NVA Inbound Security Rule resource.
+// InboundSecurityRule - NVA Inbound Security Rule resource.
 type InboundSecurityRule struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -8065,7 +8063,7 @@ type InboundSecurityRulePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the Inbound Security Rules resource.
+// InboundSecurityRuleProperties - Properties of the Inbound Security Rules resource.
 type InboundSecurityRuleProperties struct {
 	// READ-ONLY; The provisioning state of the resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -8083,7 +8081,7 @@ type InboundSecurityRuleResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the Inbound Security Rules resource.
+// InboundSecurityRules - Properties of the Inbound Security Rules resource.
 type InboundSecurityRules struct {
 	// NVA port ranges to be opened up. One needs to provide specific ports.
 	DestinationPortRange *int32 `json:"destinationPortRange,omitempty"`
@@ -8095,7 +8093,7 @@ type InboundSecurityRules struct {
 	SourceAddressPrefix *string `json:"sourceAddressPrefix,omitempty"`
 }
 
-// List of RouteTables and a URL nextLink to get the next set of results.
+// ListHubRouteTablesResult - List of RouteTables and a URL nextLink to get the next set of results.
 type ListHubRouteTablesResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8113,7 +8111,7 @@ type ListHubRouteTablesResultResponse struct {
 	RawResponse *http.Response
 }
 
-// List of HubVirtualNetworkConnections and a URL nextLink to get the next set of results.
+// ListHubVirtualNetworkConnectionsResult - List of HubVirtualNetworkConnections and a URL nextLink to get the next set of results.
 type ListHubVirtualNetworkConnectionsResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8131,7 +8129,8 @@ type ListHubVirtualNetworkConnectionsResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Result of the request to list P2SVpnGateways. It contains a list of P2SVpnGateways and a URL nextLink to get the next set of results.
+// ListP2SVPNGatewaysResult - Result of the request to list P2SVpnGateways. It contains a list of P2SVpnGateways and a URL nextLink to get the next set
+// of results.
 type ListP2SVPNGatewaysResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8149,8 +8148,8 @@ type ListP2SVPNGatewaysResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Result of the request to list all vpn connections to a virtual wan vpn gateway. It contains a list of Vpn Connections and a URL nextLink to get the next
-// set of results.
+// ListVPNConnectionsResult - Result of the request to list all vpn connections to a virtual wan vpn gateway. It contains a list of Vpn Connections and
+// a URL nextLink to get the next set of results.
 type ListVPNConnectionsResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8169,7 +8168,7 @@ type ListVPNConnectionsResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Result of the request to list VpnGateways. It contains a list of VpnGateways and a URL nextLink to get the next set of results.
+// ListVPNGatewaysResult - Result of the request to list VpnGateways. It contains a list of VpnGateways and a URL nextLink to get the next set of results.
 type ListVPNGatewaysResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8187,7 +8186,8 @@ type ListVPNGatewaysResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Result of the request to list all VpnServerConfigurations. It contains a list of VpnServerConfigurations and a URL nextLink to get the next set of results.
+// ListVPNServerConfigurationsResult - Result of the request to list all VpnServerConfigurations. It contains a list of VpnServerConfigurations and a URL
+// nextLink to get the next set of results.
 type ListVPNServerConfigurationsResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8205,8 +8205,8 @@ type ListVPNServerConfigurationsResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Result of the request to list all vpn connections to a virtual wan vpn gateway. It contains a list of Vpn Connections and a URL nextLink to get the next
-// set of results.
+// ListVPNSiteLinkConnectionsResult - Result of the request to list all vpn connections to a virtual wan vpn gateway. It contains a list of Vpn Connections
+// and a URL nextLink to get the next set of results.
 type ListVPNSiteLinkConnectionsResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8225,7 +8225,7 @@ type ListVPNSiteLinkConnectionsResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Result of the request to list VpnSiteLinks. It contains a list of VpnSiteLinks and a URL nextLink to get the next set of results.
+// ListVPNSiteLinksResult - Result of the request to list VpnSiteLinks. It contains a list of VpnSiteLinks and a URL nextLink to get the next set of results.
 type ListVPNSiteLinksResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8243,7 +8243,7 @@ type ListVPNSiteLinksResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Result of the request to list VpnSites. It contains a list of VpnSites and a URL nextLink to get the next set of results.
+// ListVPNSitesResult - Result of the request to list VpnSites. It contains a list of VpnSites and a URL nextLink to get the next set of results.
 type ListVPNSitesResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8261,7 +8261,7 @@ type ListVPNSitesResultResponse struct {
 	RawResponse *http.Response
 }
 
-// VirtualHubBgpConnections list.
+// ListVirtualHubBgpConnectionResults - VirtualHubBgpConnections list.
 type ListVirtualHubBgpConnectionResults struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8279,7 +8279,7 @@ type ListVirtualHubBgpConnectionResultsResponse struct {
 	RawResponse *http.Response
 }
 
-// VirtualHubIpConfigurations list.
+// ListVirtualHubIPConfigurationResults - VirtualHubIpConfigurations list.
 type ListVirtualHubIPConfigurationResults struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8297,7 +8297,7 @@ type ListVirtualHubIPConfigurationResultsResponse struct {
 	RawResponse *http.Response
 }
 
-// List of VirtualHubRouteTableV2s and a URL nextLink to get the next set of results.
+// ListVirtualHubRouteTableV2SResult - List of VirtualHubRouteTableV2s and a URL nextLink to get the next set of results.
 type ListVirtualHubRouteTableV2SResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8315,7 +8315,7 @@ type ListVirtualHubRouteTableV2SResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Result of the request to list VirtualHubs. It contains a list of VirtualHubs and a URL nextLink to get the next set of results.
+// ListVirtualHubsResult - Result of the request to list VirtualHubs. It contains a list of VirtualHubs and a URL nextLink to get the next set of results.
 type ListVirtualHubsResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8333,7 +8333,7 @@ type ListVirtualHubsResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Result of the request to list VirtualWANs. It contains a list of VirtualWANs and a URL nextLink to get the next set of results.
+// ListVirtualWANsResult - Result of the request to list VirtualWANs. It contains a list of VirtualWANs and a URL nextLink to get the next set of results.
 type ListVirtualWANsResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -8367,7 +8367,7 @@ type LoadBalancer struct {
 	SKU *LoadBalancerSKU `json:"sku,omitempty"`
 }
 
-// Load balancer backend addresses.
+// LoadBalancerBackendAddress - Load balancer backend addresses.
 type LoadBalancerBackendAddress struct {
 	// Name of the backend address.
 	Name *string `json:"name,omitempty"`
@@ -8376,7 +8376,7 @@ type LoadBalancerBackendAddress struct {
 	Properties *LoadBalancerBackendAddressPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListBackendAddressPool API service call.
+// LoadBalancerBackendAddressPoolListResult - Response for ListBackendAddressPool API service call.
 type LoadBalancerBackendAddressPoolListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -8415,7 +8415,7 @@ type LoadBalancerBackendAddressPoolsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Properties of the load balancer backend addresses.
+// LoadBalancerBackendAddressPropertiesFormat - Properties of the load balancer backend addresses.
 type LoadBalancerBackendAddressPropertiesFormat struct {
 	// IP Address belonging to the referenced virtual network.
 	IPAddress *string `json:"ipAddress,omitempty"`
@@ -8430,7 +8430,7 @@ type LoadBalancerBackendAddressPropertiesFormat struct {
 	VirtualNetwork *SubResource `json:"virtualNetwork,omitempty"`
 }
 
-// Response for ListFrontendIPConfiguration API service call.
+// LoadBalancerFrontendIPConfigurationListResult - Response for ListFrontendIPConfiguration API service call.
 type LoadBalancerFrontendIPConfigurationListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -8459,7 +8459,7 @@ type LoadBalancerFrontendIPConfigurationsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for ListLoadBalancers API service call.
+// LoadBalancerListResult - Response for ListLoadBalancers API service call.
 type LoadBalancerListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -8477,7 +8477,7 @@ type LoadBalancerListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for ListLoadBalancingRule API service call.
+// LoadBalancerLoadBalancingRuleListResult - Response for ListLoadBalancingRule API service call.
 type LoadBalancerLoadBalancingRuleListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -8510,7 +8510,7 @@ type LoadBalancerNetworkInterfacesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for ListOutboundRule API service call.
+// LoadBalancerOutboundRuleListResult - Response for ListOutboundRule API service call.
 type LoadBalancerOutboundRuleListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -8550,7 +8550,7 @@ type LoadBalancerPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for ListProbe API service call.
+// LoadBalancerProbeListResult - Response for ListProbe API service call.
 type LoadBalancerProbeListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -8578,7 +8578,7 @@ type LoadBalancerProbesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Properties of the load balancer.
+// LoadBalancerPropertiesFormat - Properties of the load balancer.
 type LoadBalancerPropertiesFormat struct {
 	// Collection of backend address pools used by a load balancer.
 	BackendAddressPools *[]*BackendAddressPool `json:"backendAddressPools,omitempty"`
@@ -8625,7 +8625,7 @@ type LoadBalancerResponse struct {
 	RawResponse *http.Response
 }
 
-// SKU of a load balancer.
+// LoadBalancerSKU - SKU of a load balancer.
 type LoadBalancerSKU struct {
 	// Name of a load balancer SKU.
 	Name *LoadBalancerSKUName `json:"name,omitempty"`
@@ -8665,7 +8665,7 @@ type LoadBalancersUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// A load balancing rule for a load balancer.
+// LoadBalancingRule - A load balancing rule for a load balancer.
 type LoadBalancingRule struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -8681,7 +8681,7 @@ type LoadBalancingRule struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of the load balancer.
+// LoadBalancingRulePropertiesFormat - Properties of the load balancer.
 type LoadBalancingRulePropertiesFormat struct {
 	// A reference to a pool of DIPs. Inbound traffic is randomly load balanced across IPs in the backend IPs.
 	BackendAddressPool *SubResource `json:"backendAddressPool,omitempty"`
@@ -8734,7 +8734,7 @@ type LoadBalancingRuleResponse struct {
 	RawResponse *http.Response
 }
 
-// A common class for general resource information.
+// LocalNetworkGateway - A common class for general resource information.
 type LocalNetworkGateway struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -8744,7 +8744,7 @@ type LocalNetworkGateway struct {
 	Properties *LocalNetworkGatewayPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListLocalNetworkGateways API service call.
+// LocalNetworkGatewayListResult - Response for ListLocalNetworkGateways API service call.
 type LocalNetworkGatewayListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -8774,7 +8774,7 @@ type LocalNetworkGatewayPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// LocalNetworkGateway properties.
+// LocalNetworkGatewayPropertiesFormat - LocalNetworkGateway properties.
 type LocalNetworkGatewayPropertiesFormat struct {
 	// Local network gateway's BGP speaker settings.
 	BgpSettings *BgpSettings `json:"bgpSettings,omitempty"`
@@ -8829,7 +8829,7 @@ type LocalNetworkGatewaysUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Description of logging specification.
+// LogSpecification - Description of logging specification.
 type LogSpecification struct {
 	// Duration of the blob.
 	BlobDuration *string `json:"blobDuration,omitempty"`
@@ -8841,7 +8841,7 @@ type LogSpecification struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// Defines a managed rule group override setting.
+// ManagedRuleGroupOverride - Defines a managed rule group override setting.
 type ManagedRuleGroupOverride struct {
 	// The managed rule group to override.
 	RuleGroupName *string `json:"ruleGroupName,omitempty"`
@@ -8850,7 +8850,7 @@ type ManagedRuleGroupOverride struct {
 	Rules *[]*ManagedRuleOverride `json:"rules,omitempty"`
 }
 
-// Defines a managed rule group override setting.
+// ManagedRuleOverride - Defines a managed rule group override setting.
 type ManagedRuleOverride struct {
 	// Identifier for the managed rule.
 	RuleID *string `json:"ruleId,omitempty"`
@@ -8859,7 +8859,7 @@ type ManagedRuleOverride struct {
 	State *ManagedRuleEnabledState `json:"state,omitempty"`
 }
 
-// Defines a managed rule set.
+// ManagedRuleSet - Defines a managed rule set.
 type ManagedRuleSet struct {
 	// Defines the rule group overrides to apply to the rule set.
 	RuleGroupOverrides *[]*ManagedRuleGroupOverride `json:"ruleGroupOverrides,omitempty"`
@@ -8871,7 +8871,7 @@ type ManagedRuleSet struct {
 	RuleSetVersion *string `json:"ruleSetVersion,omitempty"`
 }
 
-// Allow to exclude some variable satisfy the condition for the WAF check.
+// ManagedRulesDefinition - Allow to exclude some variable satisfy the condition for the WAF check.
 type ManagedRulesDefinition struct {
 	// The Exclusions that are applied on the policy.
 	Exclusions *[]*OwaspCrsExclusionEntry `json:"exclusions,omitempty"`
@@ -8880,7 +8880,7 @@ type ManagedRulesDefinition struct {
 	ManagedRuleSets *[]*ManagedRuleSet `json:"managedRuleSets,omitempty"`
 }
 
-// Identity for the resource.
+// ManagedServiceIdentity - Identity for the resource.
 type ManagedServiceIdentity struct {
 	// READ-ONLY; The principal id of the system assigned identity. This property will only be provided for a system assigned identity.
 	PrincipalID *string `json:"principalId,omitempty" azure:"ro"`
@@ -8898,7 +8898,7 @@ type ManagedServiceIdentity struct {
 	UserAssignedIdentities *map[string]*Components1Jq1T4ISchemasManagedserviceidentityPropertiesUserassignedidentitiesAdditionalproperties `json:"userAssignedIdentities,omitempty"`
 }
 
-// Define match conditions.
+// MatchCondition - Define match conditions.
 type MatchCondition struct {
 	// Match value.
 	MatchValues *[]*string `json:"matchValues,omitempty"`
@@ -8916,7 +8916,7 @@ type MatchCondition struct {
 	Transforms *[]*WebApplicationFirewallTransform `json:"transforms,omitempty"`
 }
 
-// Define match variables.
+// MatchVariable - Define match variables.
 type MatchVariable struct {
 	// The selector of match variable.
 	Selector *string `json:"selector,omitempty"`
@@ -8925,7 +8925,7 @@ type MatchVariable struct {
 	VariableName *WebApplicationFirewallMatchVariable `json:"variableName,omitempty"`
 }
 
-// Matched rule.
+// MatchedRule - Matched rule.
 type MatchedRule struct {
 	// The network traffic is allowed or denied. Possible values are 'Allow' and 'Deny'.
 	Action *string `json:"action,omitempty"`
@@ -8934,7 +8934,7 @@ type MatchedRule struct {
 	RuleName *string `json:"ruleName,omitempty"`
 }
 
-// Description of metrics specification.
+// MetricSpecification - Description of metrics specification.
 type MetricSpecification struct {
 	// The aggregation type.
 	AggregationType *string `json:"aggregationType,omitempty"`
@@ -8979,7 +8979,7 @@ type MetricSpecification struct {
 	Unit *string `json:"unit,omitempty"`
 }
 
-// Nat Gateway resource.
+// NatGateway - Nat Gateway resource.
 type NatGateway struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -8995,7 +8995,7 @@ type NatGateway struct {
 	Zones *[]*string `json:"zones,omitempty"`
 }
 
-// Response for ListNatGateways API service call.
+// NatGatewayListResult - Response for ListNatGateways API service call.
 type NatGatewayListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -9025,7 +9025,7 @@ type NatGatewayPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Nat Gateway properties.
+// NatGatewayPropertiesFormat - Nat Gateway properties.
 type NatGatewayPropertiesFormat struct {
 	// The idle timeout of the nat gateway.
 	IdleTimeoutInMinutes *int32 `json:"idleTimeoutInMinutes,omitempty"`
@@ -9055,7 +9055,7 @@ type NatGatewayResponse struct {
 	RawResponse *http.Response
 }
 
-// SKU of nat gateway.
+// NatGatewaySKU - SKU of nat gateway.
 type NatGatewaySKU struct {
 	// Name of Nat Gateway SKU.
 	Name *NatGatewaySKUName `json:"name,omitempty"`
@@ -9092,7 +9092,7 @@ type NatGatewaysUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Rule of type nat.
+// NatRule - Rule of type nat.
 type NatRule struct {
 	FirewallPolicyRule
 	// List of destination IP addresses or Service Tags.
@@ -9175,7 +9175,7 @@ func (n *NatRule) UnmarshalJSON(data []byte) error {
 	return n.FirewallPolicyRule.unmarshalInternal(rawMsg)
 }
 
-// Parameters to get network configuration diagnostic.
+// NetworkConfigurationDiagnosticParameters - Parameters to get network configuration diagnostic.
 type NetworkConfigurationDiagnosticParameters struct {
 	// List of network configuration diagnostic profiles.
 	Profiles *[]*NetworkConfigurationDiagnosticProfile `json:"profiles,omitempty"`
@@ -9188,7 +9188,7 @@ type NetworkConfigurationDiagnosticParameters struct {
 	VerbosityLevel *VerbosityLevel `json:"verbosityLevel,omitempty"`
 }
 
-// Parameters to compare with network configuration.
+// NetworkConfigurationDiagnosticProfile - Parameters to compare with network configuration.
 type NetworkConfigurationDiagnosticProfile struct {
 	// Traffic destination. Accepted values are: '*', IP Address/CIDR, Service Tag.
 	Destination *string `json:"destination,omitempty"`
@@ -9206,7 +9206,7 @@ type NetworkConfigurationDiagnosticProfile struct {
 	Source *string `json:"source,omitempty"`
 }
 
-// Results of network configuration diagnostic on the target resource.
+// NetworkConfigurationDiagnosticResponse - Results of network configuration diagnostic on the target resource.
 type NetworkConfigurationDiagnosticResponse struct {
 	// READ-ONLY; List of network configuration diagnostic results.
 	Results *[]*NetworkConfigurationDiagnosticResult `json:"results,omitempty" azure:"ro"`
@@ -9234,7 +9234,7 @@ type NetworkConfigurationDiagnosticResponseResponse struct {
 	RawResponse *http.Response
 }
 
-// Network configuration diagnostic result corresponded to provided traffic query.
+// NetworkConfigurationDiagnosticResult - Network configuration diagnostic result corresponded to provided traffic query.
 type NetworkConfigurationDiagnosticResult struct {
 	// Network security group result.
 	NetworkSecurityGroupResult *NetworkSecurityGroupResult `json:"networkSecurityGroupResult,omitempty"`
@@ -9243,14 +9243,14 @@ type NetworkConfigurationDiagnosticResult struct {
 	Profile *NetworkConfigurationDiagnosticProfile `json:"profile,omitempty"`
 }
 
-// Network Intent Policy resource.
+// NetworkIntentPolicy - Network Intent Policy resource.
 type NetworkIntentPolicy struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
 	Etag *string `json:"etag,omitempty" azure:"ro"`
 }
 
-// Details of NetworkIntentPolicyConfiguration for PrepareNetworkPoliciesRequest.
+// NetworkIntentPolicyConfiguration - Details of NetworkIntentPolicyConfiguration for PrepareNetworkPoliciesRequest.
 type NetworkIntentPolicyConfiguration struct {
 	// The name of the Network Intent Policy for storing in target subscription.
 	NetworkIntentPolicyName *string `json:"networkIntentPolicyName,omitempty"`
@@ -9259,7 +9259,7 @@ type NetworkIntentPolicyConfiguration struct {
 	SourceNetworkIntentPolicy *NetworkIntentPolicy `json:"sourceNetworkIntentPolicy,omitempty"`
 }
 
-// A network interface in a resource group.
+// NetworkInterface - A network interface in a resource group.
 type NetworkInterface struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -9272,7 +9272,7 @@ type NetworkInterface struct {
 	Properties *NetworkInterfacePropertiesFormat `json:"properties,omitempty"`
 }
 
-// Network interface and its custom security rules.
+// NetworkInterfaceAssociation - Network interface and its custom security rules.
 type NetworkInterfaceAssociation struct {
 	// READ-ONLY; Network interface ID.
 	ID *string `json:"id,omitempty" azure:"ro"`
@@ -9281,7 +9281,7 @@ type NetworkInterfaceAssociation struct {
 	SecurityRules *[]*SecurityRule `json:"securityRules,omitempty"`
 }
 
-// DNS settings of a network interface.
+// NetworkInterfaceDNSSettings - DNS settings of a network interface.
 type NetworkInterfaceDNSSettings struct {
 	// READ-ONLY; If the VM that uses this NIC is part of an Availability Set, then this list will have the union of all DNS servers from all NICs that are
 	// part of the Availability Set. This property is what is
@@ -9305,7 +9305,7 @@ type NetworkInterfaceDNSSettings struct {
 	InternalFqdn *string `json:"internalFqdn,omitempty" azure:"ro"`
 }
 
-// IPConfiguration in a network interface.
+// NetworkInterfaceIPConfiguration - IPConfiguration in a network interface.
 type NetworkInterfaceIPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -9316,12 +9316,9 @@ type NetworkInterfaceIPConfiguration struct {
 
 	// Network interface IP configuration properties.
 	Properties *NetworkInterfaceIPConfigurationPropertiesFormat `json:"properties,omitempty"`
-
-	// Resource type.
-	Type *string `json:"type,omitempty"`
 }
 
-// Response for list ip configurations API service call.
+// NetworkInterfaceIPConfigurationListResult - Response for list ip configurations API service call.
 type NetworkInterfaceIPConfigurationListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -9339,7 +9336,7 @@ type NetworkInterfaceIPConfigurationListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// PrivateLinkConnection properties for the network interface.
+// NetworkInterfaceIPConfigurationPrivateLinkConnectionProperties - PrivateLinkConnection properties for the network interface.
 type NetworkInterfaceIPConfigurationPrivateLinkConnectionProperties struct {
 	// READ-ONLY; List of FQDNs for current private link connection.
 	Fqdns *[]*string `json:"fqdns,omitempty" azure:"ro"`
@@ -9351,7 +9348,7 @@ type NetworkInterfaceIPConfigurationPrivateLinkConnectionProperties struct {
 	RequiredMemberName *string `json:"requiredMemberName,omitempty" azure:"ro"`
 }
 
-// Properties of IP configuration.
+// NetworkInterfaceIPConfigurationPropertiesFormat - Properties of IP configuration.
 type NetworkInterfaceIPConfigurationPropertiesFormat struct {
 	// The reference to ApplicationGatewayBackendAddressPool resource.
 	ApplicationGatewayBackendAddressPools *[]*ApplicationGatewayBackendAddressPool `json:"applicationGatewayBackendAddressPools,omitempty"`
@@ -9412,7 +9409,7 @@ type NetworkInterfaceIPConfigurationsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for the ListNetworkInterface API service call.
+// NetworkInterfaceListResult - Response for the ListNetworkInterface API service call.
 type NetworkInterfaceListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -9430,7 +9427,7 @@ type NetworkInterfaceListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for list ip configurations API service call.
+// NetworkInterfaceLoadBalancerListResult - Response for list ip configurations API service call.
 type NetworkInterfaceLoadBalancerListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -9465,7 +9462,7 @@ type NetworkInterfacePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// NetworkInterface properties.
+// NetworkInterfacePropertiesFormat - NetworkInterface properties.
 type NetworkInterfacePropertiesFormat struct {
 	// The DNS settings in network interface.
 	DNSSettings *NetworkInterfaceDNSSettings `json:"dnsSettings,omitempty"`
@@ -9491,17 +9488,11 @@ type NetworkInterfacePropertiesFormat struct {
 	// The reference to the NetworkSecurityGroup resource.
 	NetworkSecurityGroup *NetworkSecurityGroup `json:"networkSecurityGroup,omitempty"`
 
-	// Type of Network Interface resource.
-	NicType *NetworkInterfaceNicType `json:"nicType,omitempty"`
-
 	// READ-ONLY; Whether this is a primary network interface on a virtual machine.
 	Primary *bool `json:"primary,omitempty" azure:"ro"`
 
 	// READ-ONLY; A reference to the private endpoint to which the network interface is linked.
 	PrivateEndpoint *PrivateEndpoint `json:"privateEndpoint,omitempty" azure:"ro"`
-
-	// Privatelinkservice of the network interface resource.
-	PrivateLinkService *PrivateLinkService `json:"privateLinkService,omitempty"`
 
 	// READ-ONLY; The provisioning state of the network interface resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -9525,7 +9516,7 @@ type NetworkInterfaceResponse struct {
 	RawResponse *http.Response
 }
 
-// Tap configuration in a Network Interface.
+// NetworkInterfaceTapConfiguration - Tap configuration in a Network Interface.
 type NetworkInterfaceTapConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -9541,7 +9532,7 @@ type NetworkInterfaceTapConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for list tap configurations API service call.
+// NetworkInterfaceTapConfigurationListResult - Response for list tap configurations API service call.
 type NetworkInterfaceTapConfigurationListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -9572,7 +9563,7 @@ type NetworkInterfaceTapConfigurationPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of Virtual Network Tap configuration.
+// NetworkInterfaceTapConfigurationPropertiesFormat - Properties of Virtual Network Tap configuration.
 type NetworkInterfaceTapConfigurationPropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the network interface tap configuration resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -9748,7 +9739,7 @@ type NetworkManagementClientSupportedSecurityProvidersOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Network profile resource.
+// NetworkProfile - Network profile resource.
 type NetworkProfile struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -9758,7 +9749,7 @@ type NetworkProfile struct {
 	Properties *NetworkProfilePropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListNetworkProfiles API service call.
+// NetworkProfileListResult - Response for ListNetworkProfiles API service call.
 type NetworkProfileListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -9776,7 +9767,7 @@ type NetworkProfileListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Network profile properties.
+// NetworkProfilePropertiesFormat - Network profile properties.
 type NetworkProfilePropertiesFormat struct {
 	// List of chid container network interface configurations.
 	ContainerNetworkInterfaceConfigurations *[]*ContainerNetworkInterfaceConfiguration `json:"containerNetworkInterfaceConfigurations,omitempty"`
@@ -9831,7 +9822,7 @@ type NetworkProfilesUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Rule of type network.
+// NetworkRule - Rule of type network.
 type NetworkRule struct {
 	FirewallPolicyRule
 	// List of destination IP addresses or Service Tags.
@@ -9917,7 +9908,7 @@ type NetworkSecurityGroup struct {
 	Properties *NetworkSecurityGroupPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListNetworkSecurityGroups API service call.
+// NetworkSecurityGroupListResult - Response for ListNetworkSecurityGroups API service call.
 type NetworkSecurityGroupListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -9947,7 +9938,7 @@ type NetworkSecurityGroupPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Network Security Group resource.
+// NetworkSecurityGroupPropertiesFormat - Network Security Group resource.
 type NetworkSecurityGroupPropertiesFormat struct {
 	// READ-ONLY; The default security rules of network security group.
 	DefaultSecurityRules *[]*SecurityRule `json:"defaultSecurityRules,omitempty" azure:"ro"`
@@ -9980,7 +9971,7 @@ type NetworkSecurityGroupResponse struct {
 	RawResponse *http.Response
 }
 
-// Network configuration diagnostic result corresponded provided traffic query.
+// NetworkSecurityGroupResult - Network configuration diagnostic result corresponded provided traffic query.
 type NetworkSecurityGroupResult struct {
 	// READ-ONLY; List of results network security groups diagnostic.
 	EvaluatedNetworkSecurityGroups *[]*EvaluatedNetworkSecurityGroup `json:"evaluatedNetworkSecurityGroups,omitempty" azure:"ro"`
@@ -10020,7 +10011,7 @@ type NetworkSecurityGroupsUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Network security rules evaluation result.
+// NetworkSecurityRulesEvaluationResult - Network security rules evaluation result.
 type NetworkSecurityRulesEvaluationResult struct {
 	// Value indicating whether destination is matched.
 	DestinationMatched *bool `json:"destinationMatched,omitempty"`
@@ -10054,7 +10045,7 @@ type NetworkVirtualAppliance struct {
 	Properties *NetworkVirtualAppliancePropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListNetworkVirtualAppliances API service call.
+// NetworkVirtualApplianceListResult - Response for ListNetworkVirtualAppliances API service call.
 type NetworkVirtualApplianceListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -10084,7 +10075,7 @@ type NetworkVirtualAppliancePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Network Virtual Appliance definition.
+// NetworkVirtualAppliancePropertiesFormat - Network Virtual Appliance definition.
 type NetworkVirtualAppliancePropertiesFormat struct {
 	// READ-ONLY; Address Prefix.
 	AddressPrefix *string `json:"addressPrefix,omitempty" azure:"ro"`
@@ -10129,7 +10120,7 @@ type NetworkVirtualApplianceResponse struct {
 	RawResponse *http.Response
 }
 
-// Definition of the NetworkVirtualApplianceSkus resource.
+// NetworkVirtualApplianceSKU - Definition of the NetworkVirtualApplianceSkus resource.
 type NetworkVirtualApplianceSKU struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -10139,7 +10130,7 @@ type NetworkVirtualApplianceSKU struct {
 	Properties *NetworkVirtualApplianceSKUPropertiesFormat `json:"properties,omitempty"`
 }
 
-// List of available Sku and instances.
+// NetworkVirtualApplianceSKUInstances - List of available Sku and instances.
 type NetworkVirtualApplianceSKUInstances struct {
 	// READ-ONLY; Instance Count.
 	InstanceCount *int32 `json:"instanceCount,omitempty" azure:"ro"`
@@ -10148,7 +10139,7 @@ type NetworkVirtualApplianceSKUInstances struct {
 	ScaleUnit *string `json:"scaleUnit,omitempty" azure:"ro"`
 }
 
-// Response for ListNetworkVirtualApplianceSkus API service call.
+// NetworkVirtualApplianceSKUListResult - Response for ListNetworkVirtualApplianceSkus API service call.
 type NetworkVirtualApplianceSKUListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -10166,7 +10157,7 @@ type NetworkVirtualApplianceSKUListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties specific to NetworkVirtualApplianceSkus.
+// NetworkVirtualApplianceSKUPropertiesFormat - Properties specific to NetworkVirtualApplianceSkus.
 type NetworkVirtualApplianceSKUPropertiesFormat struct {
 	// The list of scale units available.
 	AvailableScaleUnits *[]*NetworkVirtualApplianceSKUInstances `json:"availableScaleUnits,omitempty"`
@@ -10187,7 +10178,7 @@ type NetworkVirtualApplianceSKUResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for ListNetworkVirtualApplianceSites API service call.
+// NetworkVirtualApplianceSiteListResult - Response for ListNetworkVirtualApplianceSites API service call.
 type NetworkVirtualApplianceSiteListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -10236,7 +10227,7 @@ type NetworkVirtualAppliancesUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Network watcher in a resource group.
+// NetworkWatcher - Network watcher in a resource group.
 type NetworkWatcher struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -10246,7 +10237,7 @@ type NetworkWatcher struct {
 	Properties *NetworkWatcherPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListNetworkWatchers API service call.
+// NetworkWatcherListResult - Response for ListNetworkWatchers API service call.
 type NetworkWatcherListResult struct {
 	// List of network watcher resources.
 	Value *[]*NetworkWatcher `json:"value,omitempty"`
@@ -10261,7 +10252,7 @@ type NetworkWatcherListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// The network watcher properties.
+// NetworkWatcherPropertiesFormat - The network watcher properties.
 type NetworkWatcherPropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the network watcher resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -10367,7 +10358,7 @@ type NetworkWatchersUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Parameters that define the source and destination endpoint.
+// NextHopParameters - Parameters that define the source and destination endpoint.
 type NextHopParameters struct {
 	// The destination IP address.
 	DestinationIPAddress *string `json:"destinationIPAddress,omitempty"`
@@ -10382,7 +10373,7 @@ type NextHopParameters struct {
 	TargetResourceID *string `json:"targetResourceId,omitempty"`
 }
 
-// The information about next hop from the specified VM.
+// NextHopResult - The information about next hop from the specified VM.
 type NextHopResult struct {
 	// Next hop IP Address.
 	NextHopIPAddress *string `json:"nextHopIpAddress,omitempty"`
@@ -10417,7 +10408,7 @@ type NextHopResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Office365 breakout categories.
+// O365BreakOutCategoryPolicies - Office365 breakout categories.
 type O365BreakOutCategoryPolicies struct {
 	// Flag to control allow category.
 	Allow *bool `json:"allow,omitempty"`
@@ -10429,19 +10420,19 @@ type O365BreakOutCategoryPolicies struct {
 	Optimize *bool `json:"optimize,omitempty"`
 }
 
-// The Office365 breakout policy.
+// O365PolicyProperties - The Office365 breakout policy.
 type O365PolicyProperties struct {
 	// Office365 breakout categories.
 	BreakOutCategories *O365BreakOutCategoryPolicies `json:"breakOutCategories,omitempty"`
 }
 
-// Network Virtual Appliance Sku Properties.
+// Office365PolicyProperties - Network Virtual Appliance Sku Properties.
 type Office365PolicyProperties struct {
 	// Office 365 breakout categories.
 	BreakOutCategories *BreakOutCategoryPolicies `json:"breakOutCategories,omitempty"`
 }
 
-// Network REST API operation definition.
+// Operation - Network REST API operation definition.
 type Operation struct {
 	// Display metadata associated with the operation.
 	Display *OperationDisplay `json:"display,omitempty"`
@@ -10456,7 +10447,7 @@ type Operation struct {
 	Properties *OperationPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Display metadata associated with the operation.
+// OperationDisplay - Display metadata associated with the operation.
 type OperationDisplay struct {
 	// Description of the operation.
 	Description *string `json:"description,omitempty"`
@@ -10471,7 +10462,7 @@ type OperationDisplay struct {
 	Resource *string `json:"resource,omitempty"`
 }
 
-// Result of the request to list Network operations. It contains a list of operations and a URL link to get the next set of results.
+// OperationListResult - Result of the request to list Network operations. It contains a list of operations and a URL link to get the next set of results.
 type OperationListResult struct {
 	// URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -10489,13 +10480,13 @@ type OperationListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Description of operation properties format.
+// OperationPropertiesFormat - Description of operation properties format.
 type OperationPropertiesFormat struct {
 	// Specification of the service.
 	ServiceSpecification *OperationPropertiesFormatServiceSpecification `json:"serviceSpecification,omitempty"`
 }
 
-// Specification of the service.
+// OperationPropertiesFormatServiceSpecification - Specification of the service.
 type OperationPropertiesFormatServiceSpecification struct {
 	// Operation log specification.
 	LogSpecifications *[]*LogSpecification `json:"logSpecifications,omitempty"`
@@ -10509,7 +10500,7 @@ type OperationsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Outbound rule of the load balancer.
+// OutboundRule - Outbound rule of the load balancer.
 type OutboundRule struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -10525,7 +10516,7 @@ type OutboundRule struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Outbound rule of the load balancer.
+// OutboundRulePropertiesFormat - Outbound rule of the load balancer.
 type OutboundRulePropertiesFormat struct {
 	// The number of outbound ports to be used for NAT.
 	AllocatedOutboundPorts *int32 `json:"allocatedOutboundPorts,omitempty"`
@@ -10559,7 +10550,7 @@ type OutboundRuleResponse struct {
 	RawResponse *http.Response
 }
 
-// Allow to exclude some variable satisfy the condition for the WAF check.
+// OwaspCrsExclusionEntry - Allow to exclude some variable satisfy the condition for the WAF check.
 type OwaspCrsExclusionEntry struct {
 	// The variable to be excluded.
 	MatchVariable *OwaspCrsExclusionEntryMatchVariable `json:"matchVariable,omitempty"`
@@ -10584,7 +10575,7 @@ type P2SConnectionConfiguration struct {
 	Properties *P2SConnectionConfigurationProperties `json:"properties,omitempty"`
 }
 
-// Parameters for P2SConnectionConfiguration.
+// P2SConnectionConfigurationProperties - Parameters for P2SConnectionConfiguration.
 type P2SConnectionConfigurationProperties struct {
 	// Flag indicating whether the enable internet security flag is turned on for the P2S Connections or not.
 	EnableInternetSecurity *bool `json:"enableInternetSecurity,omitempty"`
@@ -10599,7 +10590,7 @@ type P2SConnectionConfigurationProperties struct {
 	VPNClientAddressPool *AddressSpace `json:"vpnClientAddressPool,omitempty"`
 }
 
-// P2S Vpn connection detailed health written to sas url.
+// P2SVPNConnectionHealth - P2S Vpn connection detailed health written to sas url.
 type P2SVPNConnectionHealth struct {
 	// Returned sas url of the blob to which the p2s vpn connection detailed health will be written.
 	SasURL *string `json:"sasUrl,omitempty"`
@@ -10617,7 +10608,7 @@ type P2SVPNConnectionHealthPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// List of P2S Vpn connection health request.
+// P2SVPNConnectionHealthRequest - List of P2S Vpn connection health request.
 type P2SVPNConnectionHealthRequest struct {
 	// The sas-url to download the P2S Vpn connection health detail.
 	OutputBlobSasURL *string `json:"outputBlobSasUrl,omitempty"`
@@ -10635,13 +10626,13 @@ type P2SVPNConnectionHealthResponse struct {
 	RawResponse *http.Response
 }
 
-// List of p2s vpn connections to be disconnected.
+// P2SVPNConnectionRequest - List of p2s vpn connections to be disconnected.
 type P2SVPNConnectionRequest struct {
 	// List of p2s vpn connection Ids.
 	VPNConnectionIDs *[]*string `json:"vpnConnectionIds,omitempty"`
 }
 
-// P2SVpnGateway Resource.
+// P2SVPNGateway - P2SVpnGateway Resource.
 type P2SVPNGateway struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -10663,7 +10654,7 @@ type P2SVPNGatewayPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters for P2SVpnGateway.
+// P2SVPNGatewayProperties - Parameters for P2SVpnGateway.
 type P2SVPNGatewayProperties struct {
 	// List of all customer specified DNS servers IP addresses.
 	CustomDNSServers *[]*string `json:"customDnsServers,omitempty"`
@@ -10755,19 +10746,19 @@ type P2SVPNGatewaysListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Vpn Client Parameters for package generation.
+// P2SVPNProfileParameters - Vpn Client Parameters for package generation.
 type P2SVPNProfileParameters struct {
 	// VPN client authentication method.
 	AuthenticationMethod *AuthenticationMethod `json:"authenticationMethod,omitempty"`
 }
 
-// Parameters that define the create packet capture operation.
+// PacketCapture - Parameters that define the create packet capture operation.
 type PacketCapture struct {
 	// Properties of the packet capture.
 	Properties *PacketCaptureParameters `json:"properties,omitempty"`
 }
 
-// Filter that is applied to packet capture request. Multiple filters can be applied.
+// PacketCaptureFilter - Filter that is applied to packet capture request. Multiple filters can be applied.
 type PacketCaptureFilter struct {
 	// Local IP Address to be filtered on. Notation: "127.0.0.1" for single address entry. "127.0.0.1-127.0.0.255" for range. "127.0.0.1;127.0.0.5"? for multiple
 	// entries. Multiple ranges not currently
@@ -10793,7 +10784,7 @@ type PacketCaptureFilter struct {
 	RemotePort *string `json:"remotePort,omitempty"`
 }
 
-// List of packet capture sessions.
+// PacketCaptureListResult - List of packet capture sessions.
 type PacketCaptureListResult struct {
 	// Information about packet capture sessions.
 	Value *[]*PacketCaptureResult `json:"value,omitempty"`
@@ -10808,7 +10799,7 @@ type PacketCaptureListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters that define the create packet capture operation.
+// PacketCaptureParameters - Parameters that define the create packet capture operation.
 type PacketCaptureParameters struct {
 	// Number of bytes captured per packet, the remaining bytes are truncated.
 	BytesToCapturePerPacket *int64 `json:"bytesToCapturePerPacket,omitempty"`
@@ -10829,7 +10820,7 @@ type PacketCaptureParameters struct {
 	TotalBytesPerSession *int64 `json:"totalBytesPerSession,omitempty"`
 }
 
-// Status of packet capture session.
+// PacketCaptureQueryStatusResult - Status of packet capture session.
 type PacketCaptureQueryStatusResult struct {
 	// The start time of the packet capture session.
 	CaptureStartTime *time.Time `json:"captureStartTime,omitempty"`
@@ -10920,7 +10911,7 @@ type PacketCaptureQueryStatusResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Information about packet capture session.
+// PacketCaptureResult - Information about packet capture session.
 type PacketCaptureResult struct {
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
 	Etag *string `json:"etag,omitempty" azure:"ro"`
@@ -10947,7 +10938,7 @@ type PacketCaptureResultPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// The properties of a packet capture session.
+// PacketCaptureResultProperties - The properties of a packet capture session.
 type PacketCaptureResultProperties struct {
 	PacketCaptureParameters
 	// READ-ONLY; The provisioning state of the packet capture session.
@@ -10963,7 +10954,7 @@ type PacketCaptureResultResponse struct {
 	RawResponse *http.Response
 }
 
-// The storage location for a packet capture session.
+// PacketCaptureStorageLocation - The storage location for a packet capture session.
 type PacketCaptureStorageLocation struct {
 	// A valid local path on the targeting VM. Must include the name of the capture file (*.cap). For linux virtual machine it must start with /var/captures.
 	// Required if no storage ID is provided, otherwise
@@ -11007,7 +10998,7 @@ type PacketCapturesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Route Filter Resource.
+// PatchRouteFilter - Route Filter Resource.
 type PatchRouteFilter struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -11026,7 +11017,7 @@ type PatchRouteFilter struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Route Filter Rule Resource.
+// PatchRouteFilterRule - Route Filter Rule Resource.
 type PatchRouteFilterRule struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -11039,7 +11030,7 @@ type PatchRouteFilterRule struct {
 	Properties *RouteFilterRulePropertiesFormat `json:"properties,omitempty"`
 }
 
-// Peer Express Route Circuit Connection in an ExpressRouteCircuitPeering resource.
+// PeerExpressRouteCircuitConnection - Peer Express Route Circuit Connection in an ExpressRouteCircuitPeering resource.
 type PeerExpressRouteCircuitConnection struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -11055,7 +11046,8 @@ type PeerExpressRouteCircuitConnection struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for ListPeeredConnections API service call retrieves all global reach peer circuit connections that belongs to a Private Peering for an ExpressRouteCircuit.
+// PeerExpressRouteCircuitConnectionListResult - Response for ListPeeredConnections API service call retrieves all global reach peer circuit connections
+// that belongs to a Private Peering for an ExpressRouteCircuit.
 type PeerExpressRouteCircuitConnectionListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -11074,7 +11066,7 @@ type PeerExpressRouteCircuitConnectionListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the peer express route circuit connection.
+// PeerExpressRouteCircuitConnectionPropertiesFormat - Properties of the peer express route circuit connection.
 type PeerExpressRouteCircuitConnectionPropertiesFormat struct {
 	// /29 IP address space to carve out Customer addresses for tunnels.
 	AddressPrefix *string `json:"addressPrefix,omitempty"`
@@ -11117,7 +11109,7 @@ type PeerExpressRouteCircuitConnectionsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Peer routing details.
+// PeerRoute - Peer routing details.
 type PeerRoute struct {
 	// READ-ONLY; The route's AS path sequence.
 	AsPath *string `json:"asPath,omitempty" azure:"ro"`
@@ -11141,7 +11133,7 @@ type PeerRoute struct {
 	Weight *int32 `json:"weight,omitempty" azure:"ro"`
 }
 
-// List of virtual router peer routes.
+// PeerRouteList - List of virtual router peer routes.
 type PeerRouteList struct {
 	// List of peer routes.
 	Value *[]*PeerRoute `json:"value,omitempty"`
@@ -11168,7 +11160,7 @@ type PeerRouteListResponse struct {
 	RawResponse *http.Response
 }
 
-// Defines contents of a web application firewall global configuration.
+// PolicySettings - Defines contents of a web application firewall global configuration.
 type PolicySettings struct {
 	// Maximum file upload size in Mb for WAF.
 	FileUploadLimitInMb *int32 `json:"fileUploadLimitInMb,omitempty"`
@@ -11186,7 +11178,7 @@ type PolicySettings struct {
 	State *WebApplicationFirewallEnabledState `json:"state,omitempty"`
 }
 
-// Details of PrepareNetworkPolicies for Subnet.
+// PrepareNetworkPoliciesRequest - Details of PrepareNetworkPolicies for Subnet.
 type PrepareNetworkPoliciesRequest struct {
 	// A list of NetworkIntentPolicyConfiguration.
 	NetworkIntentPolicyConfigurations *[]*NetworkIntentPolicyConfiguration `json:"networkIntentPolicyConfigurations,omitempty"`
@@ -11195,7 +11187,7 @@ type PrepareNetworkPoliciesRequest struct {
 	ServiceName *string `json:"serviceName,omitempty"`
 }
 
-// PrivateDnsZoneConfig resource.
+// PrivateDNSZoneConfig - PrivateDnsZoneConfig resource.
 type PrivateDNSZoneConfig struct {
 	// Name of the resource that is unique within a resource group. This name can be used to access the resource.
 	Name *string `json:"name,omitempty"`
@@ -11204,7 +11196,7 @@ type PrivateDNSZoneConfig struct {
 	Properties *PrivateDNSZonePropertiesFormat `json:"properties,omitempty"`
 }
 
-// Private dns zone group resource.
+// PrivateDNSZoneGroup - Private dns zone group resource.
 type PrivateDNSZoneGroup struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -11217,7 +11209,7 @@ type PrivateDNSZoneGroup struct {
 	Properties *PrivateDNSZoneGroupPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for the ListPrivateDnsZoneGroups API service call.
+// PrivateDNSZoneGroupListResult - Response for the ListPrivateDnsZoneGroups API service call.
 type PrivateDNSZoneGroupListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -11247,7 +11239,7 @@ type PrivateDNSZoneGroupPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the private dns zone group.
+// PrivateDNSZoneGroupPropertiesFormat - Properties of the private dns zone group.
 type PrivateDNSZoneGroupPropertiesFormat struct {
 	// A collection of private dns zone configurations of the private dns zone group.
 	PrivateDNSZoneConfigs *[]*PrivateDNSZoneConfig `json:"privateDnsZoneConfigs,omitempty"`
@@ -11285,7 +11277,7 @@ type PrivateDNSZoneGroupsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Properties of the private dns zone configuration resource.
+// PrivateDNSZonePropertiesFormat - Properties of the private dns zone configuration resource.
 type PrivateDNSZonePropertiesFormat struct {
 	// The resource id of the private dns zone.
 	PrivateDNSZoneID *string `json:"privateDnsZoneId,omitempty"`
@@ -11294,7 +11286,7 @@ type PrivateDNSZonePropertiesFormat struct {
 	RecordSets *[]*RecordSet `json:"recordSets,omitempty" azure:"ro"`
 }
 
-// Private endpoint resource.
+// PrivateEndpoint - Private endpoint resource.
 type PrivateEndpoint struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -11320,7 +11312,7 @@ type PrivateEndpointConnection struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for the ListPrivateEndpointConnection API service call.
+// PrivateEndpointConnectionListResult - Response for the ListPrivateEndpointConnection API service call.
 type PrivateEndpointConnectionListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -11338,7 +11330,7 @@ type PrivateEndpointConnectionListResultResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the PrivateEndpointConnectProperties.
+// PrivateEndpointConnectionProperties - Properties of the PrivateEndpointConnectProperties.
 type PrivateEndpointConnectionProperties struct {
 	// READ-ONLY; The consumer link id.
 	LinkIdentifier *string `json:"linkIdentifier,omitempty" azure:"ro"`
@@ -11362,7 +11354,7 @@ type PrivateEndpointConnectionResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for the ListPrivateEndpoints API service call.
+// PrivateEndpointListResult - Response for the ListPrivateEndpoints API service call.
 type PrivateEndpointListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -11392,7 +11384,7 @@ type PrivateEndpointPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the private endpoint.
+// PrivateEndpointProperties - Properties of the private endpoint.
 type PrivateEndpointProperties struct {
 	// An array of custom dns configurations.
 	CustomDNSConfigs *[]*CustomDNSConfigPropertiesFormat `json:"customDnsConfigs,omitempty"`
@@ -11449,7 +11441,7 @@ type PrivateEndpointsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Private link service resource.
+// PrivateLinkService - Private link service resource.
 type PrivateLinkService struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -11475,7 +11467,7 @@ type PrivateLinkServiceConnection struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of the PrivateLinkServiceConnection.
+// PrivateLinkServiceConnectionProperties - Properties of the PrivateLinkServiceConnection.
 type PrivateLinkServiceConnectionProperties struct {
 	// The ID(s) of the group(s) obtained from the remote resource that this private endpoint should connect to.
 	GroupIDs *[]*string `json:"groupIds,omitempty"`
@@ -11493,7 +11485,7 @@ type PrivateLinkServiceConnectionProperties struct {
 	RequestMessage *string `json:"requestMessage,omitempty"`
 }
 
-// A collection of information about the state of the connection between service consumer and provider.
+// PrivateLinkServiceConnectionState - A collection of information about the state of the connection between service consumer and provider.
 type PrivateLinkServiceConnectionState struct {
 	// A message indicating if changes on the service provider require any updates on the consumer.
 	ActionsRequired *string `json:"actionsRequired,omitempty"`
@@ -11505,7 +11497,7 @@ type PrivateLinkServiceConnectionState struct {
 	Status *string `json:"status,omitempty"`
 }
 
-// The private link service ip configuration.
+// PrivateLinkServiceIPConfiguration - The private link service ip configuration.
 type PrivateLinkServiceIPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -11521,7 +11513,7 @@ type PrivateLinkServiceIPConfiguration struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of private link service IP configuration.
+// PrivateLinkServiceIPConfigurationProperties - Properties of private link service IP configuration.
 type PrivateLinkServiceIPConfigurationProperties struct {
 	// Whether the ip configuration is primary or not.
 	Primary *bool `json:"primary,omitempty"`
@@ -11542,7 +11534,7 @@ type PrivateLinkServiceIPConfigurationProperties struct {
 	Subnet *Subnet `json:"subnet,omitempty"`
 }
 
-// Response for the ListPrivateLinkService API service call.
+// PrivateLinkServiceListResult - Response for the ListPrivateLinkService API service call.
 type PrivateLinkServiceListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -11572,7 +11564,7 @@ type PrivateLinkServicePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the private link service.
+// PrivateLinkServiceProperties - Properties of the private link service.
 type PrivateLinkServiceProperties struct {
 	// READ-ONLY; The alias of the private link service.
 	Alias *string `json:"alias,omitempty" azure:"ro"`
@@ -11605,12 +11597,12 @@ type PrivateLinkServiceProperties struct {
 	Visibility *PrivateLinkServicePropertiesVisibility `json:"visibility,omitempty"`
 }
 
-// The auto-approval list of the private link service.
+// PrivateLinkServicePropertiesAutoApproval - The auto-approval list of the private link service.
 type PrivateLinkServicePropertiesAutoApproval struct {
 	ResourceSet
 }
 
-// The visibility list of the private link service.
+// PrivateLinkServicePropertiesVisibility - The visibility list of the private link service.
 type PrivateLinkServicePropertiesVisibility struct {
 	ResourceSet
 }
@@ -11624,7 +11616,7 @@ type PrivateLinkServiceResponse struct {
 	RawResponse *http.Response
 }
 
-// Response for the CheckPrivateLinkServiceVisibility API service call.
+// PrivateLinkServiceVisibility - Response for the CheckPrivateLinkServiceVisibility API service call.
 type PrivateLinkServiceVisibility struct {
 	// Private Link Service Visibility (True/False).
 	Visible *bool `json:"visible,omitempty"`
@@ -11725,7 +11717,7 @@ type PrivateLinkServicesUpdatePrivateEndpointConnectionOptions struct {
 	// placeholder for future optional parameters
 }
 
-// A load balancer probe.
+// Probe - A load balancer probe.
 type Probe struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -11741,7 +11733,7 @@ type Probe struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Load balancer probe resource.
+// ProbePropertiesFormat - Load balancer probe resource.
 type ProbePropertiesFormat struct {
 	// The interval, in seconds, for how frequently to probe the endpoint for health status. Typically, the interval is slightly less than half the allocated
 	// timeout period (in seconds) which allows two full
@@ -11781,7 +11773,7 @@ type ProbeResponse struct {
 	RawResponse *http.Response
 }
 
-// The list of RouteTables to advertise the routes to.
+// PropagatedRouteTable - The list of RouteTables to advertise the routes to.
 type PropagatedRouteTable struct {
 	// The list of resource ids of all the RouteTables.
 	IDs *[]*SubResource `json:"ids,omitempty"`
@@ -11790,13 +11782,13 @@ type PropagatedRouteTable struct {
 	Labels *[]*string `json:"labels,omitempty"`
 }
 
-// Configuration of the protocol.
+// ProtocolConfiguration - Configuration of the protocol.
 type ProtocolConfiguration struct {
 	// HTTP configuration of the connectivity check.
 	HTTPConfiguration *HTTPConfiguration `json:"HTTPConfiguration,omitempty"`
 }
 
-// DDoS custom policy properties.
+// ProtocolCustomSettingsFormat - DDoS custom policy properties.
 type ProtocolCustomSettingsFormat struct {
 	// The protocol for which the DDoS protection policy is being customized.
 	Protocol *DdosCustomPolicyProtocol `json:"protocol,omitempty"`
@@ -11813,7 +11805,7 @@ type ProtocolCustomSettingsFormat struct {
 	TriggerSensitivityOverride *DdosCustomPolicyTriggerSensitivityOverride `json:"triggerSensitivityOverride,omitempty"`
 }
 
-// Public IP address resource.
+// PublicIPAddress - Public IP address resource.
 type PublicIPAddress struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -11832,7 +11824,7 @@ type PublicIPAddress struct {
 	Zones *[]*string `json:"zones,omitempty"`
 }
 
-// Contains FQDN of the DNS record associated with the public IP address.
+// PublicIPAddressDNSSettings - Contains FQDN of the DNS record associated with the public IP address.
 type PublicIPAddressDNSSettings struct {
 	// The domain name label. The concatenation of the domain name label and the regionalized DNS zone make up the fully qualified domain name associated with
 	// the public IP address. If a domain name label is
@@ -11849,7 +11841,7 @@ type PublicIPAddressDNSSettings struct {
 	ReverseFqdn *string `json:"reverseFqdn,omitempty"`
 }
 
-// Response for ListPublicIpAddresses API service call.
+// PublicIPAddressListResult - Response for ListPublicIpAddresses API service call.
 type PublicIPAddressListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -11879,7 +11871,7 @@ type PublicIPAddressPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Public IP address properties.
+// PublicIPAddressPropertiesFormat - Public IP address properties.
 type PublicIPAddressPropertiesFormat struct {
 	// The FQDN of the DNS record associated with the public IP address.
 	DNSSettings *PublicIPAddressDNSSettings `json:"dnsSettings,omitempty"`
@@ -11898,15 +11890,6 @@ type PublicIPAddressPropertiesFormat struct {
 
 	// The idle timeout of the public IP address.
 	IdleTimeoutInMinutes *int32 `json:"idleTimeoutInMinutes,omitempty"`
-
-	// The linked public IP address of the public IP address resource.
-	LinkedPublicIPAddress *PublicIPAddress `json:"linkedPublicIPAddress,omitempty"`
-
-	// Migration phase of Public IP Address.
-	MigrationPhase *PublicIPAddressMigrationPhase `json:"migrationPhase,omitempty"`
-
-	// The NatGateway for the Public IP address.
-	NatGateway *NatGateway `json:"natGateway,omitempty"`
 
 	// READ-ONLY; The provisioning state of the public IP address resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -11933,7 +11916,7 @@ type PublicIPAddressResponse struct {
 	RawResponse *http.Response
 }
 
-// SKU of a public IP address.
+// PublicIPAddressSKU - SKU of a public IP address.
 type PublicIPAddressSKU struct {
 	// Name of a public IP address SKU.
 	Name *PublicIPAddressSKUName `json:"name,omitempty"`
@@ -12010,7 +11993,7 @@ type PublicIPAddressesUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Public IP prefix resource.
+// PublicIPPrefix - Public IP prefix resource.
 type PublicIPPrefix struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -12029,7 +12012,7 @@ type PublicIPPrefix struct {
 	Zones *[]*string `json:"zones,omitempty"`
 }
 
-// Response for ListPublicIpPrefixes API service call.
+// PublicIPPrefixListResult - Response for ListPublicIpPrefixes API service call.
 type PublicIPPrefixListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -12059,7 +12042,7 @@ type PublicIPPrefixPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Public IP prefix properties.
+// PublicIPPrefixPropertiesFormat - Public IP prefix properties.
 type PublicIPPrefixPropertiesFormat struct {
 	// The customIpPrefix that this prefix is associated with.
 	CustomIPPrefix *SubResource `json:"customIPPrefix,omitempty"`
@@ -12072,9 +12055,6 @@ type PublicIPPrefixPropertiesFormat struct {
 
 	// READ-ONLY; The reference to load balancer frontend IP configuration associated with the public IP prefix.
 	LoadBalancerFrontendIPConfiguration *SubResource `json:"loadBalancerFrontendIpConfiguration,omitempty" azure:"ro"`
-
-	// NatGateway of Public IP Prefix.
-	NatGateway *NatGateway `json:"natGateway,omitempty"`
 
 	// The Length of the Public IP Prefix.
 	PrefixLength *int32 `json:"prefixLength,omitempty"`
@@ -12101,7 +12081,7 @@ type PublicIPPrefixResponse struct {
 	RawResponse *http.Response
 }
 
-// SKU of a public IP prefix.
+// PublicIPPrefixSKU - SKU of a public IP prefix.
 type PublicIPPrefixSKU struct {
 	// Name of a public IP prefix SKU.
 	Name *PublicIPPrefixSKUName `json:"name,omitempty"`
@@ -12141,7 +12121,7 @@ type PublicIPPrefixesUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Qos Traffic Profiler IP Range properties.
+// QosIPRange - Qos Traffic Profiler IP Range properties.
 type QosIPRange struct {
 	// End IP Address.
 	EndIP *string `json:"endIP,omitempty"`
@@ -12150,7 +12130,7 @@ type QosIPRange struct {
 	StartIP *string `json:"startIP,omitempty"`
 }
 
-// Qos Traffic Profiler Port range properties.
+// QosPortRange - Qos Traffic Profiler Port range properties.
 type QosPortRange struct {
 	// Qos Port Range end.
 	End *int32 `json:"end,omitempty"`
@@ -12159,13 +12139,13 @@ type QosPortRange struct {
 	Start *int32 `json:"start,omitempty"`
 }
 
-// Parameters that define the resource to query the troubleshooting result.
+// QueryTroubleshootingParameters - Parameters that define the resource to query the troubleshooting result.
 type QueryTroubleshootingParameters struct {
 	// The target resource ID to query the troubleshooting result.
 	TargetResourceID *string `json:"targetResourceId,omitempty"`
 }
 
-// Radius Server Settings.
+// RadiusServer - Radius Server Settings.
 type RadiusServer struct {
 	// The address of this radius server.
 	RadiusServerAddress *string `json:"radiusServerAddress,omitempty"`
@@ -12177,7 +12157,7 @@ type RadiusServer struct {
 	RadiusServerSecret *string `json:"radiusServerSecret,omitempty"`
 }
 
-// A collective group of information about the record set information.
+// RecordSet - A collective group of information about the record set information.
 type RecordSet struct {
 	// Fqdn that resolves to private endpoint ip address.
 	Fqdn *string `json:"fqdn,omitempty"`
@@ -12198,13 +12178,13 @@ type RecordSet struct {
 	TTL *int32 `json:"ttl,omitempty"`
 }
 
-// Reference to a public IP address.
+// ReferencedPublicIPAddress - Reference to a public IP address.
 type ReferencedPublicIPAddress struct {
 	// The PublicIPAddress Reference.
 	ID *string `json:"id,omitempty"`
 }
 
-// Common resource representation.
+// Resource - Common resource representation.
 type Resource struct {
 	// Resource ID.
 	ID *string `json:"id,omitempty"`
@@ -12238,7 +12218,7 @@ type ResourceNavigationLink struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of ResourceNavigationLink.
+// ResourceNavigationLinkFormat - Properties of ResourceNavigationLink.
 type ResourceNavigationLinkFormat struct {
 	// Link to the external resource.
 	Link *string `json:"link,omitempty"`
@@ -12255,7 +12235,7 @@ type ResourceNavigationLinksListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for ResourceNavigationLinks_List operation.
+// ResourceNavigationLinksListResult - Response for ResourceNavigationLinks_List operation.
 type ResourceNavigationLinksListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -12273,13 +12253,13 @@ type ResourceNavigationLinksListResultResponse struct {
 	ResourceNavigationLinksListResult *ResourceNavigationLinksListResult
 }
 
-// The base resource set for visibility and auto-approval.
+// ResourceSet - The base resource set for visibility and auto-approval.
 type ResourceSet struct {
 	// The list of subscriptions.
 	Subscriptions *[]*string `json:"subscriptions,omitempty"`
 }
 
-// Parameters that define the retention policy for flow log.
+// RetentionPolicyParameters - Parameters that define the retention policy for flow log.
 type RetentionPolicyParameters struct {
 	// Number of days to retain flow log records.
 	Days *int32 `json:"days,omitempty"`
@@ -12301,7 +12281,7 @@ type Route struct {
 	Properties *RoutePropertiesFormat `json:"properties,omitempty"`
 }
 
-// Route Filter Resource.
+// RouteFilter - Route Filter Resource.
 type RouteFilter struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -12311,7 +12291,7 @@ type RouteFilter struct {
 	Properties *RouteFilterPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for the ListRouteFilters API service call.
+// RouteFilterListResult - Response for the ListRouteFilters API service call.
 type RouteFilterListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -12341,7 +12321,7 @@ type RouteFilterPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Route Filter Resource.
+// RouteFilterPropertiesFormat - Route Filter Resource.
 type RouteFilterPropertiesFormat struct {
 	// READ-ONLY; A collection of references to express route circuit ipv6 peerings.
 	IPv6Peerings *[]*ExpressRouteCircuitPeering `json:"ipv6Peerings,omitempty" azure:"ro"`
@@ -12365,7 +12345,7 @@ type RouteFilterResponse struct {
 	RouteFilter *RouteFilter
 }
 
-// Route Filter Rule Resource.
+// RouteFilterRule - Route Filter Rule Resource.
 type RouteFilterRule struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -12381,7 +12361,7 @@ type RouteFilterRule struct {
 	Properties *RouteFilterRulePropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for the ListRouteFilterRules API service call.
+// RouteFilterRuleListResult - Response for the ListRouteFilterRules API service call.
 type RouteFilterRuleListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -12411,7 +12391,7 @@ type RouteFilterRulePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Route Filter Rule Resource.
+// RouteFilterRulePropertiesFormat - Route Filter Rule Resource.
 type RouteFilterRulePropertiesFormat struct {
 	// The access type of the rule.
 	Access *Access `json:"access,omitempty"`
@@ -12486,7 +12466,7 @@ type RouteFiltersUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for the ListRoute API service call.
+// RouteListResult - Response for the ListRoute API service call.
 type RouteListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -12516,7 +12496,7 @@ type RoutePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Route resource.
+// RoutePropertiesFormat - Route resource.
 type RoutePropertiesFormat struct {
 	// The destination CIDR to which the route applies.
 	AddressPrefix *string `json:"addressPrefix,omitempty"`
@@ -12540,7 +12520,7 @@ type RouteResponse struct {
 	Route *Route
 }
 
-// Route table resource.
+// RouteTable - Route table resource.
 type RouteTable struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -12550,7 +12530,7 @@ type RouteTable struct {
 	Properties *RouteTablePropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for the ListRouteTable API service call.
+// RouteTableListResult - Response for the ListRouteTable API service call.
 type RouteTableListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -12580,7 +12560,7 @@ type RouteTablePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Route Table resource.
+// RouteTablePropertiesFormat - Route Table resource.
 type RouteTablePropertiesFormat struct {
 	// Whether to disable the routes learned by BGP on that route table. True means disable.
 	DisableBgpRoutePropagation *bool `json:"disableBgpRoutePropagation,omitempty"`
@@ -12655,7 +12635,7 @@ type RoutesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Routing Configuration indicating the associated and propagated route tables for this connection.
+// RoutingConfiguration - Routing Configuration indicating the associated and propagated route tables for this connection.
 type RoutingConfiguration struct {
 	// The resource id RouteTable associated with this RoutingConfiguration.
 	AssociatedRouteTable *SubResource `json:"associatedRouteTable,omitempty"`
@@ -12667,7 +12647,7 @@ type RoutingConfiguration struct {
 	VnetRoutes *VnetRoute `json:"vnetRoutes,omitempty"`
 }
 
-// Network interface and all its associated security rules.
+// SecurityGroupNetworkInterface - Network interface and all its associated security rules.
 type SecurityGroupNetworkInterface struct {
 	// ID of the network interface.
 	ID *string `json:"id,omitempty"`
@@ -12676,13 +12656,13 @@ type SecurityGroupNetworkInterface struct {
 	SecurityRuleAssociations *SecurityRuleAssociations `json:"securityRuleAssociations,omitempty"`
 }
 
-// Parameters that define the VM to check security groups for.
+// SecurityGroupViewParameters - Parameters that define the VM to check security groups for.
 type SecurityGroupViewParameters struct {
 	// ID of the target VM.
 	TargetResourceID *string `json:"targetResourceId,omitempty"`
 }
 
-// The information about security rules applied to the specified VM.
+// SecurityGroupViewResult - The information about security rules applied to the specified VM.
 type SecurityGroupViewResult struct {
 	// List of network interfaces on the specified VM.
 	NetworkInterfaces *[]*SecurityGroupNetworkInterface `json:"networkInterfaces,omitempty"`
@@ -12709,7 +12689,7 @@ type SecurityGroupViewResultResponse struct {
 	SecurityGroupViewResult *SecurityGroupViewResult
 }
 
-// Security Partner Provider resource.
+// SecurityPartnerProvider - Security Partner Provider resource.
 type SecurityPartnerProvider struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -12719,7 +12699,7 @@ type SecurityPartnerProvider struct {
 	Properties *SecurityPartnerProviderPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListSecurityPartnerProviders API service call.
+// SecurityPartnerProviderListResult - Response for ListSecurityPartnerProviders API service call.
 type SecurityPartnerProviderListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -12749,7 +12729,7 @@ type SecurityPartnerProviderPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the Security Partner Provider.
+// SecurityPartnerProviderPropertiesFormat - Properties of the Security Partner Provider.
 type SecurityPartnerProviderPropertiesFormat struct {
 	// READ-ONLY; The connection status with the Security Partner Provider.
 	ConnectionStatus *SecurityPartnerProviderConnectionStatus `json:"connectionStatus,omitempty" azure:"ro"`
@@ -12803,7 +12783,7 @@ type SecurityPartnerProvidersUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Network security rule.
+// SecurityRule - Network security rule.
 type SecurityRule struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -12816,7 +12796,7 @@ type SecurityRule struct {
 	Properties *SecurityRulePropertiesFormat `json:"properties,omitempty"`
 }
 
-// All security rules associated with the network interface.
+// SecurityRuleAssociations - All security rules associated with the network interface.
 type SecurityRuleAssociations struct {
 	// Collection of default security rules of the network security group.
 	DefaultSecurityRules *[]*SecurityRule `json:"defaultSecurityRules,omitempty"`
@@ -12831,7 +12811,7 @@ type SecurityRuleAssociations struct {
 	SubnetAssociation *SubnetAssociation `json:"subnetAssociation,omitempty"`
 }
 
-// Response for ListSecurityRule API service call. Retrieves all security rules that belongs to a network security group.
+// SecurityRuleListResult - Response for ListSecurityRule API service call. Retrieves all security rules that belongs to a network security group.
 type SecurityRuleListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -12861,7 +12841,7 @@ type SecurityRulePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Security rule resource.
+// SecurityRulePropertiesFormat - Security rule resource.
 type SecurityRulePropertiesFormat struct {
 	// The network traffic is allowed or denied.
 	Access *SecurityRuleAccess `json:"access,omitempty"`
@@ -12962,7 +12942,7 @@ type ServiceAssociationLink struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Properties of ServiceAssociationLink.
+// ServiceAssociationLinkPropertiesFormat - Properties of ServiceAssociationLink.
 type ServiceAssociationLinkPropertiesFormat struct {
 	// If true, the resource can be deleted.
 	AllowDelete *bool `json:"allowDelete,omitempty"`
@@ -12985,7 +12965,7 @@ type ServiceAssociationLinksListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for ServiceAssociationLinks_List operation.
+// ServiceAssociationLinksListResult - Response for ServiceAssociationLinks_List operation.
 type ServiceAssociationLinksListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -13003,7 +12983,7 @@ type ServiceAssociationLinksListResultResponse struct {
 	ServiceAssociationLinksListResult *ServiceAssociationLinksListResult
 }
 
-// Properties of a service delegation.
+// ServiceDelegationPropertiesFormat - Properties of a service delegation.
 type ServiceDelegationPropertiesFormat struct {
 	// READ-ONLY; The actions permitted to the service upon delegation.
 	Actions *[]*string `json:"actions,omitempty" azure:"ro"`
@@ -13046,7 +13026,7 @@ type ServiceEndpointPoliciesUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Service End point policy resource.
+// ServiceEndpointPolicy - Service End point policy resource.
 type ServiceEndpointPolicy struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -13056,7 +13036,7 @@ type ServiceEndpointPolicy struct {
 	Properties *ServiceEndpointPolicyPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Service Endpoint policy definitions.
+// ServiceEndpointPolicyDefinition - Service Endpoint policy definitions.
 type ServiceEndpointPolicyDefinition struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -13069,8 +13049,8 @@ type ServiceEndpointPolicyDefinition struct {
 	Properties *ServiceEndpointPolicyDefinitionPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListServiceEndpointPolicyDefinition API service call. Retrieves all service endpoint policy definition that belongs to a service endpoint
-// policy.
+// ServiceEndpointPolicyDefinitionListResult - Response for ListServiceEndpointPolicyDefinition API service call. Retrieves all service endpoint policy
+// definition that belongs to a service endpoint policy.
 type ServiceEndpointPolicyDefinitionListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -13101,7 +13081,7 @@ type ServiceEndpointPolicyDefinitionPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Service Endpoint policy definition resource.
+// ServiceEndpointPolicyDefinitionPropertiesFormat - Service Endpoint policy definition resource.
 type ServiceEndpointPolicyDefinitionPropertiesFormat struct {
 	// A description for this rule. Restricted to 140 chars.
 	Description *string `json:"description,omitempty"`
@@ -13147,7 +13127,7 @@ type ServiceEndpointPolicyDefinitionsListByResourceGroupOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for ListServiceEndpointPolicies API service call.
+// ServiceEndpointPolicyListResult - Response for ListServiceEndpointPolicies API service call.
 type ServiceEndpointPolicyListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -13177,7 +13157,7 @@ type ServiceEndpointPolicyPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Service Endpoint Policy resource.
+// ServiceEndpointPolicyPropertiesFormat - Service Endpoint Policy resource.
 type ServiceEndpointPolicyPropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the service endpoint policy resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -13201,7 +13181,7 @@ type ServiceEndpointPolicyResponse struct {
 	ServiceEndpointPolicy *ServiceEndpointPolicy
 }
 
-// The service endpoint properties.
+// ServiceEndpointPropertiesFormat - The service endpoint properties.
 type ServiceEndpointPropertiesFormat struct {
 	// A list of locations.
 	Locations *[]*string `json:"locations,omitempty"`
@@ -13213,7 +13193,7 @@ type ServiceEndpointPropertiesFormat struct {
 	Service *string `json:"service,omitempty"`
 }
 
-// The service tag information.
+// ServiceTagInformation - The service tag information.
 type ServiceTagInformation struct {
 	// READ-ONLY; The ID of service tag.
 	ID *string `json:"id,omitempty" azure:"ro"`
@@ -13225,7 +13205,7 @@ type ServiceTagInformation struct {
 	Properties *ServiceTagInformationPropertiesFormat `json:"properties,omitempty" azure:"ro"`
 }
 
-// Properties of the service tag information.
+// ServiceTagInformationPropertiesFormat - Properties of the service tag information.
 type ServiceTagInformationPropertiesFormat struct {
 	// READ-ONLY; The list of IP address prefixes.
 	AddressPrefixes *[]*string `json:"addressPrefixes,omitempty" azure:"ro"`
@@ -13236,9 +13216,6 @@ type ServiceTagInformationPropertiesFormat struct {
 	// READ-ONLY; The region of service tag.
 	Region *string `json:"region,omitempty" azure:"ro"`
 
-	// READ-ONLY; The state of the service tag.
-	State *string `json:"state,omitempty" azure:"ro"`
-
 	// READ-ONLY; The name of system service.
 	SystemService *string `json:"systemService,omitempty" azure:"ro"`
 }
@@ -13248,7 +13225,7 @@ type ServiceTagsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for the ListServiceTags API service call.
+// ServiceTagsListResult - Response for the ListServiceTags API service call.
 type ServiceTagsListResult struct {
 	// READ-ONLY; The iteration number.
 	ChangeNumber *string `json:"changeNumber,omitempty" azure:"ro"`
@@ -13281,13 +13258,13 @@ type ServiceTagsListResultResponse struct {
 	ServiceTagsListResult *ServiceTagsListResult
 }
 
-// List of session IDs.
+// SessionIDs - List of session IDs.
 type SessionIDs struct {
 	// List of session IDs.
 	SessionIDs *[]*string `json:"sessionIds,omitempty"`
 }
 
-// List of all Static Routes.
+// StaticRoute - List of all Static Routes.
 type StaticRoute struct {
 	// List of all address prefixes.
 	AddressPrefixes *[]*string `json:"addressPrefixes,omitempty"`
@@ -13327,7 +13304,7 @@ type StringResponse struct {
 	Value       *string
 }
 
-// Reference to another subresource.
+// SubResource - Reference to another subresource.
 type SubResource struct {
 	// Resource ID.
 	ID *string `json:"id,omitempty"`
@@ -13344,12 +13321,9 @@ type Subnet struct {
 
 	// Properties of the subnet.
 	Properties *SubnetPropertiesFormat `json:"properties,omitempty"`
-
-	// Resource type.
-	Type *string `json:"type,omitempty"`
 }
 
-// Subnet and it's custom security rules.
+// SubnetAssociation - Subnet and it's custom security rules.
 type SubnetAssociation struct {
 	// READ-ONLY; Subnet ID.
 	ID *string `json:"id,omitempty" azure:"ro"`
@@ -13358,7 +13332,7 @@ type SubnetAssociation struct {
 	SecurityRules *[]*SecurityRule `json:"securityRules,omitempty"`
 }
 
-// Response for ListSubnets API service callRetrieves all subnet that belongs to a virtual network.
+// SubnetListResult - Response for ListSubnets API service callRetrieves all subnet that belongs to a virtual network.
 type SubnetListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -13388,7 +13362,7 @@ type SubnetPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the subnet.
+// SubnetPropertiesFormat - Properties of the subnet.
 type SubnetPropertiesFormat struct {
 	// The address prefix for the subnet.
 	AddressPrefix *string `json:"addressPrefix,omitempty"`
@@ -13415,13 +13389,13 @@ type SubnetPropertiesFormat struct {
 	NetworkSecurityGroup *NetworkSecurityGroup `json:"networkSecurityGroup,omitempty"`
 
 	// Enable or Disable apply network policies on private end point in the subnet.
-	PrivateEndpointNetworkPolicies *VirtualNetworkPrivateEndpointNetworkPolicies `json:"privateEndpointNetworkPolicies,omitempty"`
+	PrivateEndpointNetworkPolicies *string `json:"privateEndpointNetworkPolicies,omitempty"`
 
 	// READ-ONLY; An array of references to private endpoints.
 	PrivateEndpoints *[]*PrivateEndpoint `json:"privateEndpoints,omitempty" azure:"ro"`
 
 	// Enable or Disable apply network policies on private link service in the subnet.
-	PrivateLinkServiceNetworkPolicies *VirtualNetworkPrivateLinkServiceNetworkPolicies `json:"privateLinkServiceNetworkPolicies,omitempty"`
+	PrivateLinkServiceNetworkPolicies *string `json:"privateLinkServiceNetworkPolicies,omitempty"`
 
 	// READ-ONLY; The provisioning state of the subnet resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -13485,7 +13459,7 @@ type SubnetsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Tags object for patch operations.
+// TagsObject - Tags object for patch operations.
 type TagsObject struct {
 	// Resource tags.
 	Tags *map[string]*string `json:"tags,omitempty"`
@@ -13556,7 +13530,7 @@ func (t *Topology) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Resources that have an association with the parent resource.
+// TopologyAssociation - Resources that have an association with the parent resource.
 type TopologyAssociation struct {
 	// The association type of the child resource to the parent resource.
 	AssociationType *AssociationType `json:"associationType,omitempty"`
@@ -13568,7 +13542,7 @@ type TopologyAssociation struct {
 	ResourceID *string `json:"resourceId,omitempty"`
 }
 
-// Parameters that define the representation of topology.
+// TopologyParameters - Parameters that define the representation of topology.
 type TopologyParameters struct {
 	// The name of the target resource group to perform topology on.
 	TargetResourceGroupName *string `json:"targetResourceGroupName,omitempty"`
@@ -13580,7 +13554,7 @@ type TopologyParameters struct {
 	TargetVirtualNetwork *SubResource `json:"targetVirtualNetwork,omitempty"`
 }
 
-// The network resource topology information for the given resource group.
+// TopologyResource - The network resource topology information for the given resource group.
 type TopologyResource struct {
 	// Holds the associations the resource has with other resources in the resource group.
 	Associations *[]*TopologyAssociation `json:"associations,omitempty"`
@@ -13604,7 +13578,7 @@ type TopologyResponse struct {
 	Topology *Topology
 }
 
-// Parameters that define the configuration of traffic analytics.
+// TrafficAnalyticsConfigurationProperties - Parameters that define the configuration of traffic analytics.
 type TrafficAnalyticsConfigurationProperties struct {
 	// Flag to enable/disable traffic analytics.
 	Enabled *bool `json:"enabled,omitempty"`
@@ -13622,13 +13596,13 @@ type TrafficAnalyticsConfigurationProperties struct {
 	WorkspaceResourceID *string `json:"workspaceResourceId,omitempty"`
 }
 
-// Parameters that define the configuration of traffic analytics.
+// TrafficAnalyticsProperties - Parameters that define the configuration of traffic analytics.
 type TrafficAnalyticsProperties struct {
 	// Parameters that define the configuration of traffic analytics.
 	NetworkWatcherFlowAnalyticsConfiguration *TrafficAnalyticsConfigurationProperties `json:"networkWatcherFlowAnalyticsConfiguration,omitempty"`
 }
 
-// An traffic selector policy for a virtual network gateway connection.
+// TrafficSelectorPolicy - An traffic selector policy for a virtual network gateway connection.
 type TrafficSelectorPolicy struct {
 	// A collection of local address spaces in CIDR format.
 	LocalAddressRanges *[]*string `json:"localAddressRanges,omitempty"`
@@ -13637,7 +13611,7 @@ type TrafficSelectorPolicy struct {
 	RemoteAddressRanges *[]*string `json:"remoteAddressRanges,omitempty"`
 }
 
-// Information gained from troubleshooting of specified resource.
+// TroubleshootingDetails - Information gained from troubleshooting of specified resource.
 type TroubleshootingDetails struct {
 	// Details on troubleshooting results.
 	Detail *string `json:"detail,omitempty"`
@@ -13655,7 +13629,7 @@ type TroubleshootingDetails struct {
 	Summary *string `json:"summary,omitempty"`
 }
 
-// Parameters that define the resource to troubleshoot.
+// TroubleshootingParameters - Parameters that define the resource to troubleshoot.
 type TroubleshootingParameters struct {
 	// Properties of the troubleshooting resource.
 	Properties *TroubleshootingProperties `json:"properties,omitempty"`
@@ -13664,7 +13638,7 @@ type TroubleshootingParameters struct {
 	TargetResourceID *string `json:"targetResourceId,omitempty"`
 }
 
-// Storage location provided for troubleshoot.
+// TroubleshootingProperties - Storage location provided for troubleshoot.
 type TroubleshootingProperties struct {
 	// The ID for the storage account to save the troubleshoot result.
 	StorageID *string `json:"storageId,omitempty"`
@@ -13673,7 +13647,7 @@ type TroubleshootingProperties struct {
 	StoragePath *string `json:"storagePath,omitempty"`
 }
 
-// Recommended actions based on discovered issues.
+// TroubleshootingRecommendedActions - Recommended actions based on discovered issues.
 type TroubleshootingRecommendedActions struct {
 	// ID of the recommended action.
 	ActionID *string `json:"actionId,omitempty"`
@@ -13688,7 +13662,7 @@ type TroubleshootingRecommendedActions struct {
 	ActionURIText *string `json:"actionUriText,omitempty"`
 }
 
-// Troubleshooting information gained from specified resource.
+// TroubleshootingResult - Troubleshooting information gained from specified resource.
 type TroubleshootingResult struct {
 	// The result code of the troubleshooting.
 	Code *string `json:"code,omitempty"`
@@ -13767,7 +13741,7 @@ type TroubleshootingResultResponse struct {
 	TroubleshootingResult *TroubleshootingResult
 }
 
-// VirtualNetworkGatewayConnection properties.
+// TunnelConnectionHealth - VirtualNetworkGatewayConnection properties.
 type TunnelConnectionHealth struct {
 	// READ-ONLY; Virtual Network Gateway connection status.
 	ConnectionStatus *VirtualNetworkGatewayConnectionStatus `json:"connectionStatus,omitempty" azure:"ro"`
@@ -13785,13 +13759,13 @@ type TunnelConnectionHealth struct {
 	Tunnel *string `json:"tunnel,omitempty" azure:"ro"`
 }
 
-// Details of UnprepareNetworkPolicies for Subnet.
+// UnprepareNetworkPoliciesRequest - Details of UnprepareNetworkPolicies for Subnet.
 type UnprepareNetworkPoliciesRequest struct {
 	// The name of the service for which subnet is being unprepared for.
 	ServiceName *string `json:"serviceName,omitempty"`
 }
 
-// The network resource usage.
+// Usage - The network resource usage.
 type Usage struct {
 	// The current value of the usage.
 	CurrentValue *int64 `json:"currentValue,omitempty"`
@@ -13809,7 +13783,7 @@ type Usage struct {
 	Unit *UsageUnit `json:"unit,omitempty"`
 }
 
-// The usage names.
+// UsageName - The usage names.
 type UsageName struct {
 	// A localized string describing the resource name.
 	LocalizedValue *string `json:"localizedValue,omitempty"`
@@ -13823,7 +13797,7 @@ type UsagesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// The list usages operation response.
+// UsagesListResult - The list usages operation response.
 type UsagesListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -13841,12 +13815,12 @@ type UsagesListResultResponse struct {
 	UsagesListResult *UsagesListResult
 }
 
-// Describes a Virtual Machine.
+// VM - Describes a Virtual Machine.
 type VM struct {
 	Resource
 }
 
-// VpnClientConfiguration for P2S client.
+// VPNClientConfiguration - VpnClientConfiguration for P2S client.
 type VPNClientConfiguration struct {
 	// The AADAudience property of the VirtualNetworkGateway resource for vpn client connection used for AAD authentication.
 	AADAudience *string `json:"aadAudience,omitempty"`
@@ -13882,7 +13856,7 @@ type VPNClientConfiguration struct {
 	VPNClientRootCertificates *[]*VPNClientRootCertificate `json:"vpnClientRootCertificates,omitempty"`
 }
 
-// VpnClientConnectionHealth properties.
+// VPNClientConnectionHealth - VpnClientConnectionHealth properties.
 type VPNClientConnectionHealth struct {
 	// List of allocated ip addresses to the connected p2s vpn clients.
 	AllocatedIPAddresses *[]*string `json:"allocatedIpAddresses,omitempty"`
@@ -13897,7 +13871,7 @@ type VPNClientConnectionHealth struct {
 	VPNClientConnectionsCount *int32 `json:"vpnClientConnectionsCount,omitempty"`
 }
 
-// VPN client connection health detail.
+// VPNClientConnectionHealthDetail - VPN client connection health detail.
 type VPNClientConnectionHealthDetail struct {
 	// READ-ONLY; The egress bytes per second.
 	EgressBytesTransferred *int64 `json:"egressBytesTransferred,omitempty" azure:"ro"`
@@ -13936,7 +13910,7 @@ type VPNClientConnectionHealthDetail struct {
 	VPNUserName *string `json:"vpnUserName,omitempty" azure:"ro"`
 }
 
-// List of virtual network gateway vpn client connection health.
+// VPNClientConnectionHealthDetailListResult - List of virtual network gateway vpn client connection health.
 type VPNClientConnectionHealthDetailListResult struct {
 	// List of vpn client connection health.
 	Value *[]*VPNClientConnectionHealthDetail `json:"value,omitempty"`
@@ -13964,7 +13938,7 @@ type VPNClientConnectionHealthDetailListResultResponse struct {
 	VPNClientConnectionHealthDetailListResult *VPNClientConnectionHealthDetailListResult
 }
 
-// An IPSec parameters for a virtual network gateway P2S connection.
+// VPNClientIPsecParameters - An IPSec parameters for a virtual network gateway P2S connection.
 type VPNClientIPsecParameters struct {
 	// The DH Group used in IKE Phase 1 for initial SA.
 	DhGroup *DhGroup `json:"dhGroup,omitempty"`
@@ -14012,7 +13986,7 @@ type VPNClientIPsecParametersResponse struct {
 	VPNClientIPsecParameters *VPNClientIPsecParameters
 }
 
-// Vpn Client Parameters for package generation.
+// VPNClientParameters - Vpn Client Parameters for package generation.
 type VPNClientParameters struct {
 	// VPN client authentication method.
 	AuthenticationMethod *AuthenticationMethod `json:"authenticationMethod,omitempty"`
@@ -14030,7 +14004,7 @@ type VPNClientParameters struct {
 	RadiusServerAuthCertificate *string `json:"radiusServerAuthCertificate,omitempty"`
 }
 
-// VPN client revoked certificate of virtual network gateway.
+// VPNClientRevokedCertificate - VPN client revoked certificate of virtual network gateway.
 type VPNClientRevokedCertificate struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -14043,7 +14017,7 @@ type VPNClientRevokedCertificate struct {
 	Properties *VPNClientRevokedCertificatePropertiesFormat `json:"properties,omitempty"`
 }
 
-// Properties of the revoked VPN client certificate of virtual network gateway.
+// VPNClientRevokedCertificatePropertiesFormat - Properties of the revoked VPN client certificate of virtual network gateway.
 type VPNClientRevokedCertificatePropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the VPN client revoked certificate resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -14052,7 +14026,7 @@ type VPNClientRevokedCertificatePropertiesFormat struct {
 	Thumbprint *string `json:"thumbprint,omitempty"`
 }
 
-// VPN client root certificate of virtual network gateway.
+// VPNClientRootCertificate - VPN client root certificate of virtual network gateway.
 type VPNClientRootCertificate struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -14065,7 +14039,7 @@ type VPNClientRootCertificate struct {
 	Properties *VPNClientRootCertificatePropertiesFormat `json:"properties,omitempty"`
 }
 
-// Properties of SSL certificates of application gateway.
+// VPNClientRootCertificatePropertiesFormat - Properties of SSL certificates of application gateway.
 type VPNClientRootCertificatePropertiesFormat struct {
 	// READ-ONLY; The provisioning state of the VPN client root certificate resource.
 	ProvisioningState *ProvisioningState `json:"provisioningState,omitempty" azure:"ro"`
@@ -14074,7 +14048,7 @@ type VPNClientRootCertificatePropertiesFormat struct {
 	PublicCertData *string `json:"publicCertData,omitempty"`
 }
 
-// VpnConnection Resource.
+// VPNConnection - VpnConnection Resource.
 type VPNConnection struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -14087,7 +14061,7 @@ type VPNConnection struct {
 	Properties *VPNConnectionProperties `json:"properties,omitempty"`
 }
 
-// Vpn Connection packet capture parameters supplied to start packet capture on gateway connection.
+// VPNConnectionPacketCaptureStartParameters - Vpn Connection packet capture parameters supplied to start packet capture on gateway connection.
 type VPNConnectionPacketCaptureStartParameters struct {
 	// Start Packet capture parameters on vpn connection.
 	FilterData *string `json:"filterData,omitempty"`
@@ -14096,7 +14070,7 @@ type VPNConnectionPacketCaptureStartParameters struct {
 	LinkConnectionNames *[]*string `json:"linkConnectionNames,omitempty"`
 }
 
-// Vpn Connection packet capture parameters supplied to stop packet capture on gateway connection.
+// VPNConnectionPacketCaptureStopParameters - Vpn Connection packet capture parameters supplied to stop packet capture on gateway connection.
 type VPNConnectionPacketCaptureStopParameters struct {
 	// List of site link connection names.
 	LinkConnectionNames *[]*string `json:"linkConnectionNames,omitempty"`
@@ -14117,7 +14091,7 @@ type VPNConnectionPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters for VpnConnection.
+// VPNConnectionProperties - Parameters for VpnConnection.
 type VPNConnectionProperties struct {
 	// Expected bandwidth in MBPS.
 	ConnectionBandwidth *int32 `json:"connectionBandwidth,omitempty"`
@@ -14215,7 +14189,7 @@ type VPNConnectionsListByVPNGatewayOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Vpn device configuration script generation parameters.
+// VPNDeviceScriptParameters - Vpn device configuration script generation parameters.
 type VPNDeviceScriptParameters struct {
 	// The device family for the vpn device.
 	DeviceFamily *string `json:"deviceFamily,omitempty"`
@@ -14227,7 +14201,7 @@ type VPNDeviceScriptParameters struct {
 	Vendor *string `json:"vendor,omitempty"`
 }
 
-// VpnGateway Resource.
+// VPNGateway - VpnGateway Resource.
 type VPNGateway struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -14237,7 +14211,7 @@ type VPNGateway struct {
 	Properties *VPNGatewayProperties `json:"properties,omitempty"`
 }
 
-// IP Configuration of a VPN Gateway Resource.
+// VPNGatewayIPConfiguration - IP Configuration of a VPN Gateway Resource.
 type VPNGatewayIPConfiguration struct {
 	// The identifier of the IP configuration for a VPN Gateway.
 	ID *string `json:"id,omitempty"`
@@ -14249,13 +14223,13 @@ type VPNGatewayIPConfiguration struct {
 	PublicIPAddress *string `json:"publicIpAddress,omitempty"`
 }
 
-// Start packet capture parameters.
+// VPNGatewayPacketCaptureStartParameters - Start packet capture parameters.
 type VPNGatewayPacketCaptureStartParameters struct {
 	// Start Packet capture parameters on vpn gateway.
 	FilterData *string `json:"filterData,omitempty"`
 }
 
-// Stop packet capture parameters.
+// VPNGatewayPacketCaptureStopParameters - Stop packet capture parameters.
 type VPNGatewayPacketCaptureStopParameters struct {
 	// SAS url for packet capture on vpn gateway.
 	SasURL *string `json:"sasUrl,omitempty"`
@@ -14273,7 +14247,7 @@ type VPNGatewayPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters for VpnGateway.
+// VPNGatewayProperties - Parameters for VpnGateway.
 type VPNGatewayProperties struct {
 	// Local network gateway's BGP speaker settings.
 	BgpSettings *BgpSettings `json:"bgpSettings,omitempty"`
@@ -14353,7 +14327,7 @@ type VPNGatewaysListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// BGP settings details for a link.
+// VPNLinkBgpSettings - BGP settings details for a link.
 type VPNLinkBgpSettings struct {
 	// The BGP speaker's ASN.
 	Asn *int64 `json:"asn,omitempty"`
@@ -14367,7 +14341,7 @@ type VPNLinkConnectionsListByVPNConnectionOptions struct {
 	// placeholder for future optional parameters
 }
 
-// List of properties of a link provider.
+// VPNLinkProviderProperties - List of properties of a link provider.
 type VPNLinkProviderProperties struct {
 	// Name of the link provider.
 	LinkProviderName *string `json:"linkProviderName,omitempty"`
@@ -14376,19 +14350,19 @@ type VPNLinkProviderProperties struct {
 	LinkSpeedInMbps *int32 `json:"linkSpeedInMbps,omitempty"`
 }
 
-// Start packet capture parameters on virtual network gateway.
+// VPNPacketCaptureStartParameters - Start packet capture parameters on virtual network gateway.
 type VPNPacketCaptureStartParameters struct {
 	// Start Packet capture parameters.
 	FilterData *string `json:"filterData,omitempty"`
 }
 
-// Stop packet capture parameters.
+// VPNPacketCaptureStopParameters - Stop packet capture parameters.
 type VPNPacketCaptureStopParameters struct {
 	// SAS url for packet capture on virtual network gateway.
 	SasURL *string `json:"sasUrl,omitempty"`
 }
 
-// Vpn Profile Response for package generation.
+// VPNProfileResponse - Vpn Profile Response for package generation.
 type VPNProfileResponse struct {
 	// URL to the VPN profile.
 	ProfileURL *string `json:"profileUrl,omitempty"`
@@ -14415,7 +14389,7 @@ type VPNProfileResponseResponse struct {
 	VPNProfileResponse *VPNProfileResponse
 }
 
-// Properties of the Radius client root certificate of VpnServerConfiguration.
+// VPNServerConfigRadiusClientRootCertificate - Properties of the Radius client root certificate of VpnServerConfiguration.
 type VPNServerConfigRadiusClientRootCertificate struct {
 	// The certificate name.
 	Name *string `json:"name,omitempty"`
@@ -14424,7 +14398,7 @@ type VPNServerConfigRadiusClientRootCertificate struct {
 	Thumbprint *string `json:"thumbprint,omitempty"`
 }
 
-// Properties of Radius Server root certificate of VpnServerConfiguration.
+// VPNServerConfigRadiusServerRootCertificate - Properties of Radius Server root certificate of VpnServerConfiguration.
 type VPNServerConfigRadiusServerRootCertificate struct {
 	// The certificate name.
 	Name *string `json:"name,omitempty"`
@@ -14433,7 +14407,7 @@ type VPNServerConfigRadiusServerRootCertificate struct {
 	PublicCertData *string `json:"publicCertData,omitempty"`
 }
 
-// Properties of the revoked VPN client certificate of VpnServerConfiguration.
+// VPNServerConfigVPNClientRevokedCertificate - Properties of the revoked VPN client certificate of VpnServerConfiguration.
 type VPNServerConfigVPNClientRevokedCertificate struct {
 	// The certificate name.
 	Name *string `json:"name,omitempty"`
@@ -14442,7 +14416,7 @@ type VPNServerConfigVPNClientRevokedCertificate struct {
 	Thumbprint *string `json:"thumbprint,omitempty"`
 }
 
-// Properties of VPN client root certificate of VpnServerConfiguration.
+// VPNServerConfigVPNClientRootCertificate - Properties of VPN client root certificate of VpnServerConfiguration.
 type VPNServerConfigVPNClientRootCertificate struct {
 	// The certificate name.
 	Name *string `json:"name,omitempty"`
@@ -14451,7 +14425,7 @@ type VPNServerConfigVPNClientRootCertificate struct {
 	PublicCertData *string `json:"publicCertData,omitempty"`
 }
 
-// VpnServerConfiguration Resource.
+// VPNServerConfiguration - VpnServerConfiguration Resource.
 type VPNServerConfiguration struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -14473,7 +14447,7 @@ type VPNServerConfigurationPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters for VpnServerConfiguration.
+// VPNServerConfigurationProperties - Parameters for VpnServerConfiguration.
 type VPNServerConfigurationProperties struct {
 	// The set of aad vpn authentication parameters.
 	AADAuthenticationParameters *AADAuthenticationParameters `json:"aadAuthenticationParameters,omitempty"`
@@ -14561,7 +14535,7 @@ type VPNServerConfigurationsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// VpnServerConfigurations list associated with VirtualWan Response.
+// VPNServerConfigurationsResponse - VpnServerConfigurations list associated with VirtualWan Response.
 type VPNServerConfigurationsResponse struct {
 	// List of VpnServerConfigurations associated with VirtualWan.
 	VPNServerConfigurationResourceIDs *[]*string `json:"vpnServerConfigurationResourceIds,omitempty"`
@@ -14593,7 +14567,7 @@ type VPNServerConfigurationsUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// VpnSite Resource.
+// VPNSite - VpnSite Resource.
 type VPNSite struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -14603,13 +14577,13 @@ type VPNSite struct {
 	Properties *VPNSiteProperties `json:"properties,omitempty"`
 }
 
-// VpnSite Resource.
+// VPNSiteID - VpnSite Resource.
 type VPNSiteID struct {
 	// READ-ONLY; The resource-uri of the vpn-site for which config is to be fetched.
 	VPNSite *string `json:"vpnSite,omitempty" azure:"ro"`
 }
 
-// VpnSiteLink Resource.
+// VPNSiteLink - VpnSiteLink Resource.
 type VPNSiteLink struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -14625,7 +14599,7 @@ type VPNSiteLink struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// VpnSiteLinkConnection Resource.
+// VPNSiteLinkConnection - VpnSiteLinkConnection Resource.
 type VPNSiteLinkConnection struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -14641,7 +14615,7 @@ type VPNSiteLinkConnection struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Parameters for VpnConnection.
+// VPNSiteLinkConnectionProperties - Parameters for VpnConnection.
 type VPNSiteLinkConnectionProperties struct {
 	// Expected bandwidth in MBPS.
 	ConnectionBandwidth *int32 `json:"connectionBandwidth,omitempty"`
@@ -14700,7 +14674,7 @@ type VPNSiteLinkConnectionsGetOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Parameters for VpnSite.
+// VPNSiteLinkProperties - Parameters for VpnSite.
 type VPNSiteLinkProperties struct {
 	// The set of bgp properties.
 	BgpProperties *VPNLinkBgpSettings `json:"bgpProperties,omitempty"`
@@ -14749,7 +14723,7 @@ type VPNSitePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters for VpnSite.
+// VPNSiteProperties - Parameters for VpnSite.
 type VPNSiteProperties struct {
 	// The AddressSpace that contains an array of IP address ranges.
 	AddressSpace *AddressSpace `json:"addressSpace,omitempty"`
@@ -14826,7 +14800,7 @@ type VPNSitesUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Parameters that define the IP flow to be verified.
+// VerificationIPFlowParameters - Parameters that define the IP flow to be verified.
 type VerificationIPFlowParameters struct {
 	// The direction of the packet represented as a 5-tuple.
 	Direction *Direction `json:"direction,omitempty"`
@@ -14853,7 +14827,7 @@ type VerificationIPFlowParameters struct {
 	TargetResourceID *string `json:"targetResourceId,omitempty"`
 }
 
-// Results of IP flow verification on the target resource.
+// VerificationIPFlowResult - Results of IP flow verification on the target resource.
 type VerificationIPFlowResult struct {
 	// Indicates whether the traffic is allowed or denied.
 	Access *Access `json:"access,omitempty"`
@@ -14883,7 +14857,7 @@ type VerificationIPFlowResultResponse struct {
 	VerificationIPFlowResult *VerificationIPFlowResult
 }
 
-// Network Virtual Appliance NIC properties.
+// VirtualApplianceNicProperties - Network Virtual Appliance NIC properties.
 type VirtualApplianceNicProperties struct {
 	// READ-ONLY; NIC name.
 	Name *string `json:"name,omitempty" azure:"ro"`
@@ -14895,7 +14869,7 @@ type VirtualApplianceNicProperties struct {
 	PublicIPAddress *string `json:"publicIpAddress,omitempty" azure:"ro"`
 }
 
-// Network Virtual Appliance Sku Properties.
+// VirtualApplianceSKUProperties - Network Virtual Appliance Sku Properties.
 type VirtualApplianceSKUProperties struct {
 	// Virtual Appliance Scale Unit.
 	BundledScaleUnit *string `json:"bundledScaleUnit,omitempty"`
@@ -14917,7 +14891,7 @@ type VirtualApplianceSKUsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Virtual Appliance Site resource.
+// VirtualApplianceSite - Virtual Appliance Site resource.
 type VirtualApplianceSite struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -14945,7 +14919,7 @@ type VirtualApplianceSitePollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the rule group.
+// VirtualApplianceSiteProperties - Properties of the rule group.
 type VirtualApplianceSiteProperties struct {
 	// Address Prefix.
 	AddressPrefix *string `json:"addressPrefix,omitempty"`
@@ -15027,7 +15001,7 @@ type VirtualHubBgpConnectionsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// The effective route configured on the virtual hub or specified resource.
+// VirtualHubEffectiveRoute - The effective route configured on the virtual hub or specified resource.
 type VirtualHubEffectiveRoute struct {
 	// The list of address prefixes.
 	AddressPrefixes *[]*string `json:"addressPrefixes,omitempty"`
@@ -15045,13 +15019,13 @@ type VirtualHubEffectiveRoute struct {
 	RouteOrigin *string `json:"routeOrigin,omitempty"`
 }
 
-// EffectiveRoutes List.
+// VirtualHubEffectiveRouteList - EffectiveRoutes List.
 type VirtualHubEffectiveRouteList struct {
 	// The list of effective routes configured on the virtual hub or the specified resource.
 	Value *[]*VirtualHubEffectiveRoute `json:"value,omitempty"`
 }
 
-// Virtual Hub identifier.
+// VirtualHubID - Virtual Hub identifier.
 type VirtualHubID struct {
 	// The resource URI for the Virtual Hub where the ExpressRoute gateway is or will be deployed. The Virtual Hub resource and the ExpressRoute gateway resource
 	// reside in the same subscription.
@@ -15090,7 +15064,7 @@ type VirtualHubPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters for VirtualHub.
+// VirtualHubProperties - Parameters for VirtualHub.
 type VirtualHubProperties struct {
 	// Address-prefix for this VirtualHub.
 	AddressPrefix *string `json:"addressPrefix,omitempty"`
@@ -15156,7 +15130,7 @@ type VirtualHubResponse struct {
 	VirtualHub *VirtualHub
 }
 
-// VirtualHub route.
+// VirtualHubRoute - VirtualHub route.
 type VirtualHubRoute struct {
 	// List of all addressPrefixes.
 	AddressPrefixes *[]*string `json:"addressPrefixes,omitempty"`
@@ -15165,7 +15139,7 @@ type VirtualHubRoute struct {
 	NextHopIPAddress *string `json:"nextHopIpAddress,omitempty"`
 }
 
-// VirtualHub route table.
+// VirtualHubRouteTable - VirtualHub route table.
 type VirtualHubRouteTable struct {
 	// List of all routes.
 	Routes *[]*VirtualHubRoute `json:"routes,omitempty"`
@@ -15196,7 +15170,7 @@ type VirtualHubRouteTableV2PollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Parameters for VirtualHubRouteTableV2.
+// VirtualHubRouteTableV2Properties - Parameters for VirtualHubRouteTableV2.
 type VirtualHubRouteTableV2Properties struct {
 	// List of all connections attached to this route table v2.
 	AttachedConnections *[]*string `json:"attachedConnections,omitempty"`
@@ -15237,7 +15211,7 @@ type VirtualHubRouteTableV2SListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// VirtualHubRouteTableV2 route.
+// VirtualHubRouteV2 - VirtualHubRouteTableV2 route.
 type VirtualHubRouteV2 struct {
 	// The type of destinations.
 	DestinationType *string `json:"destinationType,omitempty"`
@@ -15288,7 +15262,7 @@ type VirtualHubsUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Virtual Network resource.
+// VirtualNetwork - Virtual Network resource.
 type VirtualNetwork struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -15301,7 +15275,7 @@ type VirtualNetwork struct {
 	Properties *VirtualNetworkPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Bgp Communities sent over ExpressRoute with each route corresponding to a prefix in this VNET.
+// VirtualNetworkBgpCommunities - Bgp Communities sent over ExpressRoute with each route corresponding to a prefix in this VNET.
 type VirtualNetworkBgpCommunities struct {
 	// READ-ONLY; The BGP community associated with the region of the virtual network.
 	RegionalCommunity *string `json:"regionalCommunity,omitempty" azure:"ro"`
@@ -15310,13 +15284,13 @@ type VirtualNetworkBgpCommunities struct {
 	VirtualNetworkCommunity *string `json:"virtualNetworkCommunity,omitempty"`
 }
 
-// A reference to VirtualNetworkGateway or LocalNetworkGateway resource.
+// VirtualNetworkConnectionGatewayReference - A reference to VirtualNetworkGateway or LocalNetworkGateway resource.
 type VirtualNetworkConnectionGatewayReference struct {
 	// The ID of VirtualNetworkGateway or LocalNetworkGateway resource.
 	ID *string `json:"id,omitempty"`
 }
 
-// A common class for general resource information.
+// VirtualNetworkGateway - A common class for general resource information.
 type VirtualNetworkGateway struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -15326,7 +15300,7 @@ type VirtualNetworkGateway struct {
 	Properties *VirtualNetworkGatewayPropertiesFormat `json:"properties,omitempty"`
 }
 
-// A common class for general resource information.
+// VirtualNetworkGatewayConnection - A common class for general resource information.
 type VirtualNetworkGatewayConnection struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -15336,7 +15310,7 @@ type VirtualNetworkGatewayConnection struct {
 	Properties *VirtualNetworkGatewayConnectionPropertiesFormat `json:"properties,omitempty"`
 }
 
-// A common class for general resource information.
+// VirtualNetworkGatewayConnectionListEntity - A common class for general resource information.
 type VirtualNetworkGatewayConnectionListEntity struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -15346,7 +15320,7 @@ type VirtualNetworkGatewayConnectionListEntity struct {
 	Properties *VirtualNetworkGatewayConnectionListEntityPropertiesFormat `json:"properties,omitempty"`
 }
 
-// VirtualNetworkGatewayConnection properties.
+// VirtualNetworkGatewayConnectionListEntityPropertiesFormat - VirtualNetworkGatewayConnection properties.
 type VirtualNetworkGatewayConnectionListEntityPropertiesFormat struct {
 	// The authorizationKey.
 	AuthorizationKey *string `json:"authorizationKey,omitempty"`
@@ -15412,7 +15386,7 @@ type VirtualNetworkGatewayConnectionListEntityPropertiesFormat struct {
 	VirtualNetworkGateway2 *VirtualNetworkConnectionGatewayReference `json:"virtualNetworkGateway2,omitempty"`
 }
 
-// Response for the ListVirtualNetworkGatewayConnections API service call.
+// VirtualNetworkGatewayConnectionListResult - Response for the ListVirtualNetworkGatewayConnections API service call.
 type VirtualNetworkGatewayConnectionListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -15442,7 +15416,7 @@ type VirtualNetworkGatewayConnectionPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// VirtualNetworkGatewayConnection properties.
+// VirtualNetworkGatewayConnectionPropertiesFormat - VirtualNetworkGatewayConnection properties.
 type VirtualNetworkGatewayConnectionPropertiesFormat struct {
 	// The authorizationKey.
 	AuthorizationKey *string `json:"authorizationKey,omitempty"`
@@ -15579,7 +15553,7 @@ type VirtualNetworkGatewayConnectionsListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// IP configuration for virtual network gateway.
+// VirtualNetworkGatewayIPConfiguration - IP configuration for virtual network gateway.
 type VirtualNetworkGatewayIPConfiguration struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -15592,7 +15566,7 @@ type VirtualNetworkGatewayIPConfiguration struct {
 	Properties *VirtualNetworkGatewayIPConfigurationPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Properties of VirtualNetworkGatewayIPConfiguration.
+// VirtualNetworkGatewayIPConfigurationPropertiesFormat - Properties of VirtualNetworkGatewayIPConfiguration.
 type VirtualNetworkGatewayIPConfigurationPropertiesFormat struct {
 	// READ-ONLY; Private IP Address for this gateway.
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty" azure:"ro"`
@@ -15610,7 +15584,7 @@ type VirtualNetworkGatewayIPConfigurationPropertiesFormat struct {
 	Subnet *SubResource `json:"subnet,omitempty"`
 }
 
-// Response for the VirtualNetworkGatewayListConnections API service call.
+// VirtualNetworkGatewayListConnectionsResult - Response for the VirtualNetworkGatewayListConnections API service call.
 type VirtualNetworkGatewayListConnectionsResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -15628,7 +15602,7 @@ type VirtualNetworkGatewayListConnectionsResultResponse struct {
 	VirtualNetworkGatewayListConnectionsResult *VirtualNetworkGatewayListConnectionsResult
 }
 
-// Response for the ListVirtualNetworkGateways API service call.
+// VirtualNetworkGatewayListResult - Response for the ListVirtualNetworkGateways API service call.
 type VirtualNetworkGatewayListResult struct {
 	// READ-ONLY; The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -15658,7 +15632,7 @@ type VirtualNetworkGatewayPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// VirtualNetworkGateway properties.
+// VirtualNetworkGatewayPropertiesFormat - VirtualNetworkGateway properties.
 type VirtualNetworkGatewayPropertiesFormat struct {
 	// ActiveActive flag.
 	Active *bool `json:"activeActive,omitempty"`
@@ -15726,7 +15700,7 @@ type VirtualNetworkGatewayResponse struct {
 	VirtualNetworkGateway *VirtualNetworkGateway
 }
 
-// VirtualNetworkGatewaySku details.
+// VirtualNetworkGatewaySKU - VirtualNetworkGatewaySku details.
 type VirtualNetworkGatewaySKU struct {
 	// READ-ONLY; The capacity.
 	Capacity *int32 `json:"capacity,omitempty" azure:"ro"`
@@ -15859,7 +15833,7 @@ type VirtualNetworkGatewaysVPNDeviceConfigurationScriptOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Response for the ListVirtualNetworks API service call.
+// VirtualNetworkListResult - Response for the ListVirtualNetworks API service call.
 type VirtualNetworkListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -15877,7 +15851,7 @@ type VirtualNetworkListResultResponse struct {
 	VirtualNetworkListResult *VirtualNetworkListResult
 }
 
-// Response for the virtual networks GetUsage API service call.
+// VirtualNetworkListUsageResult - Response for the virtual networks GetUsage API service call.
 type VirtualNetworkListUsageResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -15895,7 +15869,7 @@ type VirtualNetworkListUsageResultResponse struct {
 	VirtualNetworkListUsageResult *VirtualNetworkListUsageResult
 }
 
-// Peerings in a virtual network resource.
+// VirtualNetworkPeering - Peerings in a virtual network resource.
 type VirtualNetworkPeering struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -15906,12 +15880,9 @@ type VirtualNetworkPeering struct {
 
 	// Properties of the virtual network peering.
 	Properties *VirtualNetworkPeeringPropertiesFormat `json:"properties,omitempty"`
-
-	// Resource type.
-	Type *string `json:"type,omitempty"`
 }
 
-// Response for ListSubnets API service call. Retrieves all subnets that belong to a virtual network.
+// VirtualNetworkPeeringListResult - Response for ListSubnets API service call. Retrieves all subnets that belong to a virtual network.
 type VirtualNetworkPeeringListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -15941,7 +15912,7 @@ type VirtualNetworkPeeringPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the virtual network peering.
+// VirtualNetworkPeeringPropertiesFormat - Properties of the virtual network peering.
 type VirtualNetworkPeeringPropertiesFormat struct {
 	// Whether the forwarded traffic from the VMs in the local virtual network will be allowed/disallowed in remote virtual network.
 	AllowForwardedTraffic *bool `json:"allowForwardedTraffic,omitempty"`
@@ -15968,9 +15939,6 @@ type VirtualNetworkPeeringPropertiesFormat struct {
 	// preview and learn more
 	// (https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-create-peering).
 	RemoteVirtualNetwork *SubResource `json:"remoteVirtualNetwork,omitempty"`
-
-	// READ-ONLY; The resourceGuid property of the Virtual Network peering resource.
-	ResourceGUID *string `json:"resourceGuid,omitempty" azure:"ro"`
 
 	// If remote gateways can be used on this virtual network. If the flag is set to true, and allowGatewayTransit on remote peering is also true, virtual network
 	// will use gateways of remote virtual network
@@ -16019,7 +15987,7 @@ type VirtualNetworkPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the virtual network.
+// VirtualNetworkPropertiesFormat - Properties of the virtual network.
 type VirtualNetworkPropertiesFormat struct {
 	// The AddressSpace that contains an array of IP address ranges that can be used by subnets.
 	AddressSpace *AddressSpace `json:"addressSpace,omitempty"`
@@ -16065,7 +16033,7 @@ type VirtualNetworkResponse struct {
 	VirtualNetwork *VirtualNetwork
 }
 
-// Virtual Network Tap resource.
+// VirtualNetworkTap - Virtual Network Tap resource.
 type VirtualNetworkTap struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -16075,7 +16043,7 @@ type VirtualNetworkTap struct {
 	Properties *VirtualNetworkTapPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListVirtualNetworkTap API service call.
+// VirtualNetworkTapListResult - Response for ListVirtualNetworkTap API service call.
 type VirtualNetworkTapListResult struct {
 	// The URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -16105,7 +16073,7 @@ type VirtualNetworkTapPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Virtual Network Tap properties.
+// VirtualNetworkTapPropertiesFormat - Virtual Network Tap properties.
 type VirtualNetworkTapPropertiesFormat struct {
 	// The reference to the private IP address on the internal Load Balancer that will receive the tap.
 	DestinationLoadBalancerFrontEndIPConfiguration *FrontendIPConfiguration `json:"destinationLoadBalancerFrontEndIPConfiguration,omitempty"`
@@ -16165,7 +16133,7 @@ type VirtualNetworkTapsUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Usage details for subnet.
+// VirtualNetworkUsage - Usage details for subnet.
 type VirtualNetworkUsage struct {
 	// READ-ONLY; Indicates number of IPs used from the Subnet.
 	CurrentValue *float64 `json:"currentValue,omitempty" azure:"ro"`
@@ -16183,7 +16151,7 @@ type VirtualNetworkUsage struct {
 	Unit *string `json:"unit,omitempty" azure:"ro"`
 }
 
-// Usage strings container.
+// VirtualNetworkUsageName - Usage strings container.
 type VirtualNetworkUsageName struct {
 	// READ-ONLY; Localized subnet size and usage string.
 	LocalizedValue *string `json:"localizedValue,omitempty" azure:"ro"`
@@ -16243,7 +16211,7 @@ type VirtualRouter struct {
 	Properties *VirtualRouterPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Response for ListVirtualRouters API service call.
+// VirtualRouterListResult - Response for ListVirtualRouters API service call.
 type VirtualRouterListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -16261,7 +16229,7 @@ type VirtualRouterListResultResponse struct {
 	VirtualRouterListResult *VirtualRouterListResult
 }
 
-// Virtual Router Peering resource.
+// VirtualRouterPeering - Virtual Router Peering resource.
 type VirtualRouterPeering struct {
 	SubResource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -16277,7 +16245,7 @@ type VirtualRouterPeering struct {
 	Type *string `json:"type,omitempty" azure:"ro"`
 }
 
-// Response for ListVirtualRouterPeerings API service call.
+// VirtualRouterPeeringListResult - Response for ListVirtualRouterPeerings API service call.
 type VirtualRouterPeeringListResult struct {
 	// URL to get the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -16307,7 +16275,7 @@ type VirtualRouterPeeringPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Properties of the rule group.
+// VirtualRouterPeeringProperties - Properties of the rule group.
 type VirtualRouterPeeringProperties struct {
 	// Peer ASN.
 	PeerAsn *int64 `json:"peerAsn,omitempty"`
@@ -16360,7 +16328,7 @@ type VirtualRouterPollerResponse struct {
 	RawResponse *http.Response
 }
 
-// Virtual Router definition.
+// VirtualRouterPropertiesFormat - Virtual Router definition.
 type VirtualRouterPropertiesFormat struct {
 	// The Gateway on which VirtualRouter is hosted.
 	HostedGateway *SubResource `json:"hostedGateway,omitempty"`
@@ -16447,7 +16415,7 @@ type VirtualWANResponse struct {
 	VirtualWAN *VirtualWAN
 }
 
-// Parameters for VirtualWAN.
+// VirtualWanProperties - Parameters for VirtualWAN.
 type VirtualWanProperties struct {
 	// True if branch to branch traffic is allowed.
 	AllowBranchToBranchTraffic *bool `json:"allowBranchToBranchTraffic,omitempty"`
@@ -16474,7 +16442,7 @@ type VirtualWanProperties struct {
 	VirtualHubs *[]*SubResource `json:"virtualHubs,omitempty" azure:"ro"`
 }
 
-// Collection of SecurityProviders.
+// VirtualWanSecurityProvider - Collection of SecurityProviders.
 type VirtualWanSecurityProvider struct {
 	// Name of the security provider.
 	Name *string `json:"name,omitempty"`
@@ -16486,7 +16454,7 @@ type VirtualWanSecurityProvider struct {
 	URL *string `json:"url,omitempty"`
 }
 
-// Collection of SecurityProviders.
+// VirtualWanSecurityProviders - Collection of SecurityProviders.
 type VirtualWanSecurityProviders struct {
 	// List of VirtualWAN security providers.
 	SupportedProviders *[]*VirtualWanSecurityProvider `json:"supportedProviders,omitempty"`
@@ -16501,7 +16469,7 @@ type VirtualWanSecurityProvidersResponse struct {
 	VirtualWanSecurityProviders *VirtualWanSecurityProviders
 }
 
-// Virtual Wan Vpn profile parameters Vpn profile generation.
+// VirtualWanVPNProfileParameters - Virtual Wan Vpn profile parameters Vpn profile generation.
 type VirtualWanVPNProfileParameters struct {
 	// VPN client authentication method.
 	AuthenticationMethod *AuthenticationMethod `json:"authenticationMethod,omitempty"`
@@ -16540,13 +16508,13 @@ type VirtualWansUpdateTagsOptions struct {
 	// placeholder for future optional parameters
 }
 
-// List of routes that control routing from VirtualHub into a virtual network connection.
+// VnetRoute - List of routes that control routing from VirtualHub into a virtual network connection.
 type VnetRoute struct {
 	// List of all Static Routes.
 	StaticRoutes *[]*StaticRoute `json:"staticRoutes,omitempty"`
 }
 
-// Defines contents of a web application rule.
+// WebApplicationFirewallCustomRule - Defines contents of a web application rule.
 type WebApplicationFirewallCustomRule struct {
 	// Type of Actions.
 	Action *WebApplicationFirewallAction `json:"action,omitempty"`
@@ -16592,7 +16560,7 @@ type WebApplicationFirewallPoliciesListOptions struct {
 	// placeholder for future optional parameters
 }
 
-// Defines web application firewall policy.
+// WebApplicationFirewallPolicy - Defines web application firewall policy.
 type WebApplicationFirewallPolicy struct {
 	Resource
 	// READ-ONLY; A unique read-only string that changes whenever the resource is updated.
@@ -16602,8 +16570,8 @@ type WebApplicationFirewallPolicy struct {
 	Properties *WebApplicationFirewallPolicyPropertiesFormat `json:"properties,omitempty"`
 }
 
-// Result of the request to list WebApplicationFirewallPolicies. It contains a list of WebApplicationFirewallPolicy objects and a URL link to get the next
-// set of results.
+// WebApplicationFirewallPolicyListResult - Result of the request to list WebApplicationFirewallPolicies. It contains a list of WebApplicationFirewallPolicy
+// objects and a URL link to get the next set of results.
 type WebApplicationFirewallPolicyListResult struct {
 	// READ-ONLY; URL to get the next set of WebApplicationFirewallPolicy objects if there are any.
 	NextLink *string `json:"nextLink,omitempty" azure:"ro"`
@@ -16622,7 +16590,7 @@ type WebApplicationFirewallPolicyListResultResponse struct {
 	WebApplicationFirewallPolicyListResult *WebApplicationFirewallPolicyListResult
 }
 
-// Defines web application firewall policy properties.
+// WebApplicationFirewallPolicyPropertiesFormat - Defines web application firewall policy properties.
 type WebApplicationFirewallPolicyPropertiesFormat struct {
 	// READ-ONLY; A collection of references to application gateways.
 	ApplicationGateways *[]*ApplicationGateway `json:"applicationGateways,omitempty" azure:"ro"`

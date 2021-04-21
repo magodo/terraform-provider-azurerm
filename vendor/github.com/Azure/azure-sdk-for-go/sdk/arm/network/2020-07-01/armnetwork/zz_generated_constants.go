@@ -2135,27 +2135,6 @@ func (c NatGatewaySKUName) ToPtr() *NatGatewaySKUName {
 	return &c
 }
 
-// NetworkInterfaceNicType - Type of Network Interface resource.
-type NetworkInterfaceNicType string
-
-const (
-	NetworkInterfaceNicTypeElastic  NetworkInterfaceNicType = "Elastic"
-	NetworkInterfaceNicTypeStandard NetworkInterfaceNicType = "Standard"
-)
-
-// PossibleNetworkInterfaceNicTypeValues returns the possible values for the NetworkInterfaceNicType const type.
-func PossibleNetworkInterfaceNicTypeValues() []NetworkInterfaceNicType {
-	return []NetworkInterfaceNicType{
-		NetworkInterfaceNicTypeElastic,
-		NetworkInterfaceNicTypeStandard,
-	}
-}
-
-// ToPtr() returns a *NetworkInterfaceNicType pointing to the current value.
-func (c NetworkInterfaceNicType) ToPtr() *NetworkInterfaceNicType {
-	return &c
-}
-
 // NetworkOperationStatus - Status of the Azure async operation.
 type NetworkOperationStatus string
 
@@ -2587,33 +2566,6 @@ func PossibleProvisioningStateValues() []ProvisioningState {
 
 // ToPtr() returns a *ProvisioningState pointing to the current value.
 func (c ProvisioningState) ToPtr() *ProvisioningState {
-	return &c
-}
-
-// PublicIPAddressMigrationPhase - Migration phase of Public IP Address.
-type PublicIPAddressMigrationPhase string
-
-const (
-	PublicIPAddressMigrationPhaseAbort     PublicIPAddressMigrationPhase = "Abort"
-	PublicIPAddressMigrationPhaseCommit    PublicIPAddressMigrationPhase = "Commit"
-	PublicIPAddressMigrationPhaseCommitted PublicIPAddressMigrationPhase = "Committed"
-	PublicIPAddressMigrationPhaseNone      PublicIPAddressMigrationPhase = "None"
-	PublicIPAddressMigrationPhasePrepare   PublicIPAddressMigrationPhase = "Prepare"
-)
-
-// PossiblePublicIPAddressMigrationPhaseValues returns the possible values for the PublicIPAddressMigrationPhase const type.
-func PossiblePublicIPAddressMigrationPhaseValues() []PublicIPAddressMigrationPhase {
-	return []PublicIPAddressMigrationPhase{
-		PublicIPAddressMigrationPhaseAbort,
-		PublicIPAddressMigrationPhaseCommit,
-		PublicIPAddressMigrationPhaseCommitted,
-		PublicIPAddressMigrationPhaseNone,
-		PublicIPAddressMigrationPhasePrepare,
-	}
-}
-
-// ToPtr() returns a *PublicIPAddressMigrationPhase pointing to the current value.
-func (c PublicIPAddressMigrationPhase) ToPtr() *PublicIPAddressMigrationPhase {
 	return &c
 }
 
@@ -3427,48 +3379,6 @@ func PossibleVirtualNetworkPeeringStateValues() []VirtualNetworkPeeringState {
 
 // ToPtr() returns a *VirtualNetworkPeeringState pointing to the current value.
 func (c VirtualNetworkPeeringState) ToPtr() *VirtualNetworkPeeringState {
-	return &c
-}
-
-// VirtualNetworkPrivateEndpointNetworkPolicies - Enable or Disable apply network policies on private end point in the subnet.
-type VirtualNetworkPrivateEndpointNetworkPolicies string
-
-const (
-	VirtualNetworkPrivateEndpointNetworkPoliciesDisabled VirtualNetworkPrivateEndpointNetworkPolicies = "Disabled"
-	VirtualNetworkPrivateEndpointNetworkPoliciesEnabled  VirtualNetworkPrivateEndpointNetworkPolicies = "Enabled"
-)
-
-// PossibleVirtualNetworkPrivateEndpointNetworkPoliciesValues returns the possible values for the VirtualNetworkPrivateEndpointNetworkPolicies const type.
-func PossibleVirtualNetworkPrivateEndpointNetworkPoliciesValues() []VirtualNetworkPrivateEndpointNetworkPolicies {
-	return []VirtualNetworkPrivateEndpointNetworkPolicies{
-		VirtualNetworkPrivateEndpointNetworkPoliciesDisabled,
-		VirtualNetworkPrivateEndpointNetworkPoliciesEnabled,
-	}
-}
-
-// ToPtr() returns a *VirtualNetworkPrivateEndpointNetworkPolicies pointing to the current value.
-func (c VirtualNetworkPrivateEndpointNetworkPolicies) ToPtr() *VirtualNetworkPrivateEndpointNetworkPolicies {
-	return &c
-}
-
-// VirtualNetworkPrivateLinkServiceNetworkPolicies - Enable or Disable apply network policies on private link service in the subnet.
-type VirtualNetworkPrivateLinkServiceNetworkPolicies string
-
-const (
-	VirtualNetworkPrivateLinkServiceNetworkPoliciesDisabled VirtualNetworkPrivateLinkServiceNetworkPolicies = "Disabled"
-	VirtualNetworkPrivateLinkServiceNetworkPoliciesEnabled  VirtualNetworkPrivateLinkServiceNetworkPolicies = "Enabled"
-)
-
-// PossibleVirtualNetworkPrivateLinkServiceNetworkPoliciesValues returns the possible values for the VirtualNetworkPrivateLinkServiceNetworkPolicies const type.
-func PossibleVirtualNetworkPrivateLinkServiceNetworkPoliciesValues() []VirtualNetworkPrivateLinkServiceNetworkPolicies {
-	return []VirtualNetworkPrivateLinkServiceNetworkPolicies{
-		VirtualNetworkPrivateLinkServiceNetworkPoliciesDisabled,
-		VirtualNetworkPrivateLinkServiceNetworkPoliciesEnabled,
-	}
-}
-
-// ToPtr() returns a *VirtualNetworkPrivateLinkServiceNetworkPolicies pointing to the current value.
-func (c VirtualNetworkPrivateLinkServiceNetworkPolicies) ToPtr() *VirtualNetworkPrivateLinkServiceNetworkPolicies {
 	return &c
 }
 
