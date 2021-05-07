@@ -29,10 +29,10 @@ func resourceHPCCache() *schema.Resource {
 		Delete: resourceHPCCacheDelete,
 
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(60 * time.Minute),
-			Update: schema.DefaultTimeout(60 * time.Minute),
+			Create: schema.DefaultTimeout(120 * time.Minute),
+			Update: schema.DefaultTimeout(120 * time.Minute),
 			Read:   schema.DefaultTimeout(5 * time.Minute),
-			Delete: schema.DefaultTimeout(60 * time.Minute),
+			Delete: schema.DefaultTimeout(120 * time.Minute),
 		},
 		Importer: pluginsdk.ImporterValidatingResourceId(func(id string) error {
 			_, err := parse.CacheID(id)
