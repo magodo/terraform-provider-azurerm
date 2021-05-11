@@ -10,7 +10,8 @@ import (
 
 type Client struct {
 	// AAD
-	AADDiagnosticSettingsClient *aad.DiagnosticSettingsClient
+	AADDiagnosticSettingsCategoryClient *aad.DiagnosticSettingsCategoryClient
+	AADDiagnosticSettingsClient         *aad.DiagnosticSettingsClient
 
 	// Autoscale Settings
 	AutoscaleSettingsClient *classic.AutoscaleSettingsClient
@@ -31,6 +32,9 @@ type Client struct {
 }
 
 func NewClient(o *common.ClientOptions) *Client {
+	AADDiagnosticSettingsCategoryClient := aad.NewDiagnosticSettingsCategoryClientWithBaseURI(o.ResourceManagerEndpoint)
+	o.ConfigureClient(&AADDiagnosticSettingsCategoryClient.Client, o.ResourceManagerAuthorizer)
+
 	AADDiagnosticSettingsClient := aad.NewDiagnosticSettingsClientWithBaseURI(o.ResourceManagerEndpoint)
 	o.ConfigureClient(&AADDiagnosticSettingsClient.Client, o.ResourceManagerAuthorizer)
 
@@ -68,17 +72,18 @@ func NewClient(o *common.ClientOptions) *Client {
 	o.ConfigureClient(&ScheduledQueryRulesClient.Client, o.ResourceManagerAuthorizer)
 
 	return &Client{
-		AADDiagnosticSettingsClient:      &AADDiagnosticSettingsClient,
-		AutoscaleSettingsClient:          &AutoscaleSettingsClient,
-		ActionRulesClient:                &ActionRulesClient,
-		SmartDetectorAlertRulesClient:    &SmartDetectorAlertRulesClient,
-		ActionGroupsClient:               &ActionGroupsClient,
-		ActivityLogAlertsClient:          &ActivityLogAlertsClient,
-		AlertRulesClient:                 &AlertRulesClient,
-		DiagnosticSettingsClient:         &DiagnosticSettingsClient,
-		DiagnosticSettingsCategoryClient: &DiagnosticSettingsCategoryClient,
-		LogProfilesClient:                &LogProfilesClient,
-		MetricAlertsClient:               &MetricAlertsClient,
-		ScheduledQueryRulesClient:        &ScheduledQueryRulesClient,
+		AADDiagnosticSettingsCategoryClient: &AADDiagnosticSettingsCategoryClient,
+		AADDiagnosticSettingsClient:         &AADDiagnosticSettingsClient,
+		AutoscaleSettingsClient:             &AutoscaleSettingsClient,
+		ActionRulesClient:                   &ActionRulesClient,
+		SmartDetectorAlertRulesClient:       &SmartDetectorAlertRulesClient,
+		ActionGroupsClient:                  &ActionGroupsClient,
+		ActivityLogAlertsClient:             &ActivityLogAlertsClient,
+		AlertRulesClient:                    &AlertRulesClient,
+		DiagnosticSettingsClient:            &DiagnosticSettingsClient,
+		DiagnosticSettingsCategoryClient:    &DiagnosticSettingsCategoryClient,
+		LogProfilesClient:                   &LogProfilesClient,
+		MetricAlertsClient:                  &MetricAlertsClient,
+		ScheduledQueryRulesClient:           &ScheduledQueryRulesClient,
 	}
 }
