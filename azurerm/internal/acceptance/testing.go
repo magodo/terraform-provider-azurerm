@@ -14,8 +14,8 @@ import (
 
 func PreCheck(t *testing.T) {
 	variables := []string{
-		"ARM_CLIENT_ID",
-		"ARM_CLIENT_SECRET",
+		//"ARM_CLIENT_ID",
+		//"ARM_CLIENT_SECRET",
 		"ARM_SUBSCRIPTION_ID",
 		"ARM_TENANT_ID",
 		"ARM_TEST_LOCATION",
@@ -63,7 +63,8 @@ func GetAuthConfig(t *testing.T) *authentication.Config {
 		MetadataHost:   os.Getenv("ARM_METADATA_HOST"),
 
 		// we intentionally only support Client Secret auth for tests (since those variables are used all over)
-		SupportsClientSecretAuth: true,
+		//SupportsClientSecretAuth: true,
+		SupportsAzureCliToken: true,
 	}
 	config, err := builder.Build()
 	if err != nil {

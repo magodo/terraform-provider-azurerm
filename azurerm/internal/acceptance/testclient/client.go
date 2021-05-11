@@ -33,7 +33,8 @@ func Build() (*clients.Client, error) {
 			MetadataHost:   os.Getenv("ARM_METADATA_HOST"),
 
 			// we intentionally only support Client Secret auth for tests (since those variables are used all over)
-			SupportsClientSecretAuth: true,
+			//SupportsClientSecretAuth: true,
+			SupportsAzureCliToken:          true,
 		}
 		config, err := builder.Build()
 		if err != nil {
