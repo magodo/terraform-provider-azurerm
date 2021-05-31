@@ -46,12 +46,17 @@ github.com/Azure/azure-sdk-for-go/sdk/armcore v0.6.0/go.mod h1:6yYd2qNvutd94jHTM
 github.com/Azure/azure-sdk-for-go/sdk/armcore v0.7.1 h1:qvtCPHEhkkkiuHqoQU3c0a21l6qO3sXgpa3aC/SO4w8=
 github.com/Azure/azure-sdk-for-go/sdk/armcore v0.7.1/go.mod h1:6yYd2qNvutd94jHTMUg9KrdbR39jNzI4d+15lm2gxkg=
 github.com/Azure/azure-sdk-for-go/sdk/azcore v0.14.0/go.mod h1:pElNP+u99BvCZD+0jOlhI9OC/NB2IDTOTGZOZH0Qhq8=
+github.com/Azure/azure-sdk-for-go/sdk/azcore v0.16.1/go.mod h1:MVdrcUC4Hup35qHym3VdzoW+NBgBxrta9Vei97jRtM8=
 github.com/Azure/azure-sdk-for-go/sdk/azcore v0.16.2 h1:UC4vfOhW2l0f2QOCQpOxJS4/K6oKFy2tQZE+uWU1MEo=
 github.com/Azure/azure-sdk-for-go/sdk/azcore v0.16.2/go.mod h1:MVdrcUC4Hup35qHym3VdzoW+NBgBxrta9Vei97jRtM8=
 github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.8.0/go.mod h1:acANgl9stsT5xflESXKjZx4rhZJSr0TGgTDYY0xJPIE=
+github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.9.1 h1:KchdKK3XlOjkzBROV+q3D+YgfRTvwoeBwbaoX4aVkjI=
+github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.9.1/go.mod h1:acANgl9stsT5xflESXKjZx4rhZJSr0TGgTDYY0xJPIE=
 github.com/Azure/azure-sdk-for-go/sdk/internal v0.5.0/go.mod h1:k4KbFSunV/+0hOHL1vyFaPsiYQ1Vmvy1TBpmtvCDLZM=
 github.com/Azure/azure-sdk-for-go/sdk/internal v0.5.1 h1:vx8McI56N5oLSQu8xa+xdiE0fjQq8W8Zt49vHP8Rygw=
 github.com/Azure/azure-sdk-for-go/sdk/internal v0.5.1/go.mod h1:k4KbFSunV/+0hOHL1vyFaPsiYQ1Vmvy1TBpmtvCDLZM=
+github.com/Azure/azure-sdk-for-go/sdk/resources/armresources v0.1.0 h1:qnJHb0c5dPAmMQ5uJxv16YtmGfwCthuJUoVOC76aETs=
+github.com/Azure/azure-sdk-for-go/sdk/resources/armresources v0.1.0/go.mod h1:MSOQdlw7KqPoy7Kizbht+Tsk2RwvDRgrQrTWMcLi+1o=
 github.com/Azure/azure-sdk-for-go/sdk/to v0.1.2/go.mod h1:UL/d4lvWAzSJUuX+19uKdN0ktyjoOyQhgY+HWNgtIYI=
 github.com/Azure/azure-sdk-for-go/sdk/to v0.1.4 h1:3w4gk+uYOwplGhID1fDP305/8bI5Aug3URoC1V493KU=
 github.com/Azure/azure-sdk-for-go/sdk/to v0.1.4/go.mod h1:UL/d4lvWAzSJUuX+19uKdN0ktyjoOyQhgY+HWNgtIYI=
@@ -384,6 +389,7 @@ github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLA
 github.com/oklog/run v1.0.0 h1:Ru7dDtJNOyC66gQ5dQmaCa0qIsAUFY3sFpK1Xk8igrw=
 github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQA=
 github.com/pierrec/lz4 v2.0.5+incompatible/go.mod h1:pdkljMzZIN41W+lC3N2tnIh5sFi+IEE17M5jbnwPHcY=
+github.com/pkg/browser v0.0.0-20180916011732-0a3d74bf9ce4 h1:49lOXmGaUpV9Fz3gd7TFZY106KVlPVa5jcYD1gaQf98=
 github.com/pkg/browser v0.0.0-20180916011732-0a3d74bf9ce4/go.mod h1:4OwLy04Bl9Ef3GJJCoec+30X3LQs/0/m4HFRt/2LUSA=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
