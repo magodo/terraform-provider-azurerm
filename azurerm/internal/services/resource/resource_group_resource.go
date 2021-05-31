@@ -3,9 +3,11 @@ package resource
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"time"
 
-	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2020-06-01/resources"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
+	"github.com/Azure/azure-sdk-for-go/sdk/resources/armresources"
 	"github.com/hashicorp/go-azure-helpers/response"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/helpers/azure"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/helpers/tf"
@@ -47,7 +49,7 @@ func resourceResourceGroup() *pluginsdk.Resource {
 }
 
 func resourceResourceGroupCreateUpdate(d *pluginsdk.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Resource.GroupsClient
+	client := meta.(*clients.Client).Resource.GroupsClient2
 	ctx, cancel := timeouts.ForCreateUpdate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
@@ -56,33 +58,37 @@ func resourceResourceGroupCreateUpdate(d *pluginsdk.ResourceData, meta interface
 	t := d.Get("tags").(map[string]interface{})
 
 	if d.IsNewResource() {
-		existing, err := client.Get(ctx, name)
+		existing, err := client.Get(ctx, name, nil)
 		if err != nil {
-			if !utils.ResponseWasNotFound(existing.Response) {
+			v, ok := err.(azcore.HTTPResponse)
+			if !ok || v.RawResponse().StatusCode != http.StatusNotFound {
 				return fmt.Errorf("Error checking for presence of existing resource group: %+v", err)
 			}
-		}
-
-		if existing.ID != nil && *existing.ID != "" {
-			return tf.ImportAsExistsError("azurerm_resource_group", *existing.ID)
+		} else {
+			if existing.ResourceGroup != nil && existing.ResourceGroup.ID != nil && *existing.ResourceGroup.ID != "" {
+				return tf.ImportAsExistsError("azurerm_resource_group", *existing.ResourceGroup.ID)
+			}
 		}
 	}
 
-	parameters := resources.Group{
+	parameters := armresources.ResourceGroup{
 		Location: utils.String(location),
 		Tags:     tags.Expand(t),
 	}
 
-	if _, err := client.CreateOrUpdate(ctx, name, parameters); err != nil {
+	if _, err := client.CreateOrUpdate(ctx, name, parameters, nil); err != nil {
 		return fmt.Errorf("Error creating Resource Group %q: %+v", name, err)
 	}
 
-	resp, err := client.Get(ctx, name)
+	resp, err := client.Get(ctx, name, nil)
 	if err != nil {
 		return fmt.Errorf("Error retrieving Resource Group %q: %+v", name, err)
 	}
 
-	d.SetId(*resp.ID)
+	if resp.ResourceGroup == nil || resp.ResourceGroup.ID == nil || *resp.ResourceGroup.ID == "" {
+		return fmt.Errorf("unexpected nil ID for the Resource Group %q", name)
+	}
+	d.SetId(*resp.ResourceGroup.ID)
 
 	return resourceResourceGroupRead(d, meta)
 }

@@ -2,6 +2,8 @@ package client
 
 import (
 	providers "github.com/Azure/azure-sdk-for-go/profiles/2017-03-09/resources/mgmt/resources"
+	"github.com/Azure/azure-sdk-for-go/sdk/armcore"
+	"github.com/Azure/azure-sdk-for-go/sdk/resources/armresources"
 	"github.com/Azure/azure-sdk-for-go/services/preview/resources/mgmt/2019-06-01-preview/templatespecs"
 	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2016-09-01/locks"
 	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2020-06-01/resources"
@@ -11,6 +13,7 @@ import (
 type Client struct {
 	DeploymentsClient           *resources.DeploymentsClient
 	GroupsClient                *resources.GroupsClient
+	GroupsClient2               *armresources.ResourceGroupsClient
 	LocksClient                 *locks.ManagementLocksClient
 	ProvidersClient             *providers.ProvidersClient
 	ResourcesClient             *resources.Client
@@ -23,6 +26,17 @@ func NewClient(o *common.ClientOptions) *Client {
 
 	groupsClient := resources.NewGroupsClientWithBaseURI(o.ResourceManagerEndpoint, o.SubscriptionId)
 	o.ConfigureClient(&groupsClient.Client, o.ResourceManagerAuthorizer)
+
+	groupsClient2 := armresources.NewResourceGroupsClient(
+		armcore.NewConnection(o.ResourceManagerEndpoint, o.ResourceManagerTokenCredential,
+			&armcore.ConnectionOptions{
+				DisableRPRegistration: o.SkipProviderReg,
+				// TODO: set user-agent
+				// TODO: set custom correlation id
+				// TODO: configure log
+			}),
+		o.SubscriptionId,
+	)
 
 	locksClient := locks.NewManagementLocksClientWithBaseURI(o.ResourceManagerEndpoint, o.SubscriptionId)
 	o.ConfigureClient(&locksClient.Client, o.ResourceManagerAuthorizer)
@@ -39,6 +53,7 @@ func NewClient(o *common.ClientOptions) *Client {
 
 	return &Client{
 		GroupsClient:                &groupsClient,
+		GroupsClient2:               groupsClient2,
 		DeploymentsClient:           &deploymentsClient,
 		LocksClient:                 &locksClient,
 		ProvidersClient:             &providersClient,
