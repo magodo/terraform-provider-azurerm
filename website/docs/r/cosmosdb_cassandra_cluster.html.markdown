@@ -1,12 +1,12 @@
 ---
 subcategory: "CosmosDB (DocumentDB)"
 layout: "azurerm"
-page_title: "Azure Resource Manager: azurerm_cosmosdb_cassandra_managed_instance_cluster"
+page_title: "Azure Resource Manager: azurerm_cosmosdb_cassandra_cluster"
 description: |-
   Manages a Cassandra Cluster.
 ---
 
-# azurerm_cosmosdb_cassandra_managed_instance_cluster
+# azurerm_cosmosdb_cassandra_cluster
 
 Manages a Cassandra Cluster.
 
@@ -42,7 +42,7 @@ resource "azurerm_role_assignment" "example" {
   principal_id         = "e5007d2c-4b13-4a74-9b6a-605d99f03501"
 }
 
-resource "azurerm_cosmosdb_cassandra_managed_instance_cluster" "example" {
+resource "azurerm_cosmosdb_cassandra_cluster" "example" {
   name                             = "example-cluster"
   resource_group_name              = azurerm_resource_group.example.name
   location                         = azurerm_resource_group.example.location
@@ -87,5 +87,5 @@ The `timeouts` block allows you to specify [timeouts](https://www.terraform.io/d
 Cassandra Clusters can be imported using the `resource id`, e.g.
 
 ```shell
-terraform import azurerm_cosmosdb_cassandra_managed_instance_cluster.example /subscriptions/12345678-1234-9876-4563-123456789012/resourceGroups/resGroup1/providers/Microsoft.DocumentDB/cassandraClusters/cluster1
+terraform import azurerm_cosmosdb_cassandra_cluster.example /subscriptions/12345678-1234-9876-4563-123456789012/resourceGroups/resGroup1/providers/Microsoft.DocumentDB/cassandraClusters/cluster1
 ```

@@ -19,12 +19,12 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/utils"
 )
 
-func resourceCassandraMICluster() *pluginsdk.Resource {
+func resourceCassandraCluster() *pluginsdk.Resource {
 	return &pluginsdk.Resource{
-		Create: resourceCassandraMIClusterCreateUpdate,
-		Update: resourceCassandraMIClusterCreateUpdate,
-		Read:   resourceCassandraMIClusterRead,
-		Delete: resourceCassandraMIClusterDelete,
+		Create: resourceCassandraClusterCreateUpdate,
+		Update: resourceCassandraClusterCreateUpdate,
+		Read:   resourceCassandraClusterRead,
+		Delete: resourceCassandraClusterDelete,
 
 		Importer: pluginsdk.ImporterValidatingResourceId(func(id string) error {
 			_, err := parse.CassandraClusterID(id)
@@ -67,7 +67,7 @@ func resourceCassandraMICluster() *pluginsdk.Resource {
 	}
 }
 
-func resourceCassandraMIClusterCreateUpdate(d *pluginsdk.ResourceData, meta interface{}) error {
+func resourceCassandraClusterCreateUpdate(d *pluginsdk.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client).Cosmos.CassandraClustersClient
 	subscriptionId := meta.(*clients.Client).Account.SubscriptionId
 	ctx, cancel := timeouts.ForCreateUpdate(meta.(*clients.Client).StopContext, d)
@@ -86,7 +86,7 @@ func resourceCassandraMIClusterCreateUpdate(d *pluginsdk.ResourceData, meta inte
 		}
 
 		if !utils.ResponseWasNotFound(existing.Response) {
-			return tf.ImportAsExistsError("azurerm_cosmosdb_cassandra_managed_instance_cluster", id.ID())
+			return tf.ImportAsExistsError("azurerm_cosmosdb_cassandra_cluster", id.ID())
 		}
 	}
 
@@ -109,10 +109,10 @@ func resourceCassandraMIClusterCreateUpdate(d *pluginsdk.ResourceData, meta inte
 
 	d.SetId(id.ID())
 
-	return resourceCassandraMIClusterRead(d, meta)
+	return resourceCassandraClusterRead(d, meta)
 }
 
-func resourceCassandraMIClusterRead(d *pluginsdk.ResourceData, meta interface{}) error {
+func resourceCassandraClusterRead(d *pluginsdk.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client).Cosmos.CassandraClustersClient
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
@@ -146,7 +146,7 @@ func resourceCassandraMIClusterRead(d *pluginsdk.ResourceData, meta interface{})
 	return nil
 }
 
-func resourceCassandraMIClusterDelete(d *pluginsdk.ResourceData, meta interface{}) error {
+func resourceCassandraClusterDelete(d *pluginsdk.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client).Cosmos.CassandraClustersClient
 	ctx, cancel := timeouts.ForDelete(meta.(*clients.Client).StopContext, d)
 	defer cancel()

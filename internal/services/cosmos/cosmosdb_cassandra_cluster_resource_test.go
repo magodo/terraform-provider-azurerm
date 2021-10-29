@@ -13,12 +13,12 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/utils"
 )
 
-type CassandraMIClusterResource struct {
+type CassandraClusterResource struct {
 }
 
-func TestAccCassandraMICluster_basic(t *testing.T) {
-	data := acceptance.BuildTestData(t, "azurerm_cosmosdb_cassandra_managed_instance_cluster", "test")
-	r := CassandraMIClusterResource{}
+func TestAccCassandraCluster_basic(t *testing.T) {
+	data := acceptance.BuildTestData(t, "azurerm_cosmosdb_cassandra_cluster", "test")
+	r := CassandraClusterResource{}
 
 	data.ResourceTest(t, r, []acceptance.TestStep{
 		{
@@ -31,9 +31,9 @@ func TestAccCassandraMICluster_basic(t *testing.T) {
 	})
 }
 
-func TestAccCassandraMICluster_requiresImport(t *testing.T) {
-	data := acceptance.BuildTestData(t, "azurerm_cosmosdb_cassandra_managed_instance_cluster", "test")
-	r := CassandraMIClusterResource{}
+func TestAccCassandraCluster_requiresImport(t *testing.T) {
+	data := acceptance.BuildTestData(t, "azurerm_cosmosdb_cassandra_cluster", "test")
+	r := CassandraClusterResource{}
 
 	data.ResourceTest(t, r, []acceptance.TestStep{
 		{
@@ -45,12 +45,12 @@ func TestAccCassandraMICluster_requiresImport(t *testing.T) {
 		data.ImportStep("initial_cassandra_admin_password"),
 		{
 			Config:      r.requiresImport(data),
-			ExpectError: acceptance.RequiresImportError("azurerm_cosmosdb_cassandra_managed_instance_cluster"),
+			ExpectError: acceptance.RequiresImportError("azurerm_cosmosdb_cassandra_cluster"),
 		},
 	})
 }
 
-func (t CassandraMIClusterResource) Exists(ctx context.Context, clients *clients.Client, state *pluginsdk.InstanceState) (*bool, error) {
+func (t CassandraClusterResource) Exists(ctx context.Context, clients *clients.Client, state *pluginsdk.InstanceState) (*bool, error) {
 	id, err := parse.CassandraClusterID(state.ID)
 	if err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func (t CassandraMIClusterResource) Exists(ctx context.Context, clients *clients
 	return utils.Bool(resp.ID != nil), nil
 }
 
-func (CassandraMIClusterResource) basic(data acceptance.TestData) string {
+func (CassandraClusterResource) basic(data acceptance.TestData) string {
 	return fmt.Sprintf(`
 
 provider "azurerm" {
@@ -96,7 +96,7 @@ resource "azurerm_role_assignment" "test" {
   principal_id         = "e5007d2c-4b13-4a74-9b6a-605d99f03501"
 }
 
-resource "azurerm_cosmosdb_cassandra_managed_instance_cluster" "test" {
+resource "azurerm_cosmosdb_cassandra_cluster" "test" {
   name                             = "acctca-mi-cluster-%[1]d"
   resource_group_name              = azurerm_resource_group.test.name
   location                         = azurerm_resource_group.test.location
@@ -106,15 +106,15 @@ resource "azurerm_cosmosdb_cassandra_managed_instance_cluster" "test" {
 `, data.RandomInteger, data.Locations.Primary)
 }
 
-func (CassandraMIClusterResource) requiresImport(data acceptance.TestData) string {
-	template := CassandraMIClusterResource{}.basic(data)
+func (CassandraClusterResource) requiresImport(data acceptance.TestData) string {
+	template := CassandraClusterResource{}.basic(data)
 	return fmt.Sprintf(`
 %s
 
-resource "azurerm_cosmosdb_cassandra_managed_instance_cluster" "import" {
-  name                = azurerm_cosmosdb_cassandra_managed_instance_cluster.test.name
-  resource_group_name = azurerm_cosmosdb_cassandra_managed_instance_cluster.test.resource_group_name
-  location            = azurerm_cosmosdb_cassandra_managed_instance_cluster.test.location
+resource "azurerm_cosmosdb_cassandra_cluster" "import" {
+  name                = azurerm_cosmosdb_cassandra_cluster.test.name
+  resource_group_name = azurerm_cosmosdb_cassandra_cluster.test.resource_group_name
+  location            = azurerm_cosmosdb_cassandra_cluster.test.location
 }
 `, template)
 }

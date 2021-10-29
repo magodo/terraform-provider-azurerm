@@ -30,7 +30,7 @@ func (r Registration) SupportedDataSources() map[string]*pluginsdk.Resource {
 func (r Registration) SupportedResources() map[string]*pluginsdk.Resource {
 	return map[string]*pluginsdk.Resource{
 		"azurerm_cosmosdb_account":                               resourceCosmosDbAccount(),
-		"azurerm_cosmosdb_cassandra_managed_instance_cluster":    resourceCassandraMICluster(),
+		"azurerm_cosmosdb_cassandra_cluster":                     resourceCassandraCluster(),
 		"azurerm_cosmosdb_cassandra_managed_instance_datacenter": resourceCassandraMIDatacenter(),
 		"azurerm_cosmosdb_cassandra_keyspace":                    resourceCosmosDbCassandraKeyspace(),
 		"azurerm_cosmosdb_cassandra_table":                       resourceCosmosDbCassandraTable(),
