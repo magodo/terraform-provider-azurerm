@@ -22,7 +22,6 @@ import (
 )
 
 func resourceCassandraMIDatacenter() *pluginsdk.Resource {
-	log.Println("manually merged API changes - resourceCassandraMIDatacenter**********")
 	return &pluginsdk.Resource{
 		Create: resourceCassandraMIDatacenterCreate,
 		Read:   resourceCassandraMIDatacenterRead,
