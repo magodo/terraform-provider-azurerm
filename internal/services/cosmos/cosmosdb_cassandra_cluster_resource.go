@@ -21,8 +21,7 @@ import (
 
 func resourceCassandraCluster() *pluginsdk.Resource {
 	return &pluginsdk.Resource{
-		Create: resourceCassandraClusterCreateUpdate,
-		Update: resourceCassandraClusterCreateUpdate,
+		Create: resourceCassandraClusterCreate,
 		Read:   resourceCassandraClusterRead,
 		Delete: resourceCassandraClusterDelete,
 
@@ -34,7 +33,6 @@ func resourceCassandraCluster() *pluginsdk.Resource {
 		Timeouts: &pluginsdk.ResourceTimeout{
 			Create: pluginsdk.DefaultTimeout(30 * time.Minute),
 			Read:   pluginsdk.DefaultTimeout(5 * time.Minute),
-			Update: pluginsdk.DefaultTimeout(30 * time.Minute),
 			Delete: pluginsdk.DefaultTimeout(30 * time.Minute),
 		},
 
@@ -52,14 +50,15 @@ func resourceCassandraCluster() *pluginsdk.Resource {
 
 			"delegated_management_subnet_id": {
 				Type:         pluginsdk.TypeString,
-				Optional:     true,
+				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: networkValidate.SubnetID,
 			},
 
 			"initial_cassandra_admin_password": {
 				Type:         pluginsdk.TypeString,
-				Optional:     true,
+				Required:     true,
+				ForceNew:     true,
 				Sensitive:    true,
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
@@ -67,27 +66,24 @@ func resourceCassandraCluster() *pluginsdk.Resource {
 	}
 }
 
-func resourceCassandraClusterCreateUpdate(d *pluginsdk.ResourceData, meta interface{}) error {
+func resourceCassandraClusterCreate(d *pluginsdk.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client).Cosmos.CassandraClustersClient
 	subscriptionId := meta.(*clients.Client).Account.SubscriptionId
-	ctx, cancel := timeouts.ForCreateUpdate(meta.(*clients.Client).StopContext, d)
+	ctx, cancel := timeouts.ForCreate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
 	resourceGroupName := d.Get("resource_group_name").(string)
 	name := d.Get("name").(string)
 	id := parse.NewCassandraClusterID(subscriptionId, resourceGroupName, name)
 
-	if d.IsNewResource() {
-		existing, err := client.Get(ctx, id.ResourceGroup, id.Name)
-		if err != nil {
-			if !utils.ResponseWasNotFound(existing.Response) {
-				return fmt.Errorf("checking for presence of existing %s: %+v", id, err)
-			}
-		}
-
+	existing, err := client.Get(ctx, id.ResourceGroup, id.Name)
+	if err != nil {
 		if !utils.ResponseWasNotFound(existing.Response) {
-			return tf.ImportAsExistsError("azurerm_cosmosdb_cassandra_cluster", id.ID())
+			return fmt.Errorf("checking for presence of existing %s: %+v", id, err)
 		}
+	}
+	if !utils.ResponseWasNotFound(existing.Response) {
+		return tf.ImportAsExistsError("azurerm_cosmosdb_cassandra_cluster", id.ID())
 	}
 
 	body := documentdb.ClusterResource{

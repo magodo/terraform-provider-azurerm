@@ -61,11 +61,9 @@ The following arguments are supported:
 
 * `location` - (Required) The Azure Region where the Cassandra Cluster should exist. Changing this forces a new Cassandra Cluster to be created.
 
----
+* `delegated_management_subnet_id` - (Required) The ID of the delegated management subnet for this Cassandra Cluster. Changing this forces a new Cassandra Cluster to be created.
 
-* `delegated_management_subnet_id` - (Optional) The ID of the delegated management subnet for this Cassandra Cluster. Changing this forces a new Cassandra Cluster to be created.
-
-* `initial_cassandra_admin_password` - (Optional) The initial admin password for this Cassandra Cluster.
+* `initial_cassandra_admin_password` - (Required) The initial admin password for this Cassandra Cluster.
 
 ## Attributes Reference
 
@@ -79,7 +77,6 @@ The `timeouts` block allows you to specify [timeouts](https://www.terraform.io/d
 
 * `create` - (Defaults to 30 minutes) Used when creating the Cassandra Cluster.
 * `read` - (Defaults to 5 minutes) Used when retrieving the Cassandra Cluster.
-* `update` - (Defaults to 30 minutes) Used when updating the Cassandra Cluster.
 * `delete` - (Defaults to 30 minutes) Used when deleting the Cassandra Cluster.
 
 ## Import
