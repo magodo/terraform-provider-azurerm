@@ -51,11 +51,11 @@ resource "azurerm_cosmosdb_cassandra_cluster" "example" {
 }
 
 resource "azurerm_cosmosdb_cassandra_datacenter" "example" {
-  name = "example-datacenter"
-  location = azurerm_cosmosdb_cassandra_cluster.example.location
-  cassandra_cluster_id = azurerm_cosmosdb_cassandra_cluster.example.id
+  name                           = "example-datacenter"
+  location                       = azurerm_cosmosdb_cassandra_cluster.example.location
+  cassandra_cluster_id           = azurerm_cosmosdb_cassandra_cluster.example.id
   delegated_management_subnet_id = azurerm_subnet.example.id
-  node_count = 3
+  node_count                     = 3
 }
 ```
 

@@ -99,7 +99,7 @@ resource "azurerm_role_assignment" "test" {
 }
 
 resource "azurerm_cosmosdb_cassandra_cluster" "test" {
-  name                     = "acctca-mi-cluster-%[1]d"
+  name                             = "acctca-mi-cluster-%[1]d"
   resource_group_name              = azurerm_resource_group.test.name
   location                         = azurerm_resource_group.test.location
   delegated_management_subnet_id   = azurerm_subnet.test.id
@@ -107,8 +107,8 @@ resource "azurerm_cosmosdb_cassandra_cluster" "test" {
 }
 
 resource "azurerm_cosmosdb_cassandra_datacenter" "test" {
-  name                = "acctca-mi-dc-%[1]d"
-  cassandra_cluster_id                   = azurerm_cosmosdb_cassandra_cluster.test.id
+  name                           = "acctca-mi-dc-%[1]d"
+  cassandra_cluster_id           = azurerm_cosmosdb_cassandra_cluster.test.id
   location                       = azurerm_cosmosdb_cassandra_cluster.test.location
   delegated_management_subnet_id = azurerm_subnet.test.id
   node_count                     = %[3]d
