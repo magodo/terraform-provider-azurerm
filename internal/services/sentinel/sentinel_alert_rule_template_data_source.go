@@ -146,6 +146,8 @@ func dataSourceSentinelAlertRuleTemplateRead(d *pluginsdk.ResourceData, meta int
 		err = setForMsSecurityIncidentAlertRuleTemplate(d, &template)
 	case securityinsight.ScheduledAlertRuleTemplate:
 		err = setForScheduledAlertRuleTemplate(d, &template)
+	case securityinsight.ThreatIntelligenceAlertRuleTemplate:
+		err = setForThreatIntelligenceAlertRuleTemplate(d, &template)
 	default:
 		return fmt.Errorf("unknown template type of Sentinel Alert Rule Template %q (Workspace %q / Resource Group %q) ID", nameToLog, workspaceID.WorkspaceName, workspaceID.ResourceGroup)
 	}
@@ -187,6 +189,10 @@ func getAlertRuleTemplateByDisplayName(ctx context.Context, client *securityinsi
 				results = append(results, templates.Value())
 			}
 		case securityinsight.ScheduledAlertRuleTemplate:
+			if template.DisplayName != nil && *template.DisplayName == name {
+				results = append(results, templates.Value())
+			}
+		case securityinsight.ThreatIntelligenceAlertRuleTemplate:
 			if template.DisplayName != nil && *template.DisplayName == name {
 				results = append(results, templates.Value())
 			}
@@ -249,6 +255,20 @@ func setForFusionAlertRuleTemplate(d *pluginsdk.ResourceData, template *security
 }
 
 func setForMLBehaviorAnalyticsAlertRuleTemplate(d *pluginsdk.ResourceData, template *securityinsight.MLBehaviorAnalyticsAlertRuleTemplate) error {
+	if template.ID == nil || *template.ID == "" {
+		return errors.New("empty or nil ID")
+	}
+	id, err := parse.SentinelAlertRuleTemplateID(*template.ID)
+	if err != nil {
+		return err
+	}
+	d.SetId(id.ID())
+	d.Set("name", template.Name)
+	d.Set("display_name", template.DisplayName)
+	return nil
+}
+
+func setForThreatIntelligenceAlertRuleTemplate(d *pluginsdk.ResourceData, template *securityinsight.ThreatIntelligenceAlertRuleTemplate) error {
 	if template.ID == nil || *template.ID == "" {
 		return errors.New("empty or nil ID")
 	}

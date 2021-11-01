@@ -119,7 +119,7 @@ func (r SentinelAlertRuleThreatIntelligenceResource) basic(data acceptance.TestD
 %s
 
 data "azurerm_sentinel_alert_rule_template" "test" {
-  display_name               = "Advanced Multistage Attack Detection"
+  display_name               = "(Preview) Microsoft Threat Intelligence Analytics"
   log_analytics_workspace_id = azurerm_log_analytics_solution.test.workspace_resource_id
 }
 
@@ -136,7 +136,7 @@ func (r SentinelAlertRuleThreatIntelligenceResource) complete(data acceptance.Te
 %s
 
 data "azurerm_sentinel_alert_rule_template" "test" {
-  display_name               = "Advanced Multistage Attack Detection"
+  display_name               = "(Preview) Microsoft Threat Intelligence Analytics"
   log_analytics_workspace_id = azurerm_log_analytics_solution.test.workspace_resource_id
 }
 
