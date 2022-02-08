@@ -79,23 +79,21 @@ func resourceImage() *pluginsdk.Resource {
 				Elem: &pluginsdk.Resource{
 					Schema: map[string]*pluginsdk.Schema{
 						"os_type": {
-							Type:             pluginsdk.TypeString,
-							Optional:         true,
-							DiffSuppressFunc: suppress.CaseDifference,
+							Type:     pluginsdk.TypeString,
+							Optional: true,
 							ValidateFunc: validation.StringInSlice([]string{
 								string(compute.OperatingSystemTypesLinux),
 								string(compute.OperatingSystemTypesWindows),
-							}, true),
+							}, false),
 						},
 
 						"os_state": {
-							Type:             pluginsdk.TypeString,
-							Optional:         true,
-							DiffSuppressFunc: suppress.CaseDifference,
+							Type:     pluginsdk.TypeString,
+							Optional: true,
 							ValidateFunc: validation.StringInSlice([]string{
 								string(compute.OperatingSystemStateTypesGeneralized),
 								string(compute.OperatingSystemStateTypesSpecialized),
-							}, true),
+							}, false),
 						},
 
 						"managed_disk_id": {
@@ -115,15 +113,14 @@ func resourceImage() *pluginsdk.Resource {
 						},
 
 						"caching": {
-							Type:             pluginsdk.TypeString,
-							Optional:         true,
-							Default:          string(compute.CachingTypesNone),
-							DiffSuppressFunc: suppress.CaseDifference,
+							Type:     pluginsdk.TypeString,
+							Optional: true,
+							Default:  string(compute.CachingTypesNone),
 							ValidateFunc: validation.StringInSlice([]string{
 								string(compute.CachingTypesNone),
 								string(compute.CachingTypesReadOnly),
 								string(compute.CachingTypesReadWrite),
-							}, true),
+							}, false),
 						},
 
 						"size_gb": {
@@ -168,8 +165,7 @@ func resourceImage() *pluginsdk.Resource {
 								string(compute.CachingTypesNone),
 								string(compute.CachingTypesReadOnly),
 								string(compute.CachingTypesReadWrite),
-							}, true),
-							DiffSuppressFunc: suppress.CaseDifference,
+							}, false),
 						},
 
 						"size_gb": {

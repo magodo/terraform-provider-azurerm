@@ -66,8 +66,7 @@ func resourceVirtualMachineDataDiskAttachment() *pluginsdk.Resource {
 					string(compute.CachingTypesNone),
 					string(compute.CachingTypesReadOnly),
 					string(compute.CachingTypesReadWrite),
-				}, true),
-				DiffSuppressFunc: suppress.CaseDifference,
+				}, false),
 			},
 
 			"create_option": {
@@ -78,8 +77,7 @@ func resourceVirtualMachineDataDiskAttachment() *pluginsdk.Resource {
 				ValidateFunc: validation.StringInSlice([]string{
 					string(compute.DiskCreateOptionTypesAttach),
 					string(compute.DiskCreateOptionTypesEmpty),
-				}, true),
-				DiffSuppressFunc: suppress.CaseDifference,
+				}, false),
 			},
 
 			"write_accelerator_enabled": {

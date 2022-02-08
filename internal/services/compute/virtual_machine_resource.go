@@ -165,14 +165,13 @@ func resourceVirtualMachine() *pluginsdk.Resource {
 			},
 
 			"license_type": {
-				Type:             pluginsdk.TypeString,
-				Optional:         true,
-				Computed:         true,
-				DiffSuppressFunc: suppress.CaseDifference,
+				Type:     pluginsdk.TypeString,
+				Optional: true,
+				Computed: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"Windows_Client",
 					"Windows_Server",
-				}, true),
+				}, false),
 			},
 
 			"vm_size": {
@@ -238,8 +237,7 @@ func resourceVirtualMachine() *pluginsdk.Resource {
 							ValidateFunc: validation.StringInSlice([]string{
 								string(compute.OperatingSystemTypesLinux),
 								string(compute.OperatingSystemTypesWindows),
-							}, true),
-							DiffSuppressFunc: suppress.CaseDifference,
+							}, false),
 						},
 
 						"name": {
@@ -274,8 +272,7 @@ func resourceVirtualMachine() *pluginsdk.Resource {
 								string(compute.StorageAccountTypesPremiumLRS),
 								string(compute.StorageAccountTypesStandardLRS),
 								string(compute.StorageAccountTypesStandardSSDLRS),
-							}, true),
-							DiffSuppressFunc: suppress.CaseDifference,
+							}, false),
 						},
 
 						"image_uri": {
@@ -349,8 +346,7 @@ func resourceVirtualMachine() *pluginsdk.Resource {
 								string(compute.StorageAccountTypesStandardLRS),
 								string(compute.StorageAccountTypesStandardSSDLRS),
 								string(compute.StorageAccountTypesUltraSSDLRS),
-							}, true),
-							DiffSuppressFunc: suppress.CaseDifference,
+							}, false),
 						},
 
 						"create_option": {
@@ -497,8 +493,7 @@ func resourceVirtualMachine() *pluginsdk.Resource {
 										ValidateFunc: validation.StringInSlice([]string{
 											"HTTP",
 											"HTTPS",
-										}, true),
-										DiffSuppressFunc: suppress.CaseDifference,
+										}, false),
 									},
 									"certificate_url": {
 										Type:     pluginsdk.TypeString,

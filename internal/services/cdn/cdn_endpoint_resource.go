@@ -14,7 +14,6 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/cdn/parse"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tags"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
-	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/suppress"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/validation"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/timeouts"
 	"github.com/hashicorp/terraform-provider-azurerm/utils"
@@ -167,8 +166,7 @@ func resourceCdnEndpoint() *pluginsdk.Resource {
 							ValidateFunc: validation.StringInSlice([]string{
 								string(cdn.ActionTypeAllow),
 								string(cdn.ActionTypeBlock),
-							}, true),
-							DiffSuppressFunc: suppress.CaseDifference,
+							}, false),
 						},
 						"country_codes": {
 							Type:     pluginsdk.TypeList,
@@ -190,8 +188,7 @@ func resourceCdnEndpoint() *pluginsdk.Resource {
 					string(cdn.OptimizationTypeGeneralWebDelivery),
 					string(cdn.OptimizationTypeLargeFileDownload),
 					string(cdn.OptimizationTypeVideoOnDemandMediaStreaming),
-				}, true),
-				DiffSuppressFunc: suppress.CaseDifference,
+				}, false),
 			},
 
 			"host_name": {
