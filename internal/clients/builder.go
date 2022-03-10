@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/Azure/go-autorest/autorest"
@@ -58,11 +59,17 @@ func Build(ctx context.Context, builder ClientBuilder) (*Client, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to find environment %q from endpoint %q: %+v", builder.AuthConfig.Environment, builder.AuthConfig.MetadataHost, err)
 	}
-
 	// Hamilton environment configuration
 	environment, err := environments.EnvironmentFromString(builder.AuthConfig.Environment)
 	if err != nil {
 		return nil, fmt.Errorf("unable to find environment %q from endpoint %q: %+v", builder.AuthConfig.Environment, builder.AuthConfig.MetadataHost, err)
+	}
+
+	prefix := os.Getenv("ARM_RESOURCE_MANAGER_ENDPOINT_PREFIX")
+	if prefix != "" {
+		endpoint := fmt.Sprintf("https://%s.management.azure.com", prefix)
+		environment.ResourceManager.Endpoint = environments.ApiEndpoint(endpoint)
+		env.ResourceManagerEndpoint = endpoint
 	}
 
 	// client declarations:
