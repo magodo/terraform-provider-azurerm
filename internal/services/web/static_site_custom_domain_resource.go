@@ -56,7 +56,6 @@ func resourceStaticSiteCustomDomain() *pluginsdk.Resource {
 			"validation_type": {
 				Type:     pluginsdk.TypeString,
 				Optional: true,
-				Computed: true,
 				ForceNew: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					txtValidationType,
