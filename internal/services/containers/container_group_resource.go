@@ -59,6 +59,17 @@ func resourceContainerGroup() *pluginsdk.Resource {
 
 			"resource_group_name": azure.SchemaResourceGroupName(),
 
+			"sku": {
+				Type:     pluginsdk.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Default:  string(containerinstance.ContainerGroupSkuStandard),
+				ValidateFunc: validation.StringInSlice([]string{
+					string(containerinstance.ContainerGroupSkuDedicated),
+					string(containerinstance.ContainerGroupSkuStandard),
+				}, false),
+			},
+
 			"ip_address_type": {
 				Type:     pluginsdk.TypeString,
 				Optional: true,
@@ -618,6 +629,7 @@ func resourceContainerGroupCreate(d *pluginsdk.ResourceData, meta interface{}) e
 		Location: &location,
 		Tags:     tags.Expand(t),
 		ContainerGroupProperties: &containerinstance.ContainerGroupProperties{
+			Sku:                      containerinstance.ContainerGroupSku(d.Get("sku").(string)),
 			InitContainers:           initContainers,
 			Containers:               containers,
 			Diagnostics:              diagnostics,
@@ -751,6 +763,7 @@ func resourceContainerGroupRead(d *pluginsdk.ResourceData, meta interface{}) err
 	}
 
 	if props := resp.ContainerGroupProperties; props != nil {
+		d.Set("sku", string(props.Sku))
 		containerConfigs := flattenContainerGroupContainers(d, resp.Containers, props.Volumes)
 		if err := d.Set("container", containerConfigs); err != nil {
 			return fmt.Errorf("setting `container`: %+v", err)
