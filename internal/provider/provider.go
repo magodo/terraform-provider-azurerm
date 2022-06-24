@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
-	"github.com/hashicorp/terraform-provider-azurerm/internal/resourceproviders"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/sdk"
 	"github.com/hashicorp/terraform-provider-azurerm/utils"
 )
@@ -335,24 +334,6 @@ func providerConfigure(p *schema.Provider) schema.ConfigureContextFunc {
 		}
 
 		client.StopContext = stopCtx
-
-		if !skipProviderRegistration {
-			// List all the available providers and their registration state to avoid unnecessary
-			// requests. This also lets us check if the provider credentials are correct.
-			providerList, err := client.Resource.ProvidersClient.List(ctx, nil, "")
-			if err != nil {
-				return nil, diag.Errorf("Unable to list provider registration status, it is possible that this is due to invalid "+
-					"credentials or the service principal does not have permission to use the Resource Manager API, Azure "+
-					"error: %s", err)
-			}
-
-			availableResourceProviders := providerList.Values()
-			requiredResourceProviders := resourceproviders.Required()
-
-			if err := resourceproviders.EnsureRegistered(ctx, *client.Resource.ProvidersClient, availableResourceProviders, requiredResourceProviders); err != nil {
-				return nil, diag.Errorf(resourceProviderRegistrationErrorFmt, err)
-			}
-		}
 
 		return client, nil
 	}
