@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/internal/common"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/features"
 	automation "github.com/hashicorp/terraform-provider-azurerm/internal/services/automation/client"
-	resource "github.com/hashicorp/terraform-provider-azurerm/internal/services/resource/client"
 )
 
 type Client struct {
@@ -19,7 +18,6 @@ type Client struct {
 	Features features.UserFeatures
 
 	Automation *automation.Client
-	Resource   *resource.Client
 }
 
 // NOTE: it should be possible for this method to become Private once the top level Client's removed
@@ -33,7 +31,6 @@ func (client *Client) Build(ctx context.Context, o *common.ClientOptions) error 
 	client.StopContext = ctx
 
 	client.Automation = automation.NewClient(o)
-	client.Resource = resource.NewClient(o)
 
 	return nil
 }
