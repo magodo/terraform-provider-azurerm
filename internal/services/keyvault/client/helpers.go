@@ -117,7 +117,8 @@ func (c *Client) KeyVaultIDFromBaseUrl(ctx context.Context, argClient *resourceG
 		return &v.keyVaultId, nil
 	}
 
-	query := fmt.Sprintf("resources | where type =~ 'Microsoft.KeyVault/vaults' and name =~ '%s'", *keyVaultName)
+	// Note that the resource type are lowercased by the ARG.
+	query := fmt.Sprintf("resources | where type == 'microsoft.keyvault/vaults' and name == '%s'", *keyVaultName)
 	request := resourcegraph.QueryRequest{
 		Subscriptions: &[]string{c.VaultsClient.SubscriptionID},
 		Query:         &query,
