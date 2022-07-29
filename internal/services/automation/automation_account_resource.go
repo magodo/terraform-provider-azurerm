@@ -206,7 +206,9 @@ func resourceAutomationAccountRead(d *pluginsdk.ResourceData, meta interface{}) 
 	if resp.Model == nil || resp.Model.Properties == nil {
 		return fmt.Errorf("retrieving Automation Account got empty Model")
 	}
-	prop := resp.Model.Properties
+
+	model := resp.Model
+	prop := model.Properties
 	if prop.PublicNetworkAccess != nil {
 		publicNetworkAccessEnabled = *prop.PublicNetworkAccess
 	}
