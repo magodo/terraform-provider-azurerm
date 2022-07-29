@@ -27,7 +27,7 @@ import (
 	keyVaultValidate "github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/validate"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/network"
 	vnetParse "github.com/hashicorp/terraform-provider-azurerm/internal/services/network/parse"
-	resource "github.com/hashicorp/terraform-provider-azurerm/internal/services/resource/client"
+	resourcegraph "github.com/hashicorp/terraform-provider-azurerm/internal/services/resourcegraph/client"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/helpers"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/migration"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/parse"
@@ -938,7 +938,7 @@ func resourceStorageAccountCreate(d *pluginsdk.ResourceData, meta interface{}) e
 	client := meta.(*clients.Client).Storage.AccountsClient
 	storageClient := meta.(*clients.Client).Storage
 	keyVaultClient := meta.(*clients.Client).KeyVault
-	resourceClient := meta.(*clients.Client).Resource
+	argClient := meta.(*clients.Client).ResourceGraph
 	subscriptionId := meta.(*clients.Client).Account.SubscriptionId
 	ctx, cancel := timeouts.ForCreate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
@@ -1085,7 +1085,7 @@ func resourceStorageAccountCreate(d *pluginsdk.ResourceData, meta interface{}) e
 		if storageAccountIdentity.Type != storage.IdentityTypeUserAssigned {
 			return fmt.Errorf("customer managed key can only be used with identity type `UserAssigned`")
 		}
-		encryption, err = expandStorageAccountCustomerManagedKey(ctx, keyVaultClient, resourceClient, v.([]interface{}))
+		encryption, err = expandStorageAccountCustomerManagedKey(ctx, keyVaultClient, argClient, v.([]interface{}))
 		if err != nil {
 			return err
 		}
@@ -1263,7 +1263,7 @@ func resourceStorageAccountUpdate(d *pluginsdk.ResourceData, meta interface{}) e
 	tenantId := meta.(*clients.Client).Account.TenantId
 	client := meta.(*clients.Client).Storage.AccountsClient
 	keyVaultClient := meta.(*clients.Client).KeyVault
-	resourceClient := meta.(*clients.Client).Resource
+	argClient := meta.(*clients.Client).ResourceGraph
 	ctx, cancel := timeouts.ForUpdate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
@@ -1405,7 +1405,7 @@ func resourceStorageAccountUpdate(d *pluginsdk.ResourceData, meta interface{}) e
 
 	if d.HasChange("customer_managed_key") {
 		cmk := d.Get("customer_managed_key").([]interface{})
-		encryption, err := expandStorageAccountCustomerManagedKey(ctx, keyVaultClient, resourceClient, cmk)
+		encryption, err := expandStorageAccountCustomerManagedKey(ctx, keyVaultClient, argClient, cmk)
 		if err != nil {
 			return err
 		}
@@ -2056,7 +2056,7 @@ func flattenStorageAccountCustomDomain(input *storage.CustomDomain) []interface{
 	return []interface{}{domain}
 }
 
-func expandStorageAccountCustomerManagedKey(ctx context.Context, keyVaultClient *keyvault.Client, resourceClient *resource.Client, input []interface{}) (*storage.Encryption, error) {
+func expandStorageAccountCustomerManagedKey(ctx context.Context, keyVaultClient *keyvault.Client, argClient *resourcegraph.Client, input []interface{}) (*storage.Encryption, error) {
 	if len(input) == 0 {
 		return &storage.Encryption{}, nil
 	}
@@ -2068,7 +2068,7 @@ func expandStorageAccountCustomerManagedKey(ctx context.Context, keyVaultClient 
 		return nil, err
 	}
 
-	keyVaultIdRaw, err := keyVaultClient.KeyVaultIDFromBaseUrl(ctx, resourceClient, keyId.KeyVaultBaseUrl)
+	keyVaultIdRaw, err := keyVaultClient.KeyVaultIDFromBaseUrl(ctx, argClient, keyId.KeyVaultBaseUrl)
 	if err != nil {
 		return nil, err
 	}

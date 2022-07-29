@@ -2,13 +2,16 @@ package client
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"strings"
 	"sync"
 
+	"github.com/Azure/azure-sdk-for-go/services/keyvault/mgmt/2021-10-01/keyvault"
+	"github.com/Azure/azure-sdk-for-go/services/resourcegraph/mgmt/2021-03-01/resourcegraph"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/parse"
-	resourcesClient "github.com/hashicorp/terraform-provider-azurerm/internal/services/resource/client"
+	resourceGraphClient "github.com/hashicorp/terraform-provider-azurerm/internal/services/resourcegraph/client"
 	"github.com/hashicorp/terraform-provider-azurerm/utils"
 )
 
@@ -95,7 +98,7 @@ func (c *Client) Exists(ctx context.Context, keyVaultId parse.VaultId) (bool, er
 	return true, nil
 }
 
-func (c *Client) KeyVaultIDFromBaseUrl(ctx context.Context, resourcesClient *resourcesClient.Client, keyVaultBaseUrl string) (*string, error) {
+func (c *Client) KeyVaultIDFromBaseUrl(ctx context.Context, argClient *resourceGraphClient.Client, keyVaultBaseUrl string) (*string, error) {
 	keyVaultName, err := c.parseNameFromBaseUrl(keyVaultBaseUrl)
 	if err != nil {
 		return nil, err
@@ -114,41 +117,43 @@ func (c *Client) KeyVaultIDFromBaseUrl(ctx context.Context, resourcesClient *res
 		return &v.keyVaultId, nil
 	}
 
-	filter := fmt.Sprintf("resourceType eq 'Microsoft.KeyVault/vaults' and name eq '%s'", *keyVaultName)
-	result, err := resourcesClient.ResourcesClient.List(ctx, filter, "", utils.Int32(5))
-	if err != nil {
-		return nil, fmt.Errorf("listing resources matching %q: %+v", filter, err)
+	query := fmt.Sprintf("resources | where type =~ 'Microsoft.KeyVault/vaults' and name =~ '%s'", *keyVaultName)
+	request := resourcegraph.QueryRequest{
+		Subscriptions: &[]string{c.VaultsClient.SubscriptionID},
+		Query:         &query,
+		Options: &resourcegraph.QueryRequestOptions{
+			ResultFormat: resourcegraph.ResultFormatObjectArray,
+		},
 	}
 
-	for result.NotDone() {
-		for _, v := range result.Values() {
-			if v.ID == nil {
-				continue
-			}
+	results, err := argClient.Client.Resources(context.Background(), request)
+	if err != nil {
+		return nil, fmt.Errorf("listing resources matching %q: %+v", query, err)
+	}
 
-			id, err := parse.VaultID(*v.ID)
-			if err != nil {
-				return nil, fmt.Errorf("parsing %q: %+v", *v.ID, err)
-			}
-			if !strings.EqualFold(id.Name, *keyVaultName) {
-				continue
-			}
+	data, err := json.Marshal(results.Data)
+	if err != nil {
+		return nil, fmt.Errorf("marshaling the ARG result data for query %q: %+v", query, err)
+	}
 
-			props, err := c.VaultsClient.Get(ctx, id.ResourceGroup, id.Name)
-			if err != nil {
-				return nil, fmt.Errorf("retrieving %s: %+v", *id, err)
-			}
-			if props.Properties == nil || props.Properties.VaultURI == nil {
-				return nil, fmt.Errorf("retrieving %s: `properties.VaultUri` was nil", *id)
-			}
+	var kvs []keyvault.Vault
+	if err := json.Unmarshal(data, &kvs); err != nil {
+		return nil, fmt.Errorf("unmarshalling the ARG result data for query %q as key vaults: %+v", query, err)
+	}
 
-			c.AddToCache(*id, *props.Properties.VaultURI)
-			return utils.String(id.ID()), nil
+	for _, kv := range kvs {
+		if kv.ID == nil {
+			continue
 		}
-
-		if err := result.NextWithContext(ctx); err != nil {
-			return nil, fmt.Errorf("iterating over results: %+v", err)
+		if kv.Properties == nil || kv.Properties.VaultURI == nil {
+			continue
 		}
+		id, err := parse.VaultID(*kv.ID)
+		if err != nil {
+			return nil, fmt.Errorf("parsing %q: %+v", *kv.ID, err)
+		}
+		c.AddToCache(*id, *kv.Properties.VaultURI)
+		return utils.String(id.ID()), nil
 	}
 
 	// we haven't found it, but Data Sources and Resources need to handle this error separately

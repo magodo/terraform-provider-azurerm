@@ -19,7 +19,7 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/client"
 	keyVaultParse "github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/parse"
 	keyVaultValidate "github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/validate"
-	resourcesClient "github.com/hashicorp/terraform-provider-azurerm/internal/services/resource/client"
+	resourceGraphClient "github.com/hashicorp/terraform-provider-azurerm/internal/services/resourcegraph/client"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tags"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/validation"
@@ -52,7 +52,7 @@ func resourceHPCCache() *pluginsdk.Resource {
 func resourceHPCCacheCreateOrUpdate(d *pluginsdk.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client).HPCCache.CachesClient
 	keyVaultsClient := meta.(*clients.Client).KeyVault
-	resourcesClient := meta.(*clients.Client).Resource
+	argClient := meta.(*clients.Client).ResourceGraph
 	subscriptionId := meta.(*clients.Client).Account.SubscriptionId
 	ctx, cancel := timeouts.ForCreate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
@@ -158,7 +158,7 @@ func resourceHPCCacheCreateOrUpdate(d *pluginsdk.ResourceData, meta interface{})
 		}
 
 		keyVaultKeyId := v.(string)
-		keyVaultDetails, err := storageCacheRetrieveKeyVault(ctx, keyVaultsClient, resourcesClient, keyVaultKeyId)
+		keyVaultDetails, err := storageCacheRetrieveKeyVault(ctx, keyVaultsClient, argClient, keyVaultKeyId)
 		if err != nil {
 			return fmt.Errorf("validating Key Vault Key %q for HPC Cache: %+v", keyVaultKeyId, err)
 		}
@@ -766,12 +766,12 @@ type storageCacheKeyVault struct {
 	softDeleteEnabled      bool
 }
 
-func storageCacheRetrieveKeyVault(ctx context.Context, keyVaultsClient *client.Client, resourcesClient *resourcesClient.Client, id string) (*storageCacheKeyVault, error) {
+func storageCacheRetrieveKeyVault(ctx context.Context, keyVaultsClient *client.Client, argClient *resourceGraphClient.Client, id string) (*storageCacheKeyVault, error) {
 	keyVaultKeyId, err := keyVaultParse.ParseNestedItemID(id)
 	if err != nil {
 		return nil, err
 	}
-	keyVaultID, err := keyVaultsClient.KeyVaultIDFromBaseUrl(ctx, resourcesClient, keyVaultKeyId.KeyVaultBaseUrl)
+	keyVaultID, err := keyVaultsClient.KeyVaultIDFromBaseUrl(ctx, argClient, keyVaultKeyId.KeyVaultBaseUrl)
 	if err != nil {
 		return nil, fmt.Errorf("retrieving the Resource ID the Key Vault at URL %q: %s", keyVaultKeyId.KeyVaultBaseUrl, err)
 	}

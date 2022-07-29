@@ -427,7 +427,7 @@ func expandArmCdnEndpointCustomDomainUserManagedHttpsSettings(ctx context.Contex
 		return nil, err
 	}
 
-	keyVaultIdRaw, err := clients.KeyVault.KeyVaultIDFromBaseUrl(ctx, clients.Resource, keyVaultCertId.KeyVaultBaseUrl)
+	keyVaultIdRaw, err := clients.KeyVault.KeyVaultIDFromBaseUrl(ctx, clients.ResourceGraph, keyVaultCertId.KeyVaultBaseUrl)
 	if err != nil {
 		return nil, fmt.Errorf("retrieving the Resource ID the Key Vault at URL %q: %s", keyVaultCertId.KeyVaultBaseUrl, err)
 	}

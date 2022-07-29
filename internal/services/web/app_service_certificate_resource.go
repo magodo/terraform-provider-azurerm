@@ -45,7 +45,7 @@ func resourceAppServiceCertificate() *pluginsdk.Resource {
 func resourceAppServiceCertificateCreateUpdate(d *pluginsdk.ResourceData, meta interface{}) error {
 	keyVaultsClient := meta.(*clients.Client).KeyVault
 	client := meta.(*clients.Client).Web.CertificatesClient
-	resourcesClient := meta.(*clients.Client).Resource
+	argClient := meta.(*clients.Client).ResourceGraph
 	subscriptionId := meta.(*clients.Client).Account.SubscriptionId
 	ctx, cancel := timeouts.ForCreateUpdate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
@@ -105,7 +105,7 @@ func resourceAppServiceCertificateCreateUpdate(d *pluginsdk.ResourceData, meta i
 
 		keyVaultBaseUrl := parsedSecretId.KeyVaultBaseUrl
 
-		keyVaultId, err := keyVaultsClient.KeyVaultIDFromBaseUrl(ctx, resourcesClient, keyVaultBaseUrl)
+		keyVaultId, err := keyVaultsClient.KeyVaultIDFromBaseUrl(ctx, argClient, keyVaultBaseUrl)
 		if err != nil {
 			return fmt.Errorf("retrieving the Resource ID for the Key Vault at URL %q: %s", keyVaultBaseUrl, err)
 		}
