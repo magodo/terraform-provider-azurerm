@@ -133,6 +133,17 @@ func resourceStorageAccount() *pluginsdk.Resource {
 				}, false),
 			},
 
+			"dns_endpoint_type": {
+				Type:     pluginsdk.TypeString,
+				Optional: true,
+				ForceNew: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					string(storage.DNSEndpointTypeStandard),
+					string(storage.DNSEndpointTypeAzureDNSZone),
+				}, false),
+				Default: string(storage.DNSEndpointTypeStandard),
+			},
+
 			"azure_files_authentication": {
 				Type:     pluginsdk.TypeList,
 				Optional: true,
@@ -989,6 +1000,7 @@ func resourceStorageAccountCreate(d *pluginsdk.ResourceData, meta interface{}) e
 			EnableNfsV3:                 &nfsV3Enabled,
 			AllowSharedKeyAccess:        &allowSharedKeyAccess,
 			AllowCrossTenantReplication: &crossTenantReplication,
+			DNSEndpointType:             storage.DNSEndpointType(d.Get("dns_endpoint_type").(string)),
 		},
 	}
 
@@ -1315,6 +1327,10 @@ func resourceStorageAccountUpdate(d *pluginsdk.ResourceData, meta interface{}) e
 		AccountPropertiesUpdateParameters: &storage.AccountPropertiesUpdateParameters{
 			AllowSharedKeyAccess: &allowSharedKeyAccess,
 		},
+	}
+
+	if d.HasChange("dns_endpoint_type") {
+		opts.AccountPropertiesUpdateParameters.DNSEndpointType = storage.DNSEndpointType(d.Get("dns_endpoint_type").(string))
 	}
 
 	if d.HasChange("cross_tenant_replication_enabled") {
@@ -1723,6 +1739,7 @@ func resourceStorageAccountRead(d *pluginsdk.ResourceData, meta interface{}) err
 		d.Set("enable_https_traffic_only", props.EnableHTTPSTrafficOnly)
 		d.Set("is_hns_enabled", props.IsHnsEnabled)
 		d.Set("nfsv3_enabled", props.EnableNfsV3)
+		d.Set("dns_endpoint_type", props.DNSEndpointType)
 
 		if crossTenantReplication := props.AllowCrossTenantReplication; crossTenantReplication != nil {
 			d.Set("cross_tenant_replication_enabled", crossTenantReplication)
