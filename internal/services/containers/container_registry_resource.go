@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"sort"
 	"strings"
 	"time"
 
@@ -658,11 +657,6 @@ func resourceContainerRegistryRead(d *pluginsdk.ResourceData, meta interface{}) 
 			}
 		}
 	}
-
-	// The order of the georeplications returned from the list API is not consistent. We simply order it alphabetically to be consistent.
-	sort.Slice(geoReplications, func(i, j int) bool {
-		return geoReplications[i].(map[string]interface{})["location"].(string) < geoReplications[j].(map[string]interface{})["location"].(string)
-	})
 
 	d.Set("georeplications", geoReplications)
 
