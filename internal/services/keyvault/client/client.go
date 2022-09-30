@@ -36,3 +36,9 @@ func (client Client) KeyVaultClientForSubscription(subscriptionId string) *keyva
 	client.options.ConfigureClient(&vaultsClient.Client, client.options.ResourceManagerAuthorizer)
 	return &vaultsClient
 }
+
+func (client Client) ManagedHsmClientForSubscription(subscriptionId string) *keyvault.ManagedHsmsClient {
+	hsmsClient := keyvault.NewManagedHsmsClientWithBaseURI(client.options.ResourceManagerEndpoint, subscriptionId)
+	client.options.ConfigureClient(&hsmsClient.Client, client.options.ResourceManagerAuthorizer)
+	return &hsmsClient
+}

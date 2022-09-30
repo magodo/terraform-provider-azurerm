@@ -35,6 +35,26 @@ func (c *Client) AddToCache(keyVaultId parse.VaultId, dataPlaneUri string) {
 	keysmith.Unlock()
 }
 
+func (c *Client) BaseUriForHSM(ctx context.Context, managedHSMId parse.ManagedHSMId) (*string, error) {
+	if managedHSMId.SubscriptionId != c.VaultsClient.SubscriptionID {
+		c.ManagedHsmClient = c.ManagedHsmClientForSubscription(managedHSMId.SubscriptionId)
+	}
+
+	resp, err := c.ManagedHsmClient.Get(ctx, managedHSMId.ResourceGroup, managedHSMId.Name)
+	if err != nil {
+		if utils.ResponseWasNotFound(resp.Response) {
+			return nil, fmt.Errorf("%s was not found", managedHSMId)
+		}
+		return nil, fmt.Errorf("retrieving %s: %+v", managedHSMId, err)
+	}
+
+	if resp.Properties == nil || resp.Properties.HsmURI == nil {
+		return nil, fmt.Errorf("`properties` was nil for %s", managedHSMId)
+	}
+
+	return resp.Properties.HsmURI, nil
+}
+
 func (c *Client) BaseUriForKeyVault(ctx context.Context, keyVaultId parse.VaultId) (*string, error) {
 	cacheKey := c.cacheKeyForKeyVault(keyVaultId.Name)
 	keysmith.Lock()

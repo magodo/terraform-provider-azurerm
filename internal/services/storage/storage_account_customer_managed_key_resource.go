@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/locks"
 	keyVaultParse "github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/parse"
-	keyVaultValidate "github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/validate"
+	keyvaultValidate "github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/validate"
 	storageParse "github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/parse"
 	storageValidate "github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/validate"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
@@ -48,9 +48,12 @@ func resourceStorageAccountCustomerManagedKey() *pluginsdk.Resource {
 			},
 
 			"key_vault_id": {
-				Type:         pluginsdk.TypeString,
-				Required:     true,
-				ValidateFunc: keyVaultValidate.VaultID,
+				Type:     pluginsdk.TypeString,
+				Required: true,
+				ValidateFunc: validation.Any(
+					keyvaultValidate.VaultID,
+					keyvaultValidate.ManagedHSMID,
+				),
 			},
 
 			"key_name": {
