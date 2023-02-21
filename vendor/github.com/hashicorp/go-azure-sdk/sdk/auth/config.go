@@ -52,4 +52,19 @@ type Credentials struct {
 	GitHubOIDCTokenRequestURL string
 	// GitHubOIDCTokenRequestToken specifies the bearer token for the request to GitHub's OIDC provider
 	GitHubOIDCTokenRequestToken string
+
+	// EnableCustomCommand specifies whether custom command should be checked.
+	EnableCustomCommand bool
+	// CustomCommand is the exec form of command used to retrieve the access token from the stdout.
+	// Each command argument will be rendered as a Go template with an input object that has following fields:
+	// - .ApiEndpoint: The Azure API endpoint if exists, otherwise is an empty string.
+	// - .ApiResourceIdentifier: The Azure API resource identifier if exists, otherwise is an empty string.
+	// - .ApiAppId: The application ID of the Azure API if exists, otherwise is an empty string.
+	// - .ApiName: The name of the Azure API.
+	// - .ApiScope: The scope of the Azure API if exists, otherwise an error will return.
+	// - .TenantID: The tenant ID. For auxiliary tokens, it is set as one of each auxiliary token.
+	// E.g. []string{"az", "account", "get-access-token", "--scope={{.ApiScope}}", "--query=accessToken"}"}
+	CustomCommand []string
+	// CustomCommandTokenType specifies the type of the access token retrieved by the custom command. By default, it is "Bearer".
+	CustomCommandTokenType string
 }

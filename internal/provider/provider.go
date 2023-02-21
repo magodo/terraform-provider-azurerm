@@ -264,6 +264,22 @@ func azureProvider(supportLegacyTestSuite bool) *schema.Provider {
 				Description: "The path to a file containing an OIDC ID token for use when authenticating as a Service Principal using OpenID Connect.",
 			},
 
+			"custom_command": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "The exec form of command used to retrieve the access token from the stdout.",
+			},
+
+			"custom_command_token_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ARM_CUSTOM_COMMAND_TOKEN_TYPE", ""),
+				Description: "The type of the access token retrieved by the custom command (empty string indicates type of `Bearer`).",
+			},
+
 			"use_oidc": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -292,6 +308,14 @@ func azureProvider(supportLegacyTestSuite bool) *schema.Provider {
 				Default:     true,
 				DefaultFunc: schema.EnvDefaultFunc("ARM_USE_CLI", true),
 				Description: "Allow Azure CLI to be used for Authentication.",
+			},
+
+			"use_custom_command": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				DefaultFunc: schema.EnvDefaultFunc("ARM_USE_CUSTOM_COMMAND", false),
+				Description: "Allow Custom Command to be used for Authentication.",
 			},
 
 			// Managed Tracking GUID for User-agent
@@ -386,6 +410,7 @@ func providerConfigure(p *schema.Provider) schema.ConfigureContextFunc {
 			enableAzureCli        = d.Get("use_cli").(bool)
 			enableManagedIdentity = d.Get("use_msi").(bool)
 			enableOidc            = d.Get("use_oidc").(bool)
+			enableCustomCommand   = d.Get("use_custom_command").(bool)
 		)
 
 		authConfig := auth.Credentials{
@@ -403,6 +428,9 @@ func providerConfigure(p *schema.Provider) schema.ConfigureContextFunc {
 			GitHubOIDCTokenRequestURL:   d.Get("oidc_request_url").(string),
 			GitHubOIDCTokenRequestToken: d.Get("oidc_request_token").(string),
 
+			CustomCommand:          *utils.ExpandStringSlice(d.Get("custom_command").([]interface{})),
+			CustomCommandTokenType: d.Get("custom_command_token_type").(string),
+
 			CustomManagedIdentityEndpoint: d.Get("msi_endpoint").(string),
 
 			EnableAuthenticatingUsingClientCertificate: true,
@@ -411,6 +439,7 @@ func providerConfigure(p *schema.Provider) schema.ConfigureContextFunc {
 			EnableAuthenticatingUsingManagedIdentity:   enableManagedIdentity,
 			EnableAuthenticationUsingOIDC:              enableOidc,
 			EnableAuthenticationUsingGitHubOIDC:        enableOidc,
+			EnableCustomCommand:                        enableCustomCommand,
 		}
 
 		skipProviderRegistration := d.Get("skip_provider_registration").(bool)
