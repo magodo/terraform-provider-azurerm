@@ -28,6 +28,7 @@ import (
 // For OIDC authentication, specify TenantID, ClientID and OIDCAssertionToken.
 // For GitHub OIDC authentication, specify TenantID, ClientID, GitHubOIDCTokenRequestURL and GitHubOIDCTokenRequestToken.
 // MSI authentication (if enabled) using the Azure Metadata Service is then attempted
+// Access Token authentication (if enabled) using the Access Token is then attempted
 // Azure CLI authentication (if enabled) is attempted last
 //
 // It's recommended to only enable the mechanisms you have configured and are known to work in the execution
@@ -94,7 +95,7 @@ func NewAuthorizerFromCredentials(ctx context.Context, c Credentials, api enviro
 		opts := GitHubOIDCAuthorizerOptions{
 			Api:                 api,
 			AuxiliaryTenantIds:  c.AuxiliaryTenantIDs,
-			ClientId:            c.TenantID,
+			ClientId:            c.ClientID,
 			Environment:         c.Environment,
 			IdTokenRequestUrl:   c.GitHubOIDCTokenRequestURL,
 			IdTokenRequestToken: c.GitHubOIDCTokenRequestToken,
@@ -118,6 +119,21 @@ func NewAuthorizerFromCredentials(ctx context.Context, c Credentials, api enviro
 		a, err := NewManagedIdentityAuthorizer(ctx, opts)
 		if err != nil {
 			return nil, fmt.Errorf("could not configure MSI Authorizer: %s", err)
+		}
+		if a != nil {
+			return a, nil
+		}
+	}
+
+	if c.EnableAccessToken && len(c.AccessTokenMap) != 0 {
+		opts := AccessTokenAuthorizerOptions{
+			Api:                    api,
+			TokenMap:               c.AccessTokenMap,
+			AllowInvalidAuthorizer: c.AccessTokenAllowInvalid,
+		}
+		a, err := NewAccessTokenAuthorizer(ctx, opts)
+		if err != nil {
+			return nil, fmt.Errorf("could not configure Access Token Authorizer: %s", err)
 		}
 		if a != nil {
 			return a, nil

@@ -294,6 +294,22 @@ func azureProvider(supportLegacyTestSuite bool) *schema.Provider {
 				Description: "Allow Azure CLI to be used for Authentication.",
 			},
 
+			// Access Token specific fields
+			"use_access_token": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ARM_USE_ACCESS_TOKEN", false),
+				Description: "Allow Acess Token to be used for Authentication.",
+			},
+			"access_token_map": {
+				Type: schema.TypeMap,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Optional:    true,
+				Description: "The a map of access tokens (JWT) issued by the Microsoft Identity Platform, where the key is the api's name, and the value is the token.",
+			},
+
 			// Managed Tracking GUID for User-agent
 			"partner_id": {
 				Type:         schema.TypeString,
@@ -386,7 +402,13 @@ func providerConfigure(p *schema.Provider) schema.ConfigureContextFunc {
 			enableAzureCli        = d.Get("use_cli").(bool)
 			enableManagedIdentity = d.Get("use_msi").(bool)
 			enableOidc            = d.Get("use_oidc").(bool)
+			enableAccessToken     = d.Get("use_access_token").(bool)
 		)
+
+		accessTokenMap := map[string][]byte{}
+		for k, v := range d.Get("access_token_map").(map[string]interface{}) {
+			accessTokenMap[k] = []byte(v.(string))
+		}
 
 		authConfig := auth.Credentials{
 			Environment:        *env,
@@ -403,6 +425,9 @@ func providerConfigure(p *schema.Provider) schema.ConfigureContextFunc {
 			GitHubOIDCTokenRequestURL:   d.Get("oidc_request_url").(string),
 			GitHubOIDCTokenRequestToken: d.Get("oidc_request_token").(string),
 
+			AccessTokenMap:          accessTokenMap,
+			AccessTokenAllowInvalid: true,
+
 			CustomManagedIdentityEndpoint: d.Get("msi_endpoint").(string),
 
 			EnableAuthenticatingUsingClientCertificate: true,
@@ -411,6 +436,7 @@ func providerConfigure(p *schema.Provider) schema.ConfigureContextFunc {
 			EnableAuthenticatingUsingManagedIdentity:   enableManagedIdentity,
 			EnableAuthenticationUsingOIDC:              enableOidc,
 			EnableAuthenticationUsingGitHubOIDC:        enableOidc,
+			EnableAccessToken:                          enableAccessToken,
 		}
 
 		skipProviderRegistration := d.Get("skip_provider_registration").(bool)
