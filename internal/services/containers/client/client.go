@@ -3,6 +3,7 @@ package client
 import (
 	"github.com/Azure/azure-sdk-for-go/services/preview/containerregistry/mgmt/2021-08-01-preview/containerregistry" // nolint: staticcheck
 	"github.com/Azure/go-autorest/autorest/azure"
+	containerInstance20210901 "github.com/hashicorp/go-azure-sdk/resource-manager/containerinstance/2021-09-01/containerinstance"
 	"github.com/hashicorp/go-azure-sdk/resource-manager/containerinstance/2021-10-01/containerinstance"
 	"github.com/hashicorp/go-azure-sdk/resource-manager/containerservice/2019-08-01/containerservices"
 	"github.com/hashicorp/go-azure-sdk/resource-manager/containerservice/2022-09-02-preview/agentpools"
@@ -15,6 +16,7 @@ type Client struct {
 	AgentPoolsClient                  *agentpools.AgentPoolsClient
 	ContainerRegistryAgentPoolsClient *containerregistry.AgentPoolsClient
 	ContainerInstanceClient           *containerinstance.ContainerInstanceClient
+	ContainerInstanceClient20210901   *containerInstance20210901.ContainerInstanceClient
 	KubernetesClustersClient          *managedclusters.ManagedClustersClient
 	MaintenanceConfigurationsClient   *maintenanceconfigurations.MaintenanceConfigurationsClient
 	RegistriesClient                  *containerregistry.RegistriesClient
