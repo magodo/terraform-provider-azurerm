@@ -311,7 +311,7 @@ resource "azurerm_storage_container" "test" {
   container_access_type = "private"
 
   metadata = {
-    hello = "world"
+    heLLo = "world"
   }
 }
 `, template)
@@ -328,8 +328,8 @@ resource "azurerm_storage_container" "test" {
   container_access_type = "private"
 
   metadata = {
-    hello = "world"
-    panda = "pops"
+    heLLo = "world"
+    PaNdA = "pOpS"
   }
 }
 `, template)
