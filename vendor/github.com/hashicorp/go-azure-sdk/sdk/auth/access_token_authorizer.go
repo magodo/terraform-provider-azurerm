@@ -86,6 +86,8 @@ func (a *AccessTokenAuthorizer) Token(_ context.Context, _ *http.Request) (*oaut
 
 // AuxiliaryTokens returns additional tokens for auxiliary tenant IDs, for use in multi-tenant scenarios
 func (a *AccessTokenAuthorizer) AuxiliaryTokens(_ context.Context, _ *http.Request) ([]*oauth2.Token, error) {
+	// We are not returning error, but nil auxiliary tokens here since this method is always called.
+	// See: https://github.com/manicminer/hamilton-autorest/blob/2e25d83affaf261180cad1156d2a8f30fe5e8a0a/auth/auth.go#L33
 	return nil, nil
 }
 
@@ -101,7 +103,9 @@ func (a *invalidAccessTokenAuthorizer) AuxiliaryTokens(_ context.Context, _ *htt
 	return nil, a.err
 }
 
-// tokenRefreshError is an internal type that implements adal.TokenRefreshError. This is the type of the returned error of the (Invalid)AccessTokenAuthorizer, so that these kinds of errors won't be retried (as it will always fail).
+// tokenRefreshError is an internal type that implements adal.TokenRefreshError.
+// This is the type of the returned error of the (Invalid)AccessTokenAuthorizer, so that these kinds of errors won't be retried (as it will always fail).
+// See: https://github.com/Azure/go-autorest/blob/9038e4a609b1899f0eb382d03c3e823b70537125/autorest/sender.go#L331
 type tokenRefreshError struct {
 	err error
 }
