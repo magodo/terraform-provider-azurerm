@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 
@@ -57,6 +58,8 @@ type ClientOptions struct {
 	ResourceManagerAuthorizer autorest.Authorizer
 	StorageAuthorizer         autorest.Authorizer
 	SynapseAuthorizer         autorest.Authorizer
+
+	CustomHeader http.Header
 }
 
 // Configure set up a resourcemanager.Client using an auth.Authorizer from hashicorp/go-azure-sdk
@@ -73,6 +76,18 @@ func (o ClientOptions) Configure(c *resourcemanager.Client, authorizer auth.Auth
 		requestMiddlewares = append(requestMiddlewares, correlationRequestIDMiddleware(id))
 	}
 	requestMiddlewares = append(requestMiddlewares, requestLoggerMiddleware("AzureRM"))
+
+	if len(o.CustomHeader) != 0 {
+		requestMiddlewares = append(requestMiddlewares, func(request *http.Request) (*http.Request, error) {
+			for k, vv := range o.CustomHeader {
+				for _, v := range vv {
+					request.Header.Add(k, v)
+				}
+			}
+			return request, nil
+		})
+	}
+
 	c.RequestMiddlewares = &requestMiddlewares
 
 	c.ResponseMiddlewares = &[]client.ResponseMiddleware{
@@ -93,6 +108,22 @@ func (o ClientOptions) ConfigureClient(c *autorest.Client, authorizer autorest.A
 			id = correlationRequestID()
 		}
 		c.RequestInspector = withCorrelationRequestID(id)
+	}
+
+	c.SendDecorators = []autorest.SendDecorator{
+		func(s autorest.Sender) autorest.Sender {
+			return autorest.SenderFunc(func(r *http.Request) (resp *http.Response, err error) {
+				if r.Header == nil {
+					r.Header = http.Header{}
+				}
+				for k, vv := range o.CustomHeader {
+					for _, v := range vv {
+						r.Header.Add(k, v)
+					}
+				}
+				return s.Do(r)
+			})
+		},
 	}
 }
 
