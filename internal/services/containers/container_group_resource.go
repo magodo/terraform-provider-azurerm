@@ -58,6 +58,14 @@ func resourceContainerGroup() *pluginsdk.Resource {
 
 			"resource_group_name": commonschema.ResourceGroupName(),
 
+			"sku": {
+				Type:         pluginsdk.TypeString,
+				ForceNew:     true,
+				Optional:     true,
+				Default:      containerinstance.ContainerGroupSkuStandard,
+				ValidateFunc: validation.StringInSlice(containerinstance.PossibleValuesForContainerGroupSku(), false),
+			},
+
 			"ip_address_type": {
 				Type:     pluginsdk.TypeString,
 				Optional: true,
@@ -261,6 +269,7 @@ func resourceContainerGroup() *pluginsdk.Resource {
 					},
 				},
 			},
+
 			"container": {
 				Type:     pluginsdk.TypeList,
 				Required: true,
@@ -427,6 +436,8 @@ func resourceContainerGroup() *pluginsdk.Resource {
 						"liveness_probe": SchemaContainerGroupProbe(),
 
 						"readiness_probe": SchemaContainerGroupProbe(),
+
+						"security_context": containerSecurityContextSchema(),
 					},
 				},
 			},
@@ -641,6 +652,66 @@ func containerVolumeSchema() *pluginsdk.Schema {
 	}
 }
 
+func containerSecurityContextSchema() *pluginsdk.Schema {
+	return &pluginsdk.Schema{
+		Type:     pluginsdk.TypeList,
+		Optional: true,
+		MaxItems: 1,
+		Elem: &pluginsdk.Resource{
+			Schema: map[string]*pluginsdk.Schema{
+				"privilege_enabled": {
+					Type:     pluginsdk.TypeBool,
+					Optional: true,
+				},
+				"privilege_escalation_allowed": {
+					Type:     pluginsdk.TypeBool,
+					Optional: true,
+				},
+				"gid": {
+					Type:         pluginsdk.TypeInt,
+					Optional:     true,
+					ValidateFunc: validation.IntAtLeast(0),
+				},
+				"uid": {
+					Type:         pluginsdk.TypeInt,
+					Optional:     true,
+					ValidateFunc: validation.IntAtLeast(0),
+				},
+				"seccomp_profile_base64": {
+					Type:         pluginsdk.TypeString,
+					Optional:     true,
+					ValidateFunc: validation.StringIsNotEmpty,
+				},
+				"capability": {
+					Type:     pluginsdk.TypeList,
+					MaxItems: 1,
+					Optional: true,
+					Elem: &pluginsdk.Resource{
+						Schema: map[string]*pluginsdk.Schema{
+							"add": {
+								Type:     pluginsdk.TypeList,
+								Optional: true,
+								Elem: &pluginsdk.Schema{
+									Type:         pluginsdk.TypeString,
+									ValidateFunc: validation.StringIsNotEmpty,
+								},
+							},
+							"drop": {
+								Type:     pluginsdk.TypeList,
+								Optional: true,
+								Elem: &pluginsdk.Schema{
+									Type:         pluginsdk.TypeString,
+									ValidateFunc: validation.StringIsNotEmpty,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func resourceContainerGroupCreate(d *pluginsdk.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client).Containers.ContainerInstanceClient
 	subscriptionId := meta.(*clients.Client).Account.SubscriptionId
@@ -697,6 +768,7 @@ func resourceContainerGroupCreate(d *pluginsdk.ResourceData, meta interface{}) e
 		Location: &location,
 		Tags:     tags.Expand(d.Get("tags").(map[string]interface{})),
 		Properties: containerinstance.ContainerGroupPropertiesProperties{
+			Sku:                      pointer.To(containerinstance.ContainerGroupSku(d.Get("sku").(string))),
 			InitContainers:           initContainers,
 			Containers:               containers,
 			Diagnostics:              diagnostics,
@@ -830,6 +902,13 @@ func resourceContainerGroupRead(d *pluginsdk.ResourceData, meta interface{}) err
 		d.Set("zones", zones.FlattenUntyped(model.Zones))
 
 		props := model.Properties
+
+		sku := ""
+		if props.Sku != nil {
+			sku = string(*props.Sku)
+		}
+		d.Set("sku", sku)
+
 		containerConfigs := flattenContainerGroupContainers(d, &props.Containers, props.Volumes)
 		if err := d.Set("container", containerConfigs); err != nil {
 			return fmt.Errorf("setting `container`: %+v", err)
@@ -1071,6 +1150,7 @@ func expandContainerGroupContainers(d *pluginsdk.ResourceData, addedEmptyDirs ma
 						Cpu:        cpu,
 					},
 				},
+				SecurityContext: expandContainerGroupSecurityContext(d.Get("security_context").([]interface{})),
 			},
 		}
 
@@ -1678,6 +1758,8 @@ func flattenContainerGroupContainers(d *pluginsdk.ResourceData, containers *[]co
 		containerConfig["liveness_probe"] = flattenContainerProbes(container.Properties.LivenessProbe)
 		containerConfig["readiness_probe"] = flattenContainerProbes(container.Properties.ReadinessProbe)
 
+		containerConfig["security_context"] = flattenContainerGroupSecurityContext(container.Properties.SecurityContext)
+
 		containerCfg = append(containerCfg, containerConfig)
 	}
 
@@ -2036,4 +2118,86 @@ func expandContainerGroupSubnets(input []interface{}) (*[]containerinstance.Cont
 		})
 	}
 	return &results, nil
+}
+
+func expandContainerGroupSecurityContext(input []interface{}) *containerinstance.SecurityContextDefinition {
+	if len(input) == 0 || input[0] == nil {
+		return nil
+	}
+	raw := input[0].(map[string]interface{})
+	output := &containerinstance.SecurityContextDefinition{
+		Privileged:               pointer.To(raw["privilege_enabled"].(bool)),
+		AllowPrivilegeEscalation: pointer.To(raw["privilege_escalation_allowed"].(bool)),
+		Capabilities:             expandContainerGroupSecurityContextCapabilities(raw["capabilitiy"].([]interface{})),
+		RunAsGroup:               pointer.To(int64(raw["gid"].(int))),
+		RunAsUser:                pointer.To(int64(raw["uid"].(int))),
+		SeccompProfile:           pointer.To(raw["seccomp_profile_base64"].(string)),
+	}
+	return output
+}
+
+func flattenContainerGroupSecurityContext(input *containerinstance.SecurityContextDefinition) []interface{} {
+	if input == nil {
+		return []interface{}{}
+	}
+
+	var privilegeEnabled bool
+	if input.Privileged != nil {
+		privilegeEnabled = *input.Privileged
+	}
+
+	var privilegeEscalationAllowed bool
+	if input.AllowPrivilegeEscalation != nil {
+		privilegeEscalationAllowed = *input.AllowPrivilegeEscalation
+	}
+
+	var gid int
+	if input.RunAsGroup != nil {
+		gid = int(*input.RunAsGroup)
+	}
+
+	var uid int
+	if input.RunAsUser != nil {
+		uid = int(*input.RunAsUser)
+	}
+
+	var seccompProfile string
+	if input.SeccompProfile != nil {
+		seccompProfile = *input.SeccompProfile
+	}
+
+	return []interface{}{
+		map[string]interface{}{
+			"privilege_enabled":            privilegeEnabled,
+			"privilege_escalation_allowed": privilegeEscalationAllowed,
+			"capability":                   flattenContainerGroupSecurityContextCapabilities(input.Capabilities),
+			"gid":                          gid,
+			"uid":                          uid,
+			"seccomp_profile_base64":       seccompProfile,
+		},
+	}
+}
+
+func expandContainerGroupSecurityContextCapabilities(input []interface{}) *containerinstance.SecurityContextCapabilitiesDefinition {
+	if len(input) == 0 || input[0] == nil {
+		return nil
+	}
+	raw := input[0].(map[string]interface{})
+	output := &containerinstance.SecurityContextCapabilitiesDefinition{
+		Add:  utils.ExpandStringSlice(raw["add"].([]interface{})),
+		Drop: utils.ExpandStringSlice(raw["drop"].([]interface{})),
+	}
+	return output
+}
+
+func flattenContainerGroupSecurityContextCapabilities(input *containerinstance.SecurityContextCapabilitiesDefinition) []interface{} {
+	if input == nil {
+		return []interface{}{}
+	}
+	return []interface{}{
+		map[string]interface{}{
+			"add":  utils.FlattenStringSlice(input.Add),
+			"drop": utils.FlattenStringSlice(input.Drop),
+		},
+	}
 }
