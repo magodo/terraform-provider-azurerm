@@ -10,16 +10,13 @@ import (
 	"log"
 	"os"
 	"strings"
-	"time"
 
-	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonids"
 	"github.com/hashicorp/go-azure-sdk/sdk/auth"
 	"github.com/hashicorp/go-azure-sdk/sdk/environments"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
-	"github.com/hashicorp/terraform-provider-azurerm/internal/resourceproviders"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/sdk"
 	"github.com/hashicorp/terraform-provider-azurerm/utils"
 )
@@ -482,17 +479,6 @@ func buildClient(ctx context.Context, p *schema.Provider, d *schema.ResourceData
 	}
 
 	client.StopContext = stopCtx
-
-	if !skipProviderRegistration {
-		subscriptionId := commonids.NewSubscriptionID(client.Account.SubscriptionId)
-		requiredResourceProviders := resourceproviders.Required()
-		ctx2, cancel := context.WithTimeout(ctx, 30*time.Minute)
-		defer cancel()
-
-		if err := resourceproviders.EnsureRegistered(ctx2, client.Resource.ResourceProvidersClient, subscriptionId, requiredResourceProviders); err != nil {
-			return nil, diag.Errorf(resourceProviderRegistrationErrorFmt, err)
-		}
-	}
 
 	return client, nil
 }
