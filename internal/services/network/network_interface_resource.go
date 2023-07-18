@@ -15,7 +15,6 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/helpers/tf"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/locks"
-	lbvalidate "github.com/hashicorp/terraform-provider-azurerm/internal/services/loadbalancer/validate"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/network/parse"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/network/validate"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tags"
@@ -115,10 +114,9 @@ func resourceNetworkInterface() *pluginsdk.Resource {
 						},
 
 						"gateway_load_balancer_frontend_ip_configuration_id": {
-							Type:         pluginsdk.TypeString,
-							Optional:     true,
-							Computed:     true,
-							ValidateFunc: lbvalidate.LoadBalancerFrontendIpConfigurationID,
+							Type:     pluginsdk.TypeString,
+							Optional: true,
+							Computed: true,
 						},
 					},
 				},

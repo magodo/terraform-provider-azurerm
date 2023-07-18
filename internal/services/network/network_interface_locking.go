@@ -5,7 +5,6 @@ package network
 
 import (
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonids"
-	"github.com/hashicorp/terraform-provider-azurerm/internal/locks"
 	"github.com/hashicorp/terraform-provider-azurerm/utils"
 	"github.com/tombuildsstuff/kermit/sdk/network/2022-07-01/network"
 )
@@ -16,13 +15,9 @@ type networkInterfaceIPConfigurationLockingDetails struct {
 }
 
 func (details networkInterfaceIPConfigurationLockingDetails) lock() {
-	locks.MultipleByName(&details.virtualNetworkNamesToLock, VirtualNetworkResourceName)
-	locks.MultipleByName(&details.subnetNamesToLock, SubnetResourceName)
 }
 
 func (details networkInterfaceIPConfigurationLockingDetails) unlock() {
-	locks.UnlockMultipleByName(&details.subnetNamesToLock, SubnetResourceName)
-	locks.UnlockMultipleByName(&details.virtualNetworkNamesToLock, VirtualNetworkResourceName)
 }
 
 func determineResourcesToLockFromIPConfiguration(input *[]network.InterfaceIPConfiguration) (*networkInterfaceIPConfigurationLockingDetails, error) {
