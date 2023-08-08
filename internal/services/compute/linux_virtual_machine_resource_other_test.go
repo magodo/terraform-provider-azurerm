@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package compute_test
 
 import (
@@ -7,7 +10,7 @@ import (
 
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance/check"
-	"github.com/tombuildsstuff/kermit/sdk/compute/2022-08-01/compute"
+	"github.com/tombuildsstuff/kermit/sdk/compute/2023-03-01/compute"
 )
 
 func TestAccLinuxVirtualMachine_otherAllowExtensionOperationsDefault(t *testing.T) {
@@ -822,6 +825,79 @@ func TestAccLinuxVirtualMachine_otherPatchAssessmentModeUpdate(t *testing.T) {
 	})
 }
 
+func TestAccLinuxVirtualMachine_otherBypassPlatformSafetyChecksOnUserSchedule(t *testing.T) {
+	data := acceptance.BuildTestData(t, "azurerm_linux_virtual_machine", "test")
+	r := LinuxVirtualMachineResource{}
+
+	data.ResourceTest(t, r, []acceptance.TestStep{
+		{
+			Config: r.otherBypassPlatformSafetyChecksOnUserSchedule(data, false),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+				check.That(data.ResourceName).Key("bypass_platform_safety_checks_on_user_schedule_enabled").HasValue("false"),
+			),
+		},
+		data.ImportStep(),
+		{
+			Config: r.otherBypassPlatformSafetyChecksOnUserSchedule(data, true),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep(),
+		{
+			Config: r.otherBypassPlatformSafetyChecksOnUserScheduleRemoved(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep(),
+		{
+			Config: r.otherBypassPlatformSafetyChecksOnUserSchedule(data, true),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep(),
+	})
+}
+
+func TestAccLinuxVirtualMachine_otherRebootSetting(t *testing.T) {
+	data := acceptance.BuildTestData(t, "azurerm_linux_virtual_machine", "test")
+	r := LinuxVirtualMachineResource{}
+
+	data.ResourceTest(t, r, []acceptance.TestStep{
+		{
+			Config: r.otherRebootSetting(data, "Always"),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep(),
+		{
+			Config: r.otherRebootSetting(data, "IfRequired"),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep(),
+		{
+			Config: r.otherRebootSettingRemoved(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep(),
+		{
+			Config: r.otherRebootSetting(data, "Never"),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep(),
+	})
+}
+
 func (r LinuxVirtualMachineResource) otherPatchMode(data acceptance.TestData, patchMode string) string {
 	return fmt.Sprintf(`
 %s
@@ -1373,12 +1449,45 @@ func (r LinuxVirtualMachineResource) otherEdgeZone(data acceptance.TestData) str
 	return fmt.Sprintf(`
 %[1]s
 
+resource "azurerm_resource_group" "test" {
+  name     = "acctestRG-%[3]d"
+  location = "%[2]s"
+}
+
 data "azurerm_extended_locations" "test" {
   location = azurerm_resource_group.test.location
 }
 
+resource "azurerm_virtual_network" "test" {
+  name                = "acctestnw-%[3]d"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.test.location
+  edge_zone           = data.azurerm_extended_locations.test.extended_locations[0]
+  resource_group_name = azurerm_resource_group.test.name
+}
+
+resource "azurerm_subnet" "test" {
+  name                 = "internal"
+  resource_group_name  = azurerm_resource_group.test.name
+  virtual_network_name = azurerm_virtual_network.test.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
+
+resource "azurerm_network_interface" "test" {
+  name                = "acctestnic-%[3]d"
+  location            = azurerm_resource_group.test.location
+  edge_zone           = data.azurerm_extended_locations.test.extended_locations[0]
+  resource_group_name = azurerm_resource_group.test.name
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.test.id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
 resource "azurerm_linux_virtual_machine" "test" {
-  name                = "acctestVM-%[2]d"
+  name                = "acctestVM-%[3]d"
   resource_group_name = azurerm_resource_group.test.name
   location            = azurerm_resource_group.test.location
   size                = "Standard_D2s_v3" # intentional for premium/edgezones
@@ -1406,7 +1515,7 @@ resource "azurerm_linux_virtual_machine" "test" {
     version   = "latest"
   }
 }
-`, r.otherBootDiagnosticsTemplate(data), data.RandomInteger)
+`, r.templateBasePublicKey(), data.Locations.Primary, data.RandomInteger)
 }
 
 func (r LinuxVirtualMachineResource) otherGalleryApplication(data acceptance.TestData) string {
@@ -2602,6 +2711,152 @@ resource "azurerm_linux_virtual_machine" "test" {
   }
 
   vtpm_enabled = true
+}
+`, r.template(data), data.RandomInteger)
+}
+
+func (r LinuxVirtualMachineResource) otherBypassPlatformSafetyChecksOnUserSchedule(data acceptance.TestData, enabled bool) string {
+	return fmt.Sprintf(`
+%s
+
+resource "azurerm_linux_virtual_machine" "test" {
+  name                = "acctestVM-%d"
+  resource_group_name = azurerm_resource_group.test.name
+  location            = azurerm_resource_group.test.location
+  size                = "Standard_F2"
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.test.id,
+  ]
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = local.first_public_key
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+
+  patch_mode                                             = "AutomaticByPlatform"
+  bypass_platform_safety_checks_on_user_schedule_enabled = %t
+}
+`, r.template(data), data.RandomInteger, enabled)
+}
+
+func (r LinuxVirtualMachineResource) otherBypassPlatformSafetyChecksOnUserScheduleRemoved(data acceptance.TestData) string {
+	return fmt.Sprintf(`
+%s
+
+resource "azurerm_linux_virtual_machine" "test" {
+  name                = "acctestVM-%d"
+  resource_group_name = azurerm_resource_group.test.name
+  location            = azurerm_resource_group.test.location
+  size                = "Standard_F2"
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.test.id,
+  ]
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = local.first_public_key
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+
+  patch_mode = "ImageDefault"
+}
+`, r.template(data), data.RandomInteger)
+}
+
+func (r LinuxVirtualMachineResource) otherRebootSetting(data acceptance.TestData, rebootSetting string) string {
+	return fmt.Sprintf(`
+%s
+
+resource "azurerm_linux_virtual_machine" "test" {
+  name                = "acctestVM-%d"
+  resource_group_name = azurerm_resource_group.test.name
+  location            = azurerm_resource_group.test.location
+  size                = "Standard_F2"
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.test.id,
+  ]
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = local.first_public_key
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+
+  patch_mode     = "AutomaticByPlatform"
+  reboot_setting = "%s"
+}
+`, r.template(data), data.RandomInteger, rebootSetting)
+}
+
+func (r LinuxVirtualMachineResource) otherRebootSettingRemoved(data acceptance.TestData) string {
+	return fmt.Sprintf(`
+%s
+
+resource "azurerm_linux_virtual_machine" "test" {
+  name                = "acctestVM-%d"
+  resource_group_name = azurerm_resource_group.test.name
+  location            = azurerm_resource_group.test.location
+  size                = "Standard_F2"
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.test.id,
+  ]
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = local.first_public_key
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+
+  patch_mode = "ImageDefault"
 }
 `, r.template(data), data.RandomInteger)
 }

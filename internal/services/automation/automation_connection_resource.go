@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package automation
 
 import (
@@ -8,8 +11,8 @@ import (
 
 	"github.com/hashicorp/go-azure-helpers/lang/response"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonschema"
-	"github.com/hashicorp/go-azure-sdk/resource-manager/automation/2020-01-13-preview/connection"
-	"github.com/hashicorp/go-azure-sdk/resource-manager/automation/2020-01-13-preview/connectiontype"
+	"github.com/hashicorp/go-azure-sdk/resource-manager/automation/2022-08-08/connection"
+	"github.com/hashicorp/go-azure-sdk/resource-manager/automation/2022-08-08/connectiontype"
 	"github.com/hashicorp/terraform-provider-azurerm/helpers/tf"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/automation/validate"
@@ -174,7 +177,7 @@ func resourceAutomationConnectionRead(d *pluginsdk.ResourceData, meta interface{
 			}
 
 			if props.FieldDefinitionValues != nil {
-				if err := d.Set("values", *props.FieldDefinitionValues); err != nil {
+				if err := d.Set("values", props.FieldDefinitionValues); err != nil {
 					return fmt.Errorf("setting `values`: %+v", err)
 				}
 			}

@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package monitor
 
 import (
@@ -208,6 +211,7 @@ func (r ScheduledQueryRulesAlertV2Resource) Arguments() map[string]*pluginsdk.Sc
 			},
 		},
 
+		// lintignore:S013
 		"evaluation_frequency": {
 			Type: pluginsdk.TypeString,
 			// this field is required, missing this field will get an error from service

@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package common
 
 import (
@@ -21,6 +24,7 @@ import (
 type Authorizers struct {
 	BatchManagement auth.Authorizer
 	KeyVault        auth.Authorizer
+	ManagedHSM      auth.Authorizer
 	ResourceManager auth.Authorizer
 	Storage         auth.Authorizer
 	Synapse         auth.Authorizer
@@ -53,8 +57,10 @@ type ClientOptions struct {
 	ResourceManagerEndpoint string
 
 	// Legacy authorizers for go-autorest
+	AttestationAuthorizer     autorest.Authorizer
 	BatchManagementAuthorizer autorest.Authorizer
 	KeyVaultAuthorizer        autorest.Authorizer
+	ManagedHSMAuthorizer      autorest.Authorizer
 	ResourceManagerAuthorizer autorest.Authorizer
 	StorageAuthorizer         autorest.Authorizer
 	SynapseAuthorizer         autorest.Authorizer

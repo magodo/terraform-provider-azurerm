@@ -251,6 +251,27 @@ The `certificate` block supports the following:
 * `contents` - (Required) The base64-encoded certificate contents.
 * `password` - (Optional) The password associated with the certificate.
 
+~> **NOTE:** A PEM certificate is already base64 encoded. To successfully import, the `contents` property should include a PEM encoded X509 certificate and a private_key in pkcs8 format. There should only be linux style `\n` line endings and the whole block should have the PEM begin/end blocks around the certificate data and the private key data.
+
+To convert a private key to pkcs8 format with openssl use:
+```shell
+openssl pkcs8 -topk8 -nocrypt -in private_key.pem > private_key_pk8.pem
+```
+
+The PEM content should look something like:
+```text
+-----BEGIN CERTIFICATE-----
+aGVsbG8KaGVsbG8KaGVsbG8KaGVsbG8KaGVsbG8KaGVsbG8KaGVsbG8KaGVsbG8K
+:
+aGVsbG8KaGVsbG8KaGVsbG8KaGVsbG8KaGVsbG8KaGVsbG8KaGVsbG8KaGVsbG8K
+-----END CERTIFICATE-----
+-----BEGIN PRIVATE KEY-----
+d29ybGQKd29ybGQKd29ybGQKd29ybGQKd29ybGQKd29ybGQKd29ybGQKd29ybGQK
+:
+d29ybGQKd29ybGQKd29ybGQKd29ybGQKd29ybGQKd29ybGQKd29ybGQKd29ybGQK
+-----END PRIVATE KEY-----
+```
+
 ---
 
 The `certificate_policy` block supports the following:
@@ -323,7 +344,7 @@ The `subject_alternative_names` block supports the following:
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to the Arguments listed above - the following Attributes are exported:
 
 * `id` - The Key Vault Certificate ID.
 * `secret_id` - The ID of the associated Key Vault Secret.
@@ -334,6 +355,10 @@ The following attributes are exported:
 * `certificate_data_base64` - The Base64 encoded Key Vault Certificate data.
 * `thumbprint` - The X509 Thumbprint of the Key Vault Certificate represented as a hexadecimal string.
 * `certificate_attribute` - A `certificate_attribute` block as defined below.
+ 
+* `resource_manager_id` - The (Versioned) ID for this Key Vault Certificate. This property points to a specific version of a Key Vault Certificate, as such using this won't auto-rotate values if used in other Azure Services.
+
+* `resource_manager_versionless_id` - The Versionless ID of the Key Vault Certificate. This property allows other Azure Services (that support it) to auto-rotate their value when the Key Vault Certificate is updated.
 
 ---
 

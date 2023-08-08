@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package postgres
 
 import (
@@ -8,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/go-azure-helpers/lang/pointer"
 	"github.com/hashicorp/go-azure-helpers/lang/response"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonids"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonschema"
@@ -15,12 +19,11 @@ import (
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/location"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/tags"
 	"github.com/hashicorp/go-azure-sdk/resource-manager/postgresql/2021-06-01/serverrestart"
-	"github.com/hashicorp/go-azure-sdk/resource-manager/postgresql/2022-12-01/servers"
-	"github.com/hashicorp/go-azure-sdk/resource-manager/privatedns/2018-09-01/privatezones"
+	"github.com/hashicorp/go-azure-sdk/resource-manager/postgresql/2023-03-01-preview/servers"
+	"github.com/hashicorp/go-azure-sdk/resource-manager/privatedns/2020-06-01/privatezones"
 	"github.com/hashicorp/terraform-provider-azurerm/helpers/tf"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
 	keyVaultValidate "github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/validate"
-	networkValidate "github.com/hashicorp/terraform-provider-azurerm/internal/services/network/validate"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/postgres/validate"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/validation"
@@ -120,7 +123,7 @@ func resourcePostgresqlFlexibleServer() *pluginsdk.Resource {
 				Type:         pluginsdk.TypeInt,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validation.IntInSlice([]int{32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216}),
+				ValidateFunc: validation.IntInSlice([]int{32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216, 33553408}),
 			},
 
 			"version": {
@@ -147,7 +150,7 @@ func resourcePostgresqlFlexibleServer() *pluginsdk.Resource {
 				Type:         pluginsdk.TypeString,
 				Optional:     true,
 				ForceNew:     true,
-				ValidateFunc: networkValidate.SubnetID,
+				ValidateFunc: commonids.ValidateSubnetID,
 			},
 
 			"private_dns_zone_id": {
@@ -257,7 +260,7 @@ func resourcePostgresqlFlexibleServer() *pluginsdk.Resource {
 				}, false),
 			},
 
-			"identity": commonschema.SystemAssignedUserAssignedIdentityOptional(),
+			"identity": commonschema.UserAssignedIdentityOptional(),
 
 			"customer_managed_key": {
 				Type:     pluginsdk.TypeList,
@@ -276,6 +279,20 @@ func resourcePostgresqlFlexibleServer() *pluginsdk.Resource {
 							},
 						},
 						"primary_user_assigned_identity_id": {
+							Type:         pluginsdk.TypeString,
+							Optional:     true,
+							ValidateFunc: commonids.ValidateUserAssignedIdentityID,
+						},
+						"geo_backup_key_vault_key_id": {
+							Type:         pluginsdk.TypeString,
+							Optional:     true,
+							ValidateFunc: keyVaultValidate.NestedItemIdWithOptionalVersion,
+							RequiredWith: []string{
+								"identity",
+								"customer_managed_key.0.geo_backup_user_assigned_identity_id",
+							},
+						},
+						"geo_backup_user_assigned_identity_id": {
 							Type:         pluginsdk.TypeString,
 							Optional:     true,
 							ValidateFunc: commonids.ValidateUserAssignedIdentityID,
@@ -387,7 +404,7 @@ func resourcePostgresqlFlexibleServerCreate(d *pluginsdk.ResourceData, meta inte
 				return fmt.Errorf("`administrator_password` is required when `create_mode` is `Default` and `authentication.password_auth_enabled` is set to `true`")
 			}
 		} else if adminLoginSet || adminPwdSet {
-			return fmt.Errorf("`administrator_login` and `administrator_password` cannot be set when `authentication.password_auth_enabled` is set to `false`")
+			return fmt.Errorf("`administrator_login` and `administrator_password` cannot be set during creation when `authentication.password_auth_enabled` is set to `false`")
 		}
 
 		if _, ok := d.GetOk("sku_name"); !ok {
@@ -451,7 +468,7 @@ func resourcePostgresqlFlexibleServerCreate(d *pluginsdk.ResourceData, meta inte
 		if err != nil {
 			return fmt.Errorf("unable to parse `point_in_time_restore_time_in_utc` value")
 		}
-		parameters.Properties.PointInTimeUTC = utils.String(v.Format(time.RFC3339))
+		parameters.Properties.SetPointInTimeUTCAsTime(v)
 	}
 
 	if authRaw, ok := d.GetOk("authentication"); ok {
@@ -459,7 +476,7 @@ func resourcePostgresqlFlexibleServerCreate(d *pluginsdk.ResourceData, meta inte
 		parameters.Properties.AuthConfig = authConfig
 	}
 
-	identity, err := expandFlexibleServerIdentity(d.Get("identity").([]interface{}))
+	identity, err := identity.ExpandUserAssignedMap(d.Get("identity").([]interface{}))
 	if err != nil {
 		return fmt.Errorf("expanding `identity`")
 	}
@@ -520,7 +537,7 @@ func resourcePostgresqlFlexibleServerRead(d *pluginsdk.ResourceData, meta interf
 		if props := model.Properties; props != nil {
 			d.Set("administrator_login", props.AdministratorLogin) // if pwdEnabled is set to false, then the service does not return the value of AdministratorLogin
 			d.Set("zone", props.AvailabilityZone)
-			d.Set("version", props.Version)
+			d.Set("version", pointer.From(props.Version))
 			d.Set("fqdn", props.FullyQualifiedDomainName)
 
 			// Currently, `replicationRole` is set to `Primary` when `createMode` is `Replica` and `replicationRole` is updated to `None`. Service team confirmed it should be set to `None` for this scenario. See more details from https://github.com/Azure/azure-rest-api-specs/issues/22499
@@ -570,11 +587,11 @@ func resourcePostgresqlFlexibleServerRead(d *pluginsdk.ResourceData, meta interf
 				return fmt.Errorf("setting `customer_managed_key`: %+v", err)
 			}
 
-			id, err := flattenFlexibleServerIdentity(model.Identity)
+			identity, err := identity.FlattenUserAssignedMap(model.Identity)
 			if err != nil {
 				return fmt.Errorf("flattening `identity`: %+v", err)
 			}
-			if err := d.Set("identity", id); err != nil {
+			if err := d.Set("identity", identity); err != nil {
 				return fmt.Errorf("setting `identity`: %+v", err)
 			}
 		}
@@ -629,12 +646,13 @@ func resourcePostgresqlFlexibleServerUpdate(d *pluginsdk.ResourceData, meta inte
 			if !adminPwdSet {
 				return fmt.Errorf("`administrator_password` is required when `authentication.password_auth_enabled` is set to `true`")
 			}
-		} else if adminLoginSet || adminPwdSet {
-			return fmt.Errorf("`administrator_login` and `administrator_password` cannot be set when `authentication.password_auth_enabled` is set to `false`")
 		}
 
 		if d.HasChange("administrator_login") {
 			requireUpdateOnLogin = true
+			if adminLoginSet && !pwdEnabled {
+				return fmt.Errorf("when `administrator_login` is first set, `authentication.password_auth_enabled` must be set to `true`")
+			}
 		}
 	}
 
@@ -706,7 +724,16 @@ func resourcePostgresqlFlexibleServerUpdate(d *pluginsdk.ResourceData, meta inte
 	}
 
 	if d.HasChange("storage_mb") {
-		parameters.Properties.Storage = expandArmServerStorage(d)
+		// TODO remove the additional update after https://github.com/Azure/azure-rest-api-specs/issues/22867 is fixed
+		storageUpdateParameters := servers.ServerForUpdate{
+			Properties: &servers.ServerPropertiesForUpdate{
+				Storage: expandArmServerStorage(d),
+			},
+		}
+
+		if err := client.UpdateThenPoll(ctx, *id, storageUpdateParameters); err != nil {
+			return fmt.Errorf("updating `storage_mb` for %s: %+v", *id, err)
+		}
 	}
 
 	if d.HasChange("backup_retention_days") {
@@ -738,9 +765,9 @@ func resourcePostgresqlFlexibleServerUpdate(d *pluginsdk.ResourceData, meta inte
 	}
 
 	if d.HasChange("identity") {
-		identity, err := expandFlexibleServerIdentity(d.Get("identity").([]interface{}))
+		identity, err := identity.ExpandUserAssignedMap(d.Get("identity").([]interface{}))
 		if err != nil {
-			return fmt.Errorf("expanding `identity` for Mysql Flexible Server %s (Resource Group %q): %v", id.FlexibleServerName, id.ResourceGroupName, err)
+			return fmt.Errorf("expanding `identity` for %s: %+v", *id, err)
 		}
 		parameters.Identity = identity
 	}
@@ -1047,9 +1074,23 @@ func expandFlexibleServerDataEncryption(input []interface{}) *servers.DataEncryp
 
 	det := servers.ArmServerKeyTypeAzureKeyVault
 	dataEncryption := servers.DataEncryption{
-		Type:                          &det,
-		PrimaryKeyURI:                 utils.String(v["key_vault_key_id"].(string)),
-		PrimaryUserAssignedIdentityId: utils.String(v["primary_user_assigned_identity_id"].(string)),
+		Type: &det,
+	}
+
+	if keyVaultKeyId := v["key_vault_key_id"].(string); keyVaultKeyId != "" {
+		dataEncryption.PrimaryKeyURI = utils.String(keyVaultKeyId)
+	}
+
+	if primaryUserAssignedIdentityId := v["primary_user_assigned_identity_id"].(string); primaryUserAssignedIdentityId != "" {
+		dataEncryption.PrimaryUserAssignedIdentityId = utils.String(primaryUserAssignedIdentityId)
+	}
+
+	if geoBackupKeyVaultKeyId := v["geo_backup_key_vault_key_id"].(string); geoBackupKeyVaultKeyId != "" {
+		dataEncryption.GeoBackupKeyURI = utils.String(geoBackupKeyVaultKeyId)
+	}
+
+	if geoBackupUserAssignedIdentityId := v["geo_backup_user_assigned_identity_id"].(string); geoBackupUserAssignedIdentityId != "" {
+		dataEncryption.GeoBackupUserAssignedIdentityId = utils.String(geoBackupUserAssignedIdentityId)
 	}
 
 	return &dataEncryption
@@ -1072,42 +1113,16 @@ func flattenFlexibleServerDataEncryption(de *servers.DataEncryption) ([]interfac
 		item["primary_user_assigned_identity_id"] = parsed.ID()
 	}
 
+	if de.GeoBackupKeyURI != nil {
+		item["geo_backup_key_vault_key_id"] = *de.GeoBackupKeyURI
+	}
+	if identity := de.GeoBackupUserAssignedIdentityId; identity != nil {
+		parsed, err := commonids.ParseUserAssignedIdentityIDInsensitively(*identity)
+		if err != nil {
+			return nil, fmt.Errorf("parsing %q: %+v", *identity, err)
+		}
+		item["geo_backup_user_assigned_identity_id"] = parsed.ID()
+	}
+
 	return []interface{}{item}, nil
-}
-
-func expandFlexibleServerIdentity(input []interface{}) (*servers.UserAssignedIdentity, error) {
-	expanded, err := identity.ExpandUserAssignedMap(input)
-	if err != nil || expanded.Type != identity.TypeUserAssigned {
-		return nil, err
-	}
-
-	idUserAssigned := servers.IdentityTypeUserAssigned
-	out := servers.UserAssignedIdentity{
-		Type: idUserAssigned,
-	}
-	if expanded.Type == identity.TypeUserAssigned {
-		ids := make(map[string]servers.UserIdentity)
-		for k := range expanded.IdentityIds {
-			ids[k] = servers.UserIdentity{}
-		}
-		out.UserAssignedIdentities = &ids
-	}
-
-	return &out, nil
-}
-
-func flattenFlexibleServerIdentity(input *servers.UserAssignedIdentity) (*[]interface{}, error) {
-	var transform *identity.UserAssignedMap
-
-	if input != nil {
-		transform = &identity.UserAssignedMap{
-			Type:        identity.Type(string(input.Type)),
-			IdentityIds: make(map[string]identity.UserAssignedIdentityDetails),
-		}
-		for k := range *input.UserAssignedIdentities {
-			transform.IdentityIds[k] = identity.UserAssignedIdentityDetails{}
-		}
-	}
-
-	return identity.FlattenUserAssignedMap(transform)
 }

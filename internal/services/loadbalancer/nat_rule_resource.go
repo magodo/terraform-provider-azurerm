@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package loadbalancer
 
 import (
@@ -267,7 +270,7 @@ func resourceArmLoadBalancerNatRuleRead(d *pluginsdk.ResourceData, meta interfac
 		d.Set("frontend_ip_configuration_id", frontendIPConfigID)
 
 		if props.BackendAddressPool != nil && props.BackendAddressPool.ID != nil {
-			d.Set("backend_address_pool_id", *props.BackendAddressPool.ID)
+			d.Set("backend_address_pool_id", props.BackendAddressPool.ID)
 		}
 
 		frontendPort := 0

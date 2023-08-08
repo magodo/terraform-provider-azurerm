@@ -294,7 +294,7 @@ A `headers` block supports the following:
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to the Arguments listed above - the following Attributes are exported:
 
 * `id` - The ID of the Logic App
 
@@ -329,6 +329,12 @@ The `site_credential` block exports the following:
 * `username` - The username which can be used to publish to this App Service
 
 * `password` - The password associated with the username, which can be used to publish to this App Service.
+
+---
+
+The `site_config` block exports the following:
+
+* `auto_swap_slot_name` - The Auto-swap slot name.
 
 ## Timeouts
 

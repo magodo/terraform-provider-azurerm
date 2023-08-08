@@ -243,9 +243,11 @@ An `exclusion` block supports the following:
 
 * `selector` - (Required) Selector for the value in the `match_variable` attribute this exclusion applies to.
 
+-> **NOTE:** `selector` must be set to `*` if `operator` is set to `EqualsAny`.
+
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to the Arguments listed above - the following Attributes are exported:
 
 * `id` - The ID of the Front Door Firewall Policy.
 

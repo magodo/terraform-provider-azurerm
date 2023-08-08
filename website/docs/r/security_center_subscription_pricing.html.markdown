@@ -10,7 +10,7 @@ description: |-
 
 Manages the Pricing Tier for Azure Security Center in the current subscription.
 
-~> **NOTE:** Deletion of this resource does not change or reset the pricing tier to `Free`
+~> **NOTE:** Deletion of this resource will reset the pricing tier to `Free`
 
 ## Example Usage
 
@@ -33,7 +33,7 @@ The following arguments are supported:
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to the Arguments listed above - the following Attributes are exported:
 
 * `id` - The subscription pricing ID.
 

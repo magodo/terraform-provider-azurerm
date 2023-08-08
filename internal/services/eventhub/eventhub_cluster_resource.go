@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package eventhub
 
 import (
@@ -5,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -92,10 +96,11 @@ func resourceEventHubClusterCreateUpdate(d *pluginsdk.ResourceData, meta interfa
 		}
 	}
 
+	sku := expandEventHubClusterSkuName(d.Get("sku_name").(string))
 	cluster := eventhubsclusters.Cluster{
 		Location: utils.String(azure.NormalizeLocation(d.Get("location").(string))),
 		Tags:     tags.Expand(d.Get("tags").(map[string]interface{})),
-		Sku:      expandEventHubClusterSkuName(d.Get("sku_name").(string)),
+		Sku:      &sku,
 	}
 
 	if err := client.ClustersCreateOrUpdateThenPoll(ctx, id, cluster); err != nil {
@@ -153,13 +158,13 @@ func resourceEventHubClusterDelete(d *pluginsdk.ResourceData, meta interface{}) 
 	return pluginsdk.Retry(d.Timeout(pluginsdk.TimeoutDelete), func() *pluginsdk.RetryError {
 		future, err := client.ClustersDelete(ctx, *id)
 		if err != nil {
-			if strings.Contains(err.Error(), "Cluster cannot be deleted until four hours after its creation time") || response.WasStatusCode(future.HttpResponse, http.StatusTooManyRequests) {
+			if strings.Contains(err.Error(), "ClusterMoratoriumInEffect") || response.WasBadRequest(future.HttpResponse) || response.WasStatusCode(future.HttpResponse, http.StatusTooManyRequests) {
 				return pluginsdk.RetryableError(fmt.Errorf("expected eventhub cluster to be deleted but was in pending creation state, retrying"))
 			}
 			return pluginsdk.NonRetryableError(fmt.Errorf("deleting %s: %+v", *id, err))
 		}
 
-		if err := future.Poller.PollUntilDone(); err != nil {
+		if err := future.Poller.PollUntilDone(ctx); err != nil {
 			return pluginsdk.NonRetryableError(fmt.Errorf("deleting %s: %+v", *id, err))
 		}
 
@@ -167,17 +172,12 @@ func resourceEventHubClusterDelete(d *pluginsdk.ResourceData, meta interface{}) 
 	})
 }
 
-func expandEventHubClusterSkuName(skuName string) *eventhubsclusters.ClusterSku {
-	if len(skuName) == 0 {
-		return nil
-	}
-
-	name, capacity, err := azure.SplitSku(skuName)
-	if err != nil {
-		return nil
-	}
-
-	return &eventhubsclusters.ClusterSku{
+func expandEventHubClusterSkuName(skuName string) eventhubsclusters.ClusterSku {
+	// "sku_name" is validated to be in this format above, and is required
+	skuParts := strings.Split(skuName, "_")
+	name := skuParts[0]
+	capacity, _ := strconv.Atoi(skuParts[1])
+	return eventhubsclusters.ClusterSku{
 		Name:     eventhubsclusters.ClusterSkuName(name),
 		Capacity: utils.Int64(int64(capacity)),
 	}

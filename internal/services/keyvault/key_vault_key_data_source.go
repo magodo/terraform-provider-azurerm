@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package keyvault
 
 import (
@@ -9,6 +12,8 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonids"
+	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonschema"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/parse"
 	keyVaultValidate "github.com/hashicorp/terraform-provider-azurerm/internal/services/keyvault/validate"
@@ -35,11 +40,7 @@ func dataSourceKeyVaultKey() *pluginsdk.Resource {
 				ValidateFunc: keyVaultValidate.NestedItemName,
 			},
 
-			"key_vault_id": {
-				Type:         pluginsdk.TypeString,
-				Required:     true,
-				ValidateFunc: keyVaultValidate.VaultID,
-			},
+			"key_vault_id": commonschema.ResourceIDReferenceRequired(commonids.KeyVaultId{}),
 
 			"key_type": {
 				Type:     pluginsdk.TypeString,
@@ -126,7 +127,7 @@ func dataSourceKeyVaultKeyRead(d *pluginsdk.ResourceData, meta interface{}) erro
 	defer cancel()
 
 	name := d.Get("name").(string)
-	keyVaultId, err := parse.VaultID(d.Get("key_vault_id").(string))
+	keyVaultId, err := commonids.ParseKeyVaultID(d.Get("key_vault_id").(string))
 	if err != nil {
 		return err
 	}
@@ -221,8 +222,8 @@ func dataSourceKeyVaultKeyRead(d *pluginsdk.ResourceData, meta interface{}) erro
 
 	d.Set("version", parsedId.Version)
 
-	d.Set("resource_id", parse.NewKeyID(keyVaultId.SubscriptionId, keyVaultId.ResourceGroup, keyVaultId.Name, parsedId.Name, parsedId.Version).ID())
-	d.Set("resource_versionless_id", parse.NewKeyVersionlessID(keyVaultId.SubscriptionId, keyVaultId.ResourceGroup, keyVaultId.Name, parsedId.Name).ID())
+	d.Set("resource_id", parse.NewKeyID(keyVaultId.SubscriptionId, keyVaultId.ResourceGroupName, keyVaultId.VaultName, parsedId.Name, parsedId.Version).ID())
+	d.Set("resource_versionless_id", parse.NewKeyVersionlessID(keyVaultId.SubscriptionId, keyVaultId.ResourceGroupName, keyVaultId.VaultName, parsedId.Name).ID())
 
 	return tags.FlattenAndSet(d, resp.Tags)
 }

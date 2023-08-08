@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package sentinel_test
 
 import (
@@ -103,7 +106,7 @@ func (MetadataResource) basic(data acceptance.TestData) string {
 
 resource "azurerm_sentinel_metadata" "test" {
   name         = "acctest"
-  workspace_id = azurerm_log_analytics_solution.test.workspace_resource_id
+  workspace_id = azurerm_sentinel_log_analytics_workspace_onboarding.test.workspace_id
   content_id   = azurerm_sentinel_alert_rule_nrt.test.name
   kind         = "AnalyticsRule"
   parent_id    = azurerm_sentinel_alert_rule_nrt.test.id
@@ -117,7 +120,7 @@ func (MetadataResource) complete(data acceptance.TestData) string {
 
 resource "azurerm_sentinel_metadata" "test" {
   name                       = "acctest"
-  workspace_id               = azurerm_log_analytics_solution.test.workspace_resource_id
+  workspace_id               = azurerm_sentinel_log_analytics_workspace_onboarding.test.workspace_id
   content_id                 = azurerm_sentinel_alert_rule_nrt.test.name
   kind                       = "AnalyticsRule"
   parent_id                  = azurerm_sentinel_alert_rule_nrt.test.id
@@ -191,7 +194,7 @@ func (MetadataResource) completeWithSolution(data acceptance.TestData) string {
 
 resource "azurerm_sentinel_metadata" "test" {
   name                       = "acctest"
-  workspace_id               = azurerm_log_analytics_solution.test.workspace_resource_id
+  workspace_id               = azurerm_sentinel_log_analytics_workspace_onboarding.test.workspace_id
   kind                       = "Solution"
   content_id                 = azurerm_sentinel_alert_rule_nrt.test.id
   parent_id                  = azurerm_sentinel_alert_rule_nrt.test.id

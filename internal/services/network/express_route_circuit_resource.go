@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package network
 
 import (
@@ -266,6 +269,18 @@ func resourceExpressRouteCircuitCreateUpdate(d *pluginsdk.ResourceData, meta int
 
 	if _, err = stateConf.WaitForStateContext(ctx); err != nil {
 		return fmt.Errorf("for %s to be able to be queried: %+v", id, err)
+	}
+
+	//  authorization_key can only be set after Circuit is created
+	if erc.AuthorizationKey != nil && *erc.AuthorizationKey != "" {
+		future, err := client.CreateOrUpdate(ctx, id.ResourceGroup, id.Name, erc)
+		if err != nil {
+			return fmt.Errorf(" Updating %s: %+v", id, err)
+		}
+
+		if err = future.WaitForCompletionRef(ctx, client.Client); err != nil {
+			return fmt.Errorf(" Updating %s: %+v", id, err)
+		}
 	}
 
 	d.SetId(id.ID())

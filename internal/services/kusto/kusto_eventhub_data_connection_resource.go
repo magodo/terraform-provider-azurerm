@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package kusto
 
 import (
@@ -5,12 +8,13 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/go-azure-helpers/lang/response" // nolint: staticcheck
+	"github.com/hashicorp/go-azure-helpers/lang/pointer"
+	"github.com/hashicorp/go-azure-helpers/lang/response"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonids"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonschema"
 	"github.com/hashicorp/go-azure-sdk/resource-manager/eventhub/2021-11-01/eventhubs"
-	"github.com/hashicorp/go-azure-sdk/resource-manager/kusto/2022-02-01/clusters"
-	"github.com/hashicorp/go-azure-sdk/resource-manager/kusto/2022-02-01/dataconnections"
+	"github.com/hashicorp/go-azure-sdk/resource-manager/kusto/2023-05-02/clusters"
+	"github.com/hashicorp/go-azure-sdk/resource-manager/kusto/2023-05-02/dataconnections"
 	"github.com/hashicorp/terraform-provider-azurerm/helpers/azure"
 	"github.com/hashicorp/terraform-provider-azurerm/helpers/tf"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
@@ -228,11 +232,27 @@ func resourceKustoEventHubDataConnectionRead(d *pluginsdk.ResourceData, meta int
 				d.Set("consumer_group", props.ConsumerGroup)
 				d.Set("table_name", props.TableName)
 				d.Set("mapping_rule_name", props.MappingRuleName)
-				d.Set("data_format", props.DataFormat)
-				d.Set("database_routing_type", props.DatabaseRouting)
-				d.Set("compression", props.Compression)
+				d.Set("data_format", string(pointer.From(props.DataFormat)))
+				d.Set("database_routing_type", string(pointer.From(props.DatabaseRouting)))
+				d.Set("compression", string(pointer.From(props.Compression)))
 				d.Set("event_system_properties", props.EventSystemProperties)
-				d.Set("identity_id", props.ManagedIdentityResourceId)
+
+				identityId := ""
+				if props.ManagedIdentityResourceId != nil {
+					identityId = *props.ManagedIdentityResourceId
+					clusterId, clusterIdErr := clusters.ParseClusterIDInsensitively(identityId)
+					if clusterIdErr == nil {
+						identityId = clusterId.ID()
+					} else {
+						userAssignedIdentityId, userAssignedIdentityIdErr := commonids.ParseUserAssignedIdentityIDInsensitively(identityId)
+						if userAssignedIdentityIdErr == nil {
+							identityId = userAssignedIdentityId.ID()
+						} else {
+							return fmt.Errorf("parsing `identity_id`: %+v; %+v", clusterIdErr, userAssignedIdentityIdErr)
+						}
+					}
+				}
+				d.Set("identity_id", identityId)
 			}
 		}
 	}

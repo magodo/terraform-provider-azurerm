@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package appservice
 
 import (
@@ -7,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Azure/azure-sdk-for-go/services/web/mgmt/2021-03-01/web" // nolint: staticcheck
+	"github.com/hashicorp/go-azure-helpers/lang/pointer"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonschema"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/location"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/sdk"
@@ -17,6 +20,7 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tags"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
 	"github.com/hashicorp/terraform-provider-azurerm/utils"
+	"github.com/tombuildsstuff/kermit/sdk/web/2022-09-01/web"
 )
 
 type WindowsFunctionAppDataSource struct{}
@@ -46,6 +50,7 @@ type WindowsFunctionAppDataSourceModel struct {
 	FunctionExtensionsVersion string                                 `tfschema:"functions_extension_version"`
 	ForceDisableContentShare  bool                                   `tfschema:"content_share_force_disabled"`
 	HttpsOnly                 bool                                   `tfschema:"https_only"`
+	PublicNetworkAccess       bool                                   `tfschema:"public_network_access_enabled"`
 	SiteConfig                []helpers.SiteConfigWindowsFunctionApp `tfschema:"site_config"`
 	StickySettings            []helpers.StickySettings               `tfschema:"sticky_settings"`
 	Tags                      map[string]string                      `tfschema:"tags"`
@@ -53,6 +58,7 @@ type WindowsFunctionAppDataSourceModel struct {
 
 	CustomDomainVerificationId    string   `tfschema:"custom_domain_verification_id"`
 	DefaultHostname               string   `tfschema:"default_hostname"`
+	HostingEnvId                  string   `tfschema:"hosting_environment_id"`
 	Kind                          string   `tfschema:"kind"`
 	OutboundIPAddresses           string   `tfschema:"outbound_ip_addresses"`
 	OutboundIPAddressList         []string `tfschema:"outbound_ip_address_list"`
@@ -187,6 +193,11 @@ func (d WindowsFunctionAppDataSource) Attributes() map[string]*pluginsdk.Schema 
 			Computed: true,
 		},
 
+		"hosting_environment_id": {
+			Type:     pluginsdk.TypeString,
+			Computed: true,
+		},
+
 		"kind": {
 			Type:     pluginsdk.TypeString,
 			Computed: true,
@@ -216,6 +227,11 @@ func (d WindowsFunctionAppDataSource) Attributes() map[string]*pluginsdk.Schema 
 			Elem: &pluginsdk.Schema{
 				Type: pluginsdk.TypeString,
 			},
+		},
+
+		"public_network_access_enabled": {
+			Type:     pluginsdk.TypeBool,
+			Computed: true,
 		},
 
 		"site_credential": helpers.SiteCredentialSchema(),
@@ -275,6 +291,11 @@ func (d WindowsFunctionAppDataSource) Read() sdk.ResourceFunc {
 			functionApp.CustomDomainVerificationId = utils.NormalizeNilableString(props.CustomDomainVerificationID)
 			functionApp.DefaultHostname = utils.NormalizeNilableString(props.DefaultHostName)
 			functionApp.VirtualNetworkSubnetId = utils.NormalizeNilableString(props.VirtualNetworkSubnetID)
+			functionApp.PublicNetworkAccess = !strings.EqualFold(pointer.From(props.PublicNetworkAccess), helpers.PublicNetworkAccessDisabled)
+
+			if hostingEnv := props.HostingEnvironmentProfile; hostingEnv != nil {
+				functionApp.HostingEnvId = pointer.From(hostingEnv.ID)
+			}
 
 			if v := props.OutboundIPAddresses; v != nil {
 				functionApp.OutboundIPAddresses = *v

@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package mssql
 
 import (
@@ -8,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/go-azure-helpers/lang/pointer"
 	"github.com/hashicorp/go-azure-helpers/lang/response"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonschema"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/tags"
@@ -633,7 +637,7 @@ func resourceMsSqlVirtualMachineRead(d *pluginsdk.ResourceData, meta interface{}
 				}
 				if scus := mgmtSettings.SqlConnectivityUpdateSettings; scus != nil {
 					d.Set("sql_connectivity_port", mgmtSettings.SqlConnectivityUpdateSettings.Port)
-					d.Set("sql_connectivity_type", mgmtSettings.SqlConnectivityUpdateSettings.ConnectivityType)
+					d.Set("sql_connectivity_type", string(pointer.From(mgmtSettings.SqlConnectivityUpdateSettings.ConnectivityType)))
 				}
 
 				d.Set("sql_instance", flattenSqlVirtualMachineSQLInstance(mgmtSettings.SqlInstanceSettings))

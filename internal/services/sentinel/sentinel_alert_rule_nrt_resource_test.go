@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package sentinel_test
 
 import (
@@ -270,7 +273,7 @@ func (r SentinelAlertRuleNrtResource) alertRuleTemplateGuid(data acceptance.Test
 %s
 
 data "azurerm_sentinel_alert_rule_template" "test" {
-  display_name               = "NRT Base64 encoded Windows process command-lines"
+  display_name               = "NRT Base64 Encoded Windows Process Command-lines"
   log_analytics_workspace_id = azurerm_sentinel_log_analytics_workspace_onboarding.test.workspace_id
 }
 

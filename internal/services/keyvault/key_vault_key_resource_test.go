@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package keyvault_test
 
 import (
@@ -8,6 +11,7 @@ import (
 	"time"
 
 	"github.com/Azure/go-autorest/autorest/date"
+	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonids"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance/check"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
@@ -314,6 +318,35 @@ func TestAccKeyVaultKey_RotationPolicyWithOnlyAutoRotation(t *testing.T) {
 	})
 }
 
+func TestAccKeyVaultKey_RemoveRotationPolicy(t *testing.T) {
+	data := acceptance.BuildTestData(t, "azurerm_key_vault_key", "test")
+	r := KeyVaultKeyResource{}
+
+	data.ResourceTest(t, r, []acceptance.TestStep{
+		{
+			Config: r.basicEC(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep("key_size", "key_vault_id"),
+		{
+			Config: r.rotationPolicyWithOnlyAutoRotation(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep("key_size", "key_vault_id"),
+		{
+			Config: r.basicEC(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep("key_size", "key_vault_id"),
+	})
+}
+
 func TestAccKeyVaultKey_RotationPolicyUpdate(t *testing.T) {
 	data := acceptance.BuildTestData(t, "azurerm_key_vault_key", "test")
 	r := KeyVaultKeyResource{}
@@ -361,7 +394,7 @@ func (r KeyVaultKeyResource) Exists(ctx context.Context, clients *clients.Client
 	if err != nil || keyVaultIdRaw == nil {
 		return nil, fmt.Errorf("retrieving the Resource ID the Key Vault at URL %q: %s", id.KeyVaultBaseUrl, err)
 	}
-	keyVaultId, err := parse.VaultID(*keyVaultIdRaw)
+	keyVaultId, err := commonids.ParseKeyVaultID(*keyVaultIdRaw)
 	if err != nil {
 		return nil, err
 	}
@@ -395,7 +428,7 @@ func (KeyVaultKeyResource) destroyParentKeyVault(ctx context.Context, client *cl
 func (KeyVaultKeyResource) updateExpiryDate(expiryDate string) acceptance.ClientCheckFunc {
 	return func(ctx context.Context, clients *clients.Client, state *pluginsdk.InstanceState) error {
 		name := state.Attributes["name"]
-		keyVaultId, err := parse.VaultID(state.Attributes["key_vault_id"])
+		keyVaultId, err := commonids.ParseKeyVaultID(state.Attributes["key_vault_id"])
 		if err != nil {
 			return err
 		}
@@ -425,7 +458,7 @@ func (KeyVaultKeyResource) updateExpiryDate(expiryDate string) acceptance.Client
 
 func (KeyVaultKeyResource) Destroy(ctx context.Context, client *clients.Client, state *pluginsdk.InstanceState) (*bool, error) {
 	name := state.Attributes["name"]
-	keyVaultId, err := parse.VaultID(state.Attributes["key_vault_id"])
+	keyVaultId, err := commonids.ParseKeyVaultID(state.Attributes["key_vault_id"])
 	if err != nil {
 		return nil, err
 	}

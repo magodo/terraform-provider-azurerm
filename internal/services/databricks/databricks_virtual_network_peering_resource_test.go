@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package databricks_test
 
 import (
@@ -165,16 +168,20 @@ resource "azurerm_databricks_workspace" "test" {
 }
 
 func (r DatabricksVirtualNetworkPeeringResource) update(data acceptance.TestData) string {
-	template := r.template(data)
+	features := "features {}"
+	if override := checkAzSecPackOverride(); override != "" {
+		features = fmt.Sprintf("features {%s}", override)
+	}
+
 	return fmt.Sprintf(`
 provider "azurerm" {
-  features {%[3]s}
+  %s
 }
 
-%[2]s
+%s
 
 resource "azurerm_databricks_virtual_network_peering" "test" {
-  name                = "acctest-%[1]d"
+  name                = "acctest-%[3]d"
   resource_group_name = azurerm_resource_group.test.name
   workspace_id        = azurerm_databricks_workspace.test.id
 
@@ -185,12 +192,12 @@ resource "azurerm_databricks_virtual_network_peering" "test" {
 }
 
 resource "azurerm_virtual_network_peering" "remote" {
-  name                      = "to-acctest-%[1]d"
+  name                      = "to-acctest-%[3]d"
   resource_group_name       = azurerm_resource_group.test.name
   virtual_network_name      = azurerm_virtual_network.remote.name
   remote_virtual_network_id = azurerm_databricks_virtual_network_peering.test.virtual_network_id
 }
-`, data.RandomInteger, template, checkAzSecPackOverride())
+`, features, r.template(data), data.RandomInteger)
 }
 
 func (r DatabricksVirtualNetworkPeeringResource) requiresImport(data acceptance.TestData) string {
@@ -210,16 +217,19 @@ resource "azurerm_databricks_virtual_network_peering" "import" {
 }
 
 func (r DatabricksVirtualNetworkPeeringResource) basic(data acceptance.TestData) string {
-	template := r.template(data)
+	features := "features {}"
+	if override := checkAzSecPackOverride(); override != "" {
+		features = fmt.Sprintf("features {%s}", override)
+	}
 	return fmt.Sprintf(`
 provider "azurerm" {
-  features {%[3]s}
+  %s
 }
 
-%[2]s
+%s
 
 resource "azurerm_databricks_virtual_network_peering" "test" {
-  name                = "acctest-%[1]d"
+  name                = "acctest-%[3]d"
   resource_group_name = azurerm_resource_group.test.name
   workspace_id        = azurerm_databricks_workspace.test.id
 
@@ -228,25 +238,28 @@ resource "azurerm_databricks_virtual_network_peering" "test" {
 }
 
 resource "azurerm_virtual_network_peering" "remote" {
-  name                      = "to-acctest-%[1]d"
+  name                      = "to-acctest-%[3]d"
   resource_group_name       = azurerm_resource_group.test.name
   virtual_network_name      = azurerm_virtual_network.remote.name
   remote_virtual_network_id = azurerm_databricks_virtual_network_peering.test.virtual_network_id
 }
-`, data.RandomInteger, template, checkAzSecPackOverride())
+`, features, r.template(data), data.RandomInteger)
 }
 
 func (r DatabricksVirtualNetworkPeeringResource) complete(data acceptance.TestData) string {
-	template := r.template(data)
+	features := "features {}"
+	if override := checkAzSecPackOverride(); override != "" {
+		features = fmt.Sprintf("features {%s}", override)
+	}
 	return fmt.Sprintf(`
 provider "azurerm" {
-  features {%[3]s}
+  %s
 }
 
-%[2]s
+%s
 
 resource "azurerm_databricks_virtual_network_peering" "test" {
-  name                = "acctest-%[1]d"
+  name                = "acctest-%[3]d"
   resource_group_name = azurerm_resource_group.test.name
   workspace_id        = azurerm_databricks_workspace.test.id
 
@@ -260,25 +273,28 @@ resource "azurerm_databricks_virtual_network_peering" "test" {
 }
 
 resource "azurerm_virtual_network_peering" "remote" {
-  name                      = "to-acctest-%[1]d"
+  name                      = "to-acctest-%[3]d"
   resource_group_name       = azurerm_resource_group.test.name
   virtual_network_name      = azurerm_virtual_network.remote.name
   remote_virtual_network_id = azurerm_databricks_virtual_network_peering.test.virtual_network_id
 }
-`, data.RandomInteger, template, checkAzSecPackOverride())
+`, features, r.template(data), data.RandomInteger)
 }
 
 func (r DatabricksVirtualNetworkPeeringResource) completeUpdate(data acceptance.TestData) string {
-	template := r.template(data)
+	features := "features {}"
+	if override := checkAzSecPackOverride(); override != "" {
+		features = fmt.Sprintf("features {%s}", override)
+	}
 	return fmt.Sprintf(`
 provider "azurerm" {
-  features {%[3]s}
+  %s
 }
 
-%[2]s
+%s
 
 resource "azurerm_databricks_virtual_network_peering" "test" {
-  name                = "acctest-%[1]d"
+  name                = "acctest-%[3]d"
   resource_group_name = azurerm_resource_group.test.name
   workspace_id        = azurerm_databricks_workspace.test.id
 
@@ -292,10 +308,10 @@ resource "azurerm_databricks_virtual_network_peering" "test" {
 }
 
 resource "azurerm_virtual_network_peering" "remote" {
-  name                      = "to-acctest-%[1]d"
+  name                      = "to-acctest-%[3]d"
   resource_group_name       = azurerm_resource_group.test.name
   virtual_network_name      = azurerm_virtual_network.remote.name
   remote_virtual_network_id = azurerm_databricks_virtual_network_peering.test.virtual_network_id
 }
-`, data.RandomInteger, template, checkAzSecPackOverride())
+`, features, r.template(data), data.RandomInteger)
 }

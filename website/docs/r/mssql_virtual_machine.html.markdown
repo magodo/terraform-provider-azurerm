@@ -49,7 +49,7 @@ The following arguments are supported:
 
 * `auto_patching` - (Optional) An `auto_patching` block as defined below.
 
-* `key_vault_credential` - (Optional) (Optional) An `key_vault_credential` block as defined below.
+* `key_vault_credential` - (Optional) An `key_vault_credential` block as defined below.
 
 * `r_services_enabled` - (Optional) Should R Services be enabled?
 
@@ -213,7 +213,7 @@ The `schedule` block supports the following:
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to the Arguments listed above - the following Attributes are exported:
 
 * `id` - The ID of the SQL Virtual Machine.
 

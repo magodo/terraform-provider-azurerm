@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package voiceservices_test
 
 import (
@@ -6,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/go-azure-helpers/lang/response"
-	"github.com/hashicorp/go-azure-sdk/resource-manager/voiceservices/2023-01-31/communicationsgateways"
+	"github.com/hashicorp/go-azure-sdk/resource-manager/voiceservices/2023-04-03/communicationsgateways"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance/check"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
@@ -160,7 +163,7 @@ resource "azurerm_voice_services_communications_gateway" "import" {
   on_prem_mcp_enabled = azurerm_voice_services_communications_gateway.test.on_prem_mcp_enabled
 
   service_location {
-    location                                  = "useast"
+    location                                  = "eastus"
     allowed_media_source_address_prefixes     = ["10.1.2.0/24"]
     allowed_signaling_source_address_prefixes = ["10.1.1.0/24"]
     operator_addresses                        = ["198.51.100.1"]

@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package sentinel
 
 import (
@@ -62,6 +65,7 @@ func (r LogAnalyticsWorkspaceOnboardResource) Arguments() map[string]*pluginsdk.
 			ValidateFunc:  validation.StringIsNotEmpty,
 		},
 
+		// lintignore:S013
 		"workspace_id": {
 			Type:         pluginsdk.TypeString,
 			Required:     features.FourPointOhBeta(),
