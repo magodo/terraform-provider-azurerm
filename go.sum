@@ -101,8 +101,6 @@ github.com/hashicorp/errwrap v1.1.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brv
 github.com/hashicorp/go-azure-helpers v0.12.0/go.mod h1:Zc3v4DNeX6PDdy7NljlYpnrdac1++qNW0I4U+ofGwpg=
 github.com/hashicorp/go-azure-helpers v0.61.0 h1:dIz23Vp8LdErxuImc6V5QIPtJcWjMgqP75bfp8o1Lro=
 github.com/hashicorp/go-azure-helpers v0.61.0/go.mod h1:BQUQp5udwbJ8pnzl0wByCLVEEyPMAFpJ9vOREiCzObo=
-github.com/hashicorp/go-azure-sdk v0.20230907.1113401 h1:rtikuZ4FzVZrJ4lbldIJk1oIa1+Ofnq76+Mv3muDbLs=
-github.com/hashicorp/go-azure-sdk v0.20230907.1113401/go.mod h1:Rk63T4GsVOHb/WohiAX7F0tMEd8MIKV+g4aV0Jv4XEk=
 github.com/hashicorp/go-checkpoint v0.5.0 h1:MFYpPZCnQqQTE18jFwSII6eUQrD/oxMFp3mlgcqk5mU=
 github.com/hashicorp/go-checkpoint v0.5.0/go.mod h1:7nfLNL10NsxqO4iWuW6tWW0HjZuDrwkBuEQsVcpCOgg=
 github.com/hashicorp/go-cleanhttp v0.5.0/go.mod h1:JpRdi6/HCYpAwUzNwuwqhbovhLtngrth3wmdIIUrZ80=
@@ -164,6 +162,8 @@ github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
 github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348/go.mod h1:B69LEHPfb2qLo0BaaOLcbitczOKLWTsrBG9LczfCD4k=
 github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0SNc=
+github.com/magodo/go-azure-sdk v0.0.0-20230915055232-7dbe90ca71be h1:Y0bhzq8SKuK48o50MP0SBVBUZ6ck6Vm9xMLFitHw6TE=
+github.com/magodo/go-azure-sdk v0.0.0-20230915055232-7dbe90ca71be/go.mod h1:gmSr1e4hzs91iCXzAnacrk50WzstC2FuZbyrZSbTnsY=
 github.com/magodo/terraform-provider-azurerm-example-gen v0.0.0-20220407025246-3a3ee0ab24a8 h1:HHSqLmPZaa8U66U7N2Gtx3gYptSHrUB/rB5t+6fZTkQ=
 github.com/magodo/terraform-provider-azurerm-example-gen v0.0.0-20220407025246-3a3ee0ab24a8/go.mod h1:iMzpAzVr2v/NUVie/apAYtZlFZYFndPcp6/E0VLxgAM=
 github.com/mattn/go-colorable v0.1.9/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope9wVRipJSqc=

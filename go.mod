@@ -87,3 +87,5 @@ require (
 )
 
 go 1.20
+
+replace github.com/hashicorp/go-azure-sdk => github.com/magodo/go-azure-sdk v0.0.0-20230915055232-7dbe90ca71be
