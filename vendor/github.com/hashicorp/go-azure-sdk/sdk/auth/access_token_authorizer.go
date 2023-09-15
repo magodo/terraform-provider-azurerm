@@ -29,9 +29,10 @@ type AccessTokenAuthorizerOptions struct {
 
 // NewAccessTokenAuthorizer returns an Authorizer which authenticates using the Access Token.
 func NewAccessTokenAuthorizer(ctx context.Context, options AccessTokenAuthorizerOptions) (auth Authorizer, err error) {
+	var token []byte
 	defer func() {
 		if err != nil {
-			err = newTokenRefreshError(err)
+			err = newTokenRefreshError(fmt.Errorf("%s: %v", options.Api.Name(), err))
 			if options.AllowInvalidAuthorizer {
 				auth = &invalidAccessTokenAuthorizer{err: err}
 				err = nil
