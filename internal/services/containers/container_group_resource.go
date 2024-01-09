@@ -5,6 +5,7 @@ package containers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strings"
@@ -559,6 +560,52 @@ func resourceContainerGroup() *pluginsdk.Resource {
 				Optional:     true,
 				ValidateFunc: commonids.ValidateUserAssignedIdentityID,
 			},
+
+			"extension": {
+				Type:     pluginsdk.TypeList,
+				Optional: true,
+				ForceNew: true,
+				MaxItems: 1,
+				Elem: &pluginsdk.Resource{
+					Schema: map[string]*pluginsdk.Schema{
+						"name": {
+							Type:         pluginsdk.TypeString,
+							Required:     true,
+							ForceNew:     true,
+							ValidateFunc: validation.StringIsNotEmpty,
+						},
+						"type": {
+							Type:         pluginsdk.TypeString,
+							Required:     true,
+							ForceNew:     true,
+							ValidateFunc: validation.StringIsNotEmpty,
+						},
+						"version": {
+							Type:         pluginsdk.TypeString,
+							Required:     true,
+							ForceNew:     true,
+							ValidateFunc: validation.StringIsNotEmpty,
+						},
+						"settings": {
+							Type:     pluginsdk.TypeMap,
+							Optional: true,
+							ForceNew: true,
+							Elem: &pluginsdk.Schema{
+								Type: pluginsdk.TypeString,
+							},
+						},
+						"protected_settings": {
+							Type:      pluginsdk.TypeMap,
+							Optional:  true,
+							ForceNew:  true,
+							Sensitive: true,
+							Elem: &pluginsdk.Schema{
+								Type: pluginsdk.TypeString,
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -745,6 +792,7 @@ func resourceContainerGroupCreate(d *pluginsdk.ResourceData, meta interface{}) e
 			ImageRegistryCredentials: expandContainerImageRegistryCredentials(d),
 			DnsConfig:                expandContainerGroupDnsConfig(dnsConfig),
 			SubnetIds:                subnets,
+			Extensions:               expandContainerGropuExtensions(d.Get("extension").([]interface{})),
 		},
 		Zones: &zones,
 	}
@@ -953,6 +1001,14 @@ func resourceContainerGroupRead(d *pluginsdk.ResourceData, meta interface{}) err
 			}
 			d.Set("key_vault_key_id", keyId.ID())
 			d.Set("key_vault_user_assigned_identity_id", pointer.From(kvProps.Identity))
+		}
+
+		extensions, err := flattenContainerGroupExtensions(props.Extensions)
+		if err != nil {
+			return err
+		}
+		if err := d.Set("extension", extensions); err != nil {
+			return fmt.Errorf("setting `extension`: %v", err)
 		}
 	}
 
@@ -2131,4 +2187,82 @@ func expandContainerGroupSubnets(input []interface{}) (*[]containerinstance.Cont
 		})
 	}
 	return &results, nil
+}
+
+func expandContainerGropuExtensions(input []interface{}) *[]containerinstance.DeploymentExtensionSpec {
+	if len(input) == 0 {
+		return nil
+	}
+
+	result := make([]containerinstance.DeploymentExtensionSpec, 0)
+
+	for _, e := range input {
+		e := e.(map[string]interface{})
+		extension := containerinstance.DeploymentExtensionSpec{
+			Name: e["name"].(string),
+			Properties: &containerinstance.DeploymentExtensionSpecProperties{
+				ExtensionType: e["type"].(string),
+				Version:       e["version"].(string),
+			},
+		}
+		if v, ok := e["settings"]; ok && v != nil {
+			var v interface{} = *utils.ExpandPtrMapStringString(v.(map[string]interface{}))
+			extension.Properties.Settings = &v
+		}
+		if v, ok := e["protected_settings"]; ok && v != nil {
+			var v interface{} = *utils.ExpandPtrMapStringString(v.(map[string]interface{}))
+			extension.Properties.ProtectedSettings = &v
+		}
+		result = append(result, extension)
+	}
+
+	return &result
+}
+
+func flattenContainerGroupExtensions(input *[]containerinstance.DeploymentExtensionSpec) ([]interface{}, error) {
+	if input == nil {
+		return []interface{}{}, nil
+	}
+
+	output := make([]interface{}, 0)
+
+	for _, e := range *input {
+		var (
+			typ               string
+			ver               string
+			settings          map[string]interface{}
+			protectedSettings map[string]interface{}
+		)
+		if prop := e.Properties; prop != nil {
+			typ = prop.ExtensionType
+			ver = prop.Version
+			if prop.Settings != nil {
+				b, err := json.Marshal(*prop.Settings)
+				if err != nil {
+					return nil, err
+				}
+				if err := json.Unmarshal(b, &settings); err != nil {
+					return nil, err
+				}
+			}
+			if prop.ProtectedSettings != nil {
+				b, err := json.Marshal(*prop.ProtectedSettings)
+				if err != nil {
+					return nil, err
+				}
+				if err := json.Unmarshal(b, &protectedSettings); err != nil {
+					return nil, err
+				}
+			}
+		}
+		output = append(output, map[string]interface{}{
+			"name":               e.Name,
+			"type":               typ,
+			"version":            ver,
+			"settings":           settings,
+			"protected_settings": protectedSettings,
+		})
+	}
+
+	return output, nil
 }
