@@ -14,7 +14,7 @@ func AzurePublic() *Environment {
 			"https://management.azure.com",
 		},
 		IdentityProvider: "AAD",
-		LoginEndpoint:    "https://westus2.login.microsoftonline.com",
+		LoginEndpoint:    "https://westus2.login.microsoft.com",
 		Tenant:           "common",
 	}
 	env.ResourceManager = ResourceManagerAPI("https://management.azure.com")
