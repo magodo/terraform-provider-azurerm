@@ -15,7 +15,7 @@ const AzurePublicLoginEndpointWithRegion = "https://%s.login.microsoft.com"
 func AzurePublic() *Environment {
 	env := baseEnvironmentWithName(AzurePublicCloud)
 
-	loginEndpoint := "https://login.microsoftonline.com/"
+	loginEndpoint := "https://login.microsoftonline.com"
 	if authorityRegion := os.Getenv(AzureRegionalAuthorityName); authorityRegion != "" {
 		loginEndpoint = fmt.Sprintf(AzurePublicLoginEndpointWithRegion, authorityRegion)
 	}
