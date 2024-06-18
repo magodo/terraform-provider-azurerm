@@ -3,10 +3,22 @@
 
 package environments
 
+import (
+	"fmt"
+	"os"
+)
+
 const AzurePublicCloud = "Public"
+const AzureRegionalAuthorityName = "AZURE_REGIONAL_AUTHORITY_NAME"
+const AzurePublicLoginEndpointWithRegion = "https://%s.login.microsoft.com"
 
 func AzurePublic() *Environment {
 	env := baseEnvironmentWithName(AzurePublicCloud)
+
+	loginEndpoint := "https://login.microsoftonline.com/"
+	if authorityRegion := os.Getenv(AzureRegionalAuthorityName); authorityRegion != "" {
+		loginEndpoint = fmt.Sprintf(AzurePublicLoginEndpointWithRegion, authorityRegion)
+	}
 
 	env.Authorization = &Authorization{
 		Audiences: []string{
@@ -14,7 +26,7 @@ func AzurePublic() *Environment {
 			"https://management.azure.com",
 		},
 		IdentityProvider: "AAD",
-		LoginEndpoint:    "https://westus2.login.microsoft.com",
+		LoginEndpoint:    loginEndpoint,
 		Tenant:           "common",
 	}
 	env.ResourceManager = ResourceManagerAPI("https://management.azure.com")
