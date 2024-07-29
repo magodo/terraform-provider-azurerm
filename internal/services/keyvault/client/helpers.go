@@ -21,6 +21,11 @@ var (
 	lock           = map[string]*sync.RWMutex{}
 )
 
+func ClearCache() {
+	keyVaultsCache = map[string]keyVaultDetails{}
+	lock = map[string]*sync.RWMutex{}
+}
+
 type keyVaultDetails struct {
 	keyVaultId       string
 	dataPlaneBaseUri string
