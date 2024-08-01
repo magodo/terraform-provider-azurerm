@@ -96,9 +96,17 @@ func Build(ctx context.Context, builder ClientBuilder) (*Client, error) {
 		return authorizer, nil
 	})
 
-	account, err := NewResourceManagerAccount(ctx, *builder.AuthConfig, builder.SubscriptionID, builder.RegisteredResourceProviders)
-	if err != nil {
-		return nil, fmt.Errorf("building account: %+v", err)
+	// account, err := NewResourceManagerAccount(ctx, *builder.AuthConfig, builder.SubscriptionID, builder.RegisteredResourceProviders)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("building account: %+v", err)
+	// }
+	account := &ResourceManagerAccount{
+		Environment:                      *environments.AzurePublic(),
+		ClientId:                         "",
+		ObjectId:                         "",
+		SubscriptionId:                   "",
+		TenantId:                         "",
+		AuthenticatedAsAServicePrincipal: false,
 	}
 
 	var managedHSMAuth auth.Authorizer

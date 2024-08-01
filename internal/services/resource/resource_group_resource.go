@@ -5,7 +5,6 @@ package resource
 
 import (
 	"fmt"
-	"log"
 	"sort"
 	"strings"
 	"time"
@@ -152,30 +151,12 @@ func resourceResourceGroupCreateUpdate(d *pluginsdk.ResourceData, meta interface
 }
 
 func resourceResourceGroupRead(d *pluginsdk.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Resource.GroupsClient
-	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
-	defer cancel()
-
-	id, err := parse.ResourceGroupID(d.Id())
-	if err != nil {
-		return err
-	}
-
-	resp, err := client.Get(ctx, id.ResourceGroup)
-	if err != nil {
-		if utils.ResponseWasNotFound(resp.Response) {
-			log.Printf("[INFO] Error reading resource group %q - removing from state", d.Id())
-			d.SetId("")
-			return nil
-		}
-
-		return fmt.Errorf("reading resource group: %+v", err)
-	}
-
-	d.Set("name", resp.Name)
-	d.Set("location", location.NormalizeNilable(resp.Location))
-	d.Set("managed_by", pointer.From(resp.ManagedBy))
-	return tags.FlattenAndSet(d, resp.Tags)
+	d.Set("name", "foo")
+	d.Set("location", "foo")
+	d.Set("managed_by", "foo")
+	return tags.FlattenAndSet(d, map[string]*string{
+		"foo": pointer.FromString("foo"),
+	})
 }
 
 func resourceResourceGroupDelete(d *pluginsdk.ResourceData, meta interface{}) error {
