@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/go-azure-helpers/lang/response"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonids"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonschema"
+	"github.com/hashicorp/go-azure-helpers/resourcemanager/edgezones"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/identity"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/location"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/tags"
@@ -41,10 +42,10 @@ func resourceLinuxVirtualMachine() *pluginsdk.Resource {
 		Read:   resourceLinuxVirtualMachineRead,
 		Update: resourceLinuxVirtualMachineUpdate,
 		Delete: resourceLinuxVirtualMachineDelete,
-		Importer: pluginsdk.ImporterValidatingResourceIdThen(func(id string) error {
+		Importer: pluginsdk.ImporterValidatingResourceId(func(id string) error {
 			_, err := commonids.ParseVirtualMachineID(id)
 			return err
-		}, importVirtualMachine(virtualmachines.OperatingSystemTypesLinux, "azurerm_linux_virtual_machine")),
+		}),
 
 		Timeouts: &pluginsdk.ResourceTimeout{
 			Create: pluginsdk.DefaultTimeout(45 * time.Minute),
@@ -780,35 +781,369 @@ func resourceLinuxVirtualMachineCreate(d *pluginsdk.ResourceData, meta interface
 }
 
 func resourceLinuxVirtualMachineRead(d *pluginsdk.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Compute.VirtualMachinesClient
-	disksClient := meta.(*clients.Client).Compute.DisksClient
-	networkInterfacesClient := meta.(*clients.Client).Network.NetworkInterfacesClient
-	publicIPAddressesClient := meta.(*clients.Client).Network.PublicIPAddresses
-	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
-	defer cancel()
+	// client := meta.(*clients.Client).Compute.VirtualMachinesClient
+	// disksClient := meta.(*clients.Client).Compute.DisksClient
+	// networkInterfacesClient := meta.(*clients.Client).Network.NetworkInterfacesClient
+	// publicIPAddressesClient := meta.(*clients.Client).Network.PublicIPAddresses
+	// ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
+	// defer cancel()
 
 	id, err := virtualmachines.ParseVirtualMachineID(d.Id())
 	if err != nil {
 		return err
 	}
 
-	options := virtualmachines.DefaultGetOperationOptions()
-	options.Expand = pointer.To(virtualmachines.InstanceViewTypesUserData)
-	resp, err := client.Get(ctx, *id, options)
-	if err != nil {
-		if response.WasNotFound(resp.HttpResponse) {
-			log.Printf("[DEBUG] Linux %s was not found - removing from state!", id)
-			d.SetId("")
-			return nil
-		}
+	// options := virtualmachines.DefaultGetOperationOptions()
+	// options.Expand = pointer.To(virtualmachines.InstanceViewTypesUserData)
+	// resp, err := client.Get(ctx, *id, options)
+	// if err != nil {
+	// 	if response.WasNotFound(resp.HttpResponse) {
+	// 		log.Printf("[DEBUG] Linux %s was not found - removing from state!", id)
+	// 		d.SetId("")
+	// 		return nil
+	// 	}
 
-		return fmt.Errorf("retrieving Linux %s: %+v", id, err)
-	}
+	// 	return fmt.Errorf("retrieving Linux %s: %+v", id, err)
+	// }
 
 	d.Set("name", id.VirtualMachineName)
 	d.Set("resource_group_name", id.ResourceGroupName)
 
-	if model := resp.Model; model != nil {
+	respModel := &virtualmachines.GetOperationResponse{
+		Model: &virtualmachines.VirtualMachine{
+			ExtendedLocation: &edgezones.Model{
+				Name: "aaa",
+			},
+			Identity: &identity.SystemAndUserAssignedMap{
+				Type:        "a",
+				PrincipalId: "a",
+				TenantId:    "a",
+				IdentityIds: map[string]identity.UserAssignedIdentityDetails{
+					"a": {
+						ClientId:    pointer.To("a"),
+						PrincipalId: pointer.To("a"),
+					},
+				},
+			},
+			Location: "loc",
+			Name:     pointer.To("name"),
+			Plan: &virtualmachines.Plan{
+				Name:          pointer.To("name"),
+				Product:       pointer.To("prod"),
+				PromotionCode: pointer.To("promo"),
+				Publisher:     pointer.To("pub"),
+			},
+			Properties: &virtualmachines.VirtualMachineProperties{
+				AdditionalCapabilities: &virtualmachines.AdditionalCapabilities{
+					HibernationEnabled: pointer.To(true),
+					UltraSSDEnabled:    pointer.To(true),
+				},
+				ApplicationProfile: &virtualmachines.ApplicationProfile{
+					GalleryApplications: pointer.To([]virtualmachines.VMGalleryApplication{
+						{
+							ConfigurationReference:          pointer.To("ref"),
+							EnableAutomaticUpgrade:          pointer.To(true),
+							Order:                           pointer.To(int64(123)),
+							PackageReferenceId:              "abc",
+							Tags:                            pointer.To("tags"),
+							TreatFailureAsDeploymentFailure: pointer.To(true),
+						},
+					}),
+				},
+				AvailabilitySet: &virtualmachines.SubResource{
+					Id: pointer.To("a"),
+				},
+				BillingProfile: &virtualmachines.BillingProfile{
+					MaxPrice: pointer.To(1.2),
+				},
+				CapacityReservation: &virtualmachines.CapacityReservationProfile{
+					CapacityReservationGroup: &virtualmachines.SubResource{
+						Id: pointer.To("a"),
+					},
+				},
+				DiagnosticsProfile: &virtualmachines.DiagnosticsProfile{
+					BootDiagnostics: &virtualmachines.BootDiagnostics{
+						Enabled:    pointer.To(true),
+						StorageUri: pointer.To("uri"),
+					},
+				},
+				EvictionPolicy:       pointer.To(virtualmachines.VirtualMachineEvictionPolicyTypesDelete),
+				ExtensionsTimeBudget: pointer.To("a"),
+				HardwareProfile: &virtualmachines.HardwareProfile{
+					VMSize: pointer.To(virtualmachines.VirtualMachineSizeTypesBasicAOne),
+					VMSizeProperties: &virtualmachines.VMSizeProperties{
+						VCPUsAvailable: pointer.To(int64(123)),
+						VCPUsPerCore:   pointer.To(int64(123)),
+					},
+				},
+				Host: &virtualmachines.SubResource{
+					Id: pointer.To("a"),
+				},
+				HostGroup: &virtualmachines.SubResource{
+					Id: pointer.To("a"),
+				},
+				InstanceView: &virtualmachines.VirtualMachineInstanceView{
+					AssignedHost: pointer.To("host"),
+					BootDiagnostics: &virtualmachines.BootDiagnosticsInstanceView{
+						ConsoleScreenshotBlobUri: pointer.To("uri"),
+						SerialConsoleLogBlobUri:  pointer.To("uri"),
+						Status: &virtualmachines.InstanceViewStatus{
+							Code:          pointer.To("code"),
+							DisplayStatus: pointer.To("display"),
+							Level:         pointer.To(virtualmachines.StatusLevelTypesInfo),
+							Message:       pointer.To("msg"),
+							Time:          pointer.To("time"),
+						},
+					},
+					ComputerName:      pointer.To("name"),
+					Disks:             pointer.To([]virtualmachines.DiskInstanceView{}),
+					Extensions:        nil,
+					HyperVGeneration:  nil,
+					IsVMInStandbyPool: nil,
+					MaintenanceRedeployStatus: &virtualmachines.MaintenanceRedeployStatus{
+						IsCustomerInitiatedMaintenanceAllowed: nil,
+						LastOperationMessage:                  nil,
+						LastOperationResultCode:               nil,
+						MaintenanceWindowEndTime:              nil,
+						MaintenanceWindowStartTime:            nil,
+						PreMaintenanceWindowEndTime:           nil,
+						PreMaintenanceWindowStartTime:         nil,
+					},
+					OsName:    nil,
+					OsVersion: nil,
+					PatchStatus: &virtualmachines.VirtualMachinePatchStatus{
+						AvailablePatchSummary: &virtualmachines.AvailablePatchSummary{
+							AssessmentActivityId:          nil,
+							CriticalAndSecurityPatchCount: nil,
+							Error: &virtualmachines.ApiError{
+								Code:    nil,
+								Details: nil,
+								Innererror: &virtualmachines.InnerError{
+									Errordetail:   nil,
+									Exceptiontype: nil,
+								},
+								Message: nil,
+								Target:  nil,
+							},
+							LastModifiedTime: nil,
+							OtherPatchCount:  nil,
+							RebootPending:    nil,
+							StartTime:        nil,
+							Status:           nil,
+						},
+						ConfigurationStatuses: nil,
+						LastPatchInstallationSummary: &virtualmachines.LastPatchInstallationSummary{
+							Error: &virtualmachines.ApiError{
+								Code:    nil,
+								Details: nil,
+								Innererror: &virtualmachines.InnerError{
+									Errordetail:   nil,
+									Exceptiontype: nil,
+								},
+								Message: nil,
+								Target:  nil,
+							},
+							ExcludedPatchCount:        nil,
+							FailedPatchCount:          nil,
+							InstallationActivityId:    nil,
+							InstalledPatchCount:       nil,
+							LastModifiedTime:          nil,
+							MaintenanceWindowExceeded: nil,
+							NotSelectedPatchCount:     nil,
+							PendingPatchCount:         nil,
+							StartTime:                 nil,
+							Status:                    nil,
+						},
+					},
+					PlatformFaultDomain:  nil,
+					PlatformUpdateDomain: nil,
+					RdpThumbPrint:        nil,
+					Statuses:             nil,
+					VMAgent: &virtualmachines.VirtualMachineAgentInstanceView{
+						ExtensionHandlers: nil,
+						Statuses:          nil,
+						VMAgentVersion:    nil,
+					},
+					VMHealth: &virtualmachines.VirtualMachineHealthStatus{
+						Status: &virtualmachines.InstanceViewStatus{
+							Code:          nil,
+							DisplayStatus: nil,
+							Level:         nil,
+							Message:       nil,
+							Time:          nil,
+						},
+					},
+				},
+				LicenseType: nil,
+				NetworkProfile: &virtualmachines.NetworkProfile{
+					NetworkApiVersion:              nil,
+					NetworkInterfaceConfigurations: nil,
+					NetworkInterfaces:              nil,
+				},
+				OsProfile: &virtualmachines.OSProfile{
+					AdminPassword:            nil,
+					AdminUsername:            nil,
+					AllowExtensionOperations: nil,
+					ComputerName:             nil,
+					CustomData:               nil,
+					LinuxConfiguration: &virtualmachines.LinuxConfiguration{
+						DisablePasswordAuthentication: nil,
+						EnableVMAgentPlatformUpdates:  nil,
+						PatchSettings: &virtualmachines.LinuxPatchSettings{
+							AssessmentMode: nil,
+							AutomaticByPlatformSettings: &virtualmachines.LinuxVMGuestPatchAutomaticByPlatformSettings{
+								BypassPlatformSafetyChecksOnUserSchedule: nil,
+								RebootSetting:                            nil,
+							},
+							PatchMode: nil,
+						},
+						ProvisionVMAgent: nil,
+						Ssh: &virtualmachines.SshConfiguration{
+							PublicKeys: nil,
+						},
+					},
+					RequireGuestProvisionSignal: nil,
+					Secrets:                     nil,
+					WindowsConfiguration: &virtualmachines.WindowsConfiguration{
+						AdditionalUnattendContent:    nil,
+						EnableAutomaticUpdates:       nil,
+						EnableVMAgentPlatformUpdates: nil,
+						PatchSettings: &virtualmachines.PatchSettings{
+							AssessmentMode: nil,
+							AutomaticByPlatformSettings: &virtualmachines.WindowsVMGuestPatchAutomaticByPlatformSettings{
+								BypassPlatformSafetyChecksOnUserSchedule: nil,
+								RebootSetting:                            nil,
+							},
+							EnableHotpatching: nil,
+							PatchMode:         nil,
+						},
+						ProvisionVMAgent: nil,
+						TimeZone:         nil,
+						WinRM: &virtualmachines.WinRMConfiguration{
+							Listeners: nil,
+						},
+					},
+				},
+				PlatformFaultDomain: nil,
+				Priority:            nil,
+				ProvisioningState:   nil,
+				ProximityPlacementGroup: &virtualmachines.SubResource{
+					Id: nil,
+				},
+				ScheduledEventsPolicy: &virtualmachines.ScheduledEventsPolicy{
+					ScheduledEventsAdditionalPublishingTargets: &virtualmachines.ScheduledEventsAdditionalPublishingTargets{
+						EventGridAndResourceGraph: &virtualmachines.EventGridAndResourceGraph{
+							Enable: nil,
+						},
+					},
+					UserInitiatedReboot: &virtualmachines.UserInitiatedReboot{
+						AutomaticallyApprove: nil,
+					},
+					UserInitiatedRedeploy: &virtualmachines.UserInitiatedRedeploy{
+						AutomaticallyApprove: nil,
+					},
+				},
+				ScheduledEventsProfile: &virtualmachines.ScheduledEventsProfile{
+					OsImageNotificationProfile: &virtualmachines.OSImageNotificationProfile{
+						Enable:           nil,
+						NotBeforeTimeout: nil,
+					},
+					TerminateNotificationProfile: &virtualmachines.TerminateNotificationProfile{
+						Enable:           nil,
+						NotBeforeTimeout: nil,
+					},
+				},
+				SecurityProfile: &virtualmachines.SecurityProfile{
+					EncryptionAtHost: nil,
+					EncryptionIdentity: &virtualmachines.EncryptionIdentity{
+						UserAssignedIdentityResourceId: nil,
+					},
+					ProxyAgentSettings: &virtualmachines.ProxyAgentSettings{
+						Enabled:          nil,
+						KeyIncarnationId: nil,
+						Mode:             nil,
+					},
+					SecurityType: nil,
+					UefiSettings: &virtualmachines.UefiSettings{
+						SecureBootEnabled: nil,
+						VTpmEnabled:       nil,
+					},
+				},
+				StorageProfile: &virtualmachines.StorageProfile{
+					DataDisks:          nil,
+					DiskControllerType: nil,
+					ImageReference: &virtualmachines.ImageReference{
+						CommunityGalleryImageId: nil,
+						ExactVersion:            nil,
+						Id:                      nil,
+						Offer:                   nil,
+						Publisher:               nil,
+						SharedGalleryImageId:    nil,
+						Sku:                     nil,
+						Version:                 nil,
+					},
+					OsDisk: &virtualmachines.OSDisk{
+						Caching:      nil,
+						CreateOption: "",
+						DeleteOption: nil,
+						DiffDiskSettings: &virtualmachines.DiffDiskSettings{
+							Option:    nil,
+							Placement: nil,
+						},
+						DiskSizeGB: nil,
+						EncryptionSettings: &virtualmachines.DiskEncryptionSettings{
+							DiskEncryptionKey: &virtualmachines.KeyVaultSecretReference{
+								SecretUrl: "",
+								SourceVault: virtualmachines.SubResource{
+									Id: nil,
+								},
+							},
+							Enabled: nil,
+							KeyEncryptionKey: &virtualmachines.KeyVaultKeyReference{
+								KeyUrl: "",
+								SourceVault: virtualmachines.SubResource{
+									Id: nil,
+								},
+							},
+						},
+						Image: &virtualmachines.VirtualHardDisk{
+							Uri: nil,
+						},
+						ManagedDisk: &virtualmachines.ManagedDiskParameters{
+							DiskEncryptionSet: &virtualmachines.SubResource{
+								Id: nil,
+							},
+							Id: nil,
+							SecurityProfile: &virtualmachines.VMDiskSecurityProfile{
+								DiskEncryptionSet: &virtualmachines.SubResource{
+									Id: nil,
+								},
+								SecurityEncryptionType: nil,
+							},
+							StorageAccountType: nil,
+						},
+						Name:   nil,
+						OsType: nil,
+						Vhd: &virtualmachines.VirtualHardDisk{
+							Uri: nil,
+						},
+						WriteAcceleratorEnabled: nil,
+					},
+				},
+				TimeCreated: nil,
+				UserData:    nil,
+				VMId:        nil,
+				VirtualMachineScaleSet: &virtualmachines.SubResource{
+					Id: nil,
+				},
+			},
+			Resources: nil,
+			Tags:      nil,
+			Type:      nil,
+			Zones:     nil,
+		},
+	}
+	if model := respModel.Model; model != nil {
 		d.Set("location", location.Normalize(model.Location))
 		d.Set("edge_zone", flattenEdgeZone(model.ExtendedLocation))
 
@@ -968,14 +1303,14 @@ func resourceLinuxVirtualMachineRead(d *pluginsdk.ResourceData, meta interface{}
 			if profile := props.StorageProfile; profile != nil {
 				d.Set("disk_controller_type", string(pointer.From(props.StorageProfile.DiskControllerType)))
 
-				// the storage_account_type isn't returned so we need to look it up
-				flattenedOSDisk, err := flattenVirtualMachineOSDisk(ctx, disksClient, profile.OsDisk)
-				if err != nil {
-					return fmt.Errorf("flattening `os_disk`: %+v", err)
-				}
-				if err := d.Set("os_disk", flattenedOSDisk); err != nil {
-					return fmt.Errorf("settings `os_disk`: %+v", err)
-				}
+				// // the storage_account_type isn't returned so we need to look it up
+				// flattenedOSDisk, err := flattenVirtualMachineOSDisk(ctx, disksClient, profile.OsDisk)
+				// if err != nil {
+				// 	return fmt.Errorf("flattening `os_disk`: %+v", err)
+				// }
+				// if err := d.Set("os_disk", flattenedOSDisk); err != nil {
+				// 	return fmt.Errorf("settings `os_disk`: %+v", err)
+				// }
 
 				var storageImageId string
 				if profile.ImageReference != nil && profile.ImageReference.Id != nil {
@@ -1030,13 +1365,13 @@ func resourceLinuxVirtualMachineRead(d *pluginsdk.ResourceData, meta interface{}
 			d.Set("virtual_machine_id", props.VMId)
 			d.Set("user_data", props.UserData)
 
-			connectionInfo := retrieveConnectionInformation(ctx, networkInterfacesClient, publicIPAddressesClient, props)
-			d.Set("private_ip_address", connectionInfo.primaryPrivateAddress)
-			d.Set("private_ip_addresses", connectionInfo.privateAddresses)
-			d.Set("public_ip_address", connectionInfo.primaryPublicAddress)
-			d.Set("public_ip_addresses", connectionInfo.publicAddresses)
+			//connectionInfo := retrieveConnectionInformation(ctx, networkInterfacesClient, publicIPAddressesClient, props)
+			d.Set("private_ip_address", "xxx")
+			d.Set("private_ip_addresses", []interface{}{"xxx"})
+			d.Set("public_ip_address", "xxx")
+			d.Set("public_ip_addresses", []interface{}{"xxx"})
 			isWindows := false
-			setConnectionInformation(d, connectionInfo, isWindows)
+			setConnectionInformation(d, connectionInfo{}, isWindows)
 		}
 		return tags.FlattenAndSet(d, model.Tags)
 	}
