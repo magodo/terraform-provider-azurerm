@@ -18,6 +18,8 @@ import (
 	providerfunction "github.com/hashicorp/terraform-provider-azurerm/internal/provider/function"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/resourceproviders"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/sdk/frameworkhelpers"
+	fixnetwork "github.com/hashicorp/terraform-provider-azurerm/internal/services/network/fix"
+	"github.com/magodo/terrafix-sdk/tfxsdk"
 )
 
 type azureRmFrameworkProvider struct {
@@ -33,6 +35,20 @@ func (p *azureRmFrameworkProvider) Functions(_ context.Context) []func() functio
 	return []func() function.Function{
 		providerfunction.NewNormaliseResourceIDFunction,
 		providerfunction.NewParseResourceIDFunction,
+		func() function.Function {
+			return tfxsdk.NewFixConfigDefinitionFunction(tfxsdk.DefinitionFixers{
+				tfxsdk.BlockTypeResource: map[string]tfxsdk.DefinitionFixFunction{
+					"azurerm_virtual_network": fixnetwork.DefinitionVirtualNetwork,
+				},
+			})
+		},
+		func() function.Function {
+			return tfxsdk.NewFixConfigReferenceFunction(tfxsdk.ReferenceFixers{
+				tfxsdk.BlockTypeResource: map[string]tfxsdk.ReferenceFixFunction{
+					"azurerm_virtual_network": fixnetwork.ReferenceVirtualNetwork,
+				},
+			})
+		},
 	}
 }
 

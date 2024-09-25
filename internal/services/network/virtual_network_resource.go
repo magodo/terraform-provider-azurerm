@@ -70,7 +70,12 @@ func resourceVirtualNetworkSchema() map[string]*pluginsdk.Schema {
 
 		"resource_group_name": commonschema.ResourceGroupName(),
 
-		"location": commonschema.Location(),
+		"locations": {
+			Type:     pluginsdk.TypeList,
+			Required: true,
+			ForceNew: true,
+			Elem:     commonschema.Location(),
+		},
 
 		"address_space": {
 			Type:     pluginsdk.TypeSet,
