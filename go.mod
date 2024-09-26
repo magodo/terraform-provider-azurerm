@@ -95,6 +95,6 @@ require (
 	software.sslmate.com/src/go-pkcs12 v0.4.0 // indirect
 )
 
-go 1.23.1
+go 1.23
 
 replace github.com/magodo/terrafix-sdk => ../terrafix-sdk
