@@ -152,7 +152,7 @@ func resourceVirtualNetworkSchema() map[string]*pluginsdk.Schema {
 
 		"guid": {
 			Type:     pluginsdk.TypeString,
-			Computed: true,
+			Required: true,
 		},
 
 		"subnet": {

@@ -2,14 +2,16 @@ package tfxsdk
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
+	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/hashicorp/terraform-plugin-framework/function"
 )
 
-type DefinitionFixFunction func(version int, sbody *hclsyntax.Body, wbody *hclwrite.Body) error
+type DefinitionFixFunction func(version int, sbody *hclsyntax.Body, wbody *hclwrite.Body, state *tfjson.StateResource) error
 
 type DefinitionFixers map[BlockType]map[string]DefinitionFixFunction
 
@@ -53,6 +55,11 @@ func (a FixConfigDefinitionFunction) Definition(_ context.Context, _ function.De
 				Description:         "The content of the block definition",
 				MarkdownDescription: "The content of the block definition",
 			},
+			function.StringParameter{
+				Name:                "raw_state",
+				Description:         "(Optional) The content of the block's terraform state. Only for resource or data source",
+				MarkdownDescription: "(Optional) The content of the block's terraform state. Only for resource or data source",
+			},
 		},
 		Return: function.StringReturn{},
 	}
@@ -61,9 +68,9 @@ func (a FixConfigDefinitionFunction) Definition(_ context.Context, _ function.De
 func (a FixConfigDefinitionFunction) Run(ctx context.Context, request function.RunRequest, response *function.RunResponse) {
 	var blockType, blockName string
 	var version int64
-	var rawContent string
+	var rawContent, rawState string
 
-	response.Error = function.ConcatFuncErrors(request.Arguments.Get(ctx, &blockType, &blockName, &version, &rawContent))
+	response.Error = function.ConcatFuncErrors(request.Arguments.Get(ctx, &blockType, &blockName, &version, &rawContent, &rawState))
 	if response.Error != nil {
 		return
 	}
@@ -82,10 +89,20 @@ func (a FixConfigDefinitionFunction) Run(ctx context.Context, request function.R
 	}
 	wbody := wf.Body().Blocks()[0].Body()
 
+	var state *tfjson.StateResource
+	if rawState != "" {
+		var tstate tfjson.StateResource
+		if err := json.Unmarshal([]byte(rawState), &tstate); err != nil {
+			response.Error = function.NewFuncError(diags.Error())
+			return
+		}
+		state = &tstate
+	}
+
 	var err error
 	if m, ok := a.Fixers[BlockType(blockType)]; ok {
 		if u, ok := m[blockName]; ok {
-			err = u(int(version), sbody, wbody)
+			err = u(int(version), sbody, wbody, state)
 		}
 	}
 	if err != nil {
