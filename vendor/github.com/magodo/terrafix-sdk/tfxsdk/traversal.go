@@ -8,9 +8,31 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
+// TraversalReplace finds the traveral prefix "tpfx" in the "t", replace the last traverse of "tpfx" in the "t"
+// with the "nt".
+//
+// Any index/splat steps in "t" will be ignored, except the current step in "tpfx" being
+// tested is also a index/slat step.
+//
+// If the "tpfx" is not found, "t" will be returned.
+func TraversalReplace(t hcl.Traversal, tpfx hcl.Traversal, nt hcl.Traversal) (hcl.Traversal, error) {
+	idx, err := findSubTraversal(t, tpfx)
+	if err != nil {
+		return nil, err
+	}
+
+	if idx == -1 {
+		return t, nil
+	}
+	tt := append(hcl.Traversal{}, t[:idx]...)
+	tt = append(tt, nt...)
+	tt = append(tt, t[idx+1:]...)
+	return tt, nil
+}
+
 // TraversalMatches tells whether the traversal "t1" matches the sub-traversal t2.
 //
-// Any index/splat steps in "addr" will be ignored, except the current step in "subaddr" being
+// Any index/splat steps in "t1" will be ignored, except the current step in "t2str" being
 // tested is also a index/slat step.
 //
 // current step in "t2" being tested is also a index/slat step.
@@ -43,24 +65,28 @@ func TraversalMatches(t1 hcl.Traversal, t2str string) (bool, error) {
 	return true, nil
 }
 
-// FindSubAddr finds the last step's traversal index in "t1", for the sub-address "t2".
+// FindSubTraversal finds the last step's traversal index in "t1", for the sub-address "t2".
 //
 // Any index/splat steps in "t1" will be ignored, except the current step in "t2" being
 // tested is also a index/slat step.
 //
 // If "t2" is not found in the "t1", -1 is returned.
 // E.g. Given "a[0].b.c", and as "a.b", 2 is returned.
-func FindSubAddr(t1 hcl.Traversal, t2str string) (int, error) {
-	addr2, err := ParseTraversal(t2str)
+func FindSubTraversal(t1 hcl.Traversal, t2str string) (int, error) {
+	t2, err := ParseTraversal(t2str)
 	if err != nil {
 		return 0, fmt.Errorf("parsing traversal %s: %v", t2str, err)
 	}
 
+	return findSubTraversal(t1, t2)
+}
+
+func findSubTraversal(t1, t2 hcl.Traversal) (int, error) {
 	i2 := 0
 	var idx int
 	for i1 := range t1 {
 		n1, isAttr1 := FormatTraverse(t1[i1])
-		n2, isAttr2 := FormatTraverse(addr2[i2])
+		n2, isAttr2 := FormatTraverse(t2[i2])
 
 		// Skip indx/splat in addr if the current focused subaddr is an attr
 		if !isAttr1 && isAttr2 {
@@ -71,12 +97,12 @@ func FindSubAddr(t1 hcl.Traversal, t2str string) (int, error) {
 			return -1, nil
 		}
 		i2 += 1
-		if len(addr2) == i2 {
+		if len(t2) == i2 {
 			idx = i1
 			break
 		}
 	}
-	if len(addr2) != i2 {
+	if len(t2) != i2 {
 		return -1, nil
 	}
 	return idx, nil
