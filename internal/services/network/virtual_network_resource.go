@@ -27,6 +27,7 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/features"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/locks"
+	"github.com/hashicorp/terraform-provider-azurerm/internal/services/network/migration"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/network/validate"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/suppress"
@@ -47,7 +48,6 @@ func resourceVirtualNetwork() *pluginsdk.Resource {
 			_, err := commonids.ParseVirtualNetworkID(id)
 			return err
 		}),
-
 		Timeouts: &pluginsdk.ResourceTimeout{
 			Create: pluginsdk.DefaultTimeout(30 * time.Minute),
 			Read:   pluginsdk.DefaultTimeout(5 * time.Minute),
@@ -55,7 +55,12 @@ func resourceVirtualNetwork() *pluginsdk.Resource {
 			Delete: pluginsdk.DefaultTimeout(30 * time.Minute),
 		},
 
-		Schema: resourceVirtualNetworkSchema(),
+		Schema:        resourceVirtualNetworkSchema(),
+		SchemaVersion: 2,
+		StateUpgraders: pluginsdk.StateUpgrades(map[int]pluginsdk.StateUpgrade{
+			0: migration.VirtualNetworkV0ToV1{},
+			1: migration.VirtualNetworkV1ToV2{},
+		}),
 	}
 }
 
@@ -74,7 +79,9 @@ func resourceVirtualNetworkSchema() map[string]*pluginsdk.Schema {
 			Type:     pluginsdk.TypeList,
 			Required: true,
 			ForceNew: true,
-			Elem:     commonschema.Location(),
+			Elem: &pluginsdk.Schema{
+				Type: pluginsdk.TypeString,
+			},
 		},
 
 		"address_space": {
@@ -150,7 +157,7 @@ func resourceVirtualNetworkSchema() map[string]*pluginsdk.Schema {
 			ValidateFunc: validation.IntBetween(4, 30),
 		},
 
-		"guid": {
+		"uuid": {
 			Type:     pluginsdk.TypeString,
 			Required: true,
 		},
@@ -428,11 +435,11 @@ func resourceVirtualNetworkRead(d *pluginsdk.ResourceData, meta interface{}) err
 	d.Set("resource_group_name", id.ResourceGroupName)
 
 	if model := resp.Model; model != nil {
-		d.Set("location", location.NormalizeNilable(model.Location))
+		d.Set("location", []interface{}{location.NormalizeNilable(model.Location)})
 		d.Set("edge_zone", flattenEdgeZoneModel(model.ExtendedLocation))
 
 		if props := model.Properties; props != nil {
-			d.Set("guid", props.ResourceGuid)
+			d.Set("uuid", props.ResourceGuid)
 			d.Set("flow_timeout_in_minutes", props.FlowTimeoutInMinutes)
 
 			if space := props.AddressSpace; space != nil {

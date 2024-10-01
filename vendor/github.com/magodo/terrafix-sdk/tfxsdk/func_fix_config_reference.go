@@ -3,6 +3,8 @@ package tfxsdk
 import (
 	"context"
 	"fmt"
+	"maps"
+	"slices"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
@@ -10,9 +12,26 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
-type ReferenceFixFunction func(version int, traversals []hcl.Traversal) ([]hcl.Traversal, error)
+// ReferenceConfigUpgraders is a collection of ReferenceConfigUpgrader, from the schema version 0 to the latest supported version. Each ReferenceConfigUpgraders upgrades the reference config one version forward.
+//
+// The schema version expects to be continuouse within the major version of the provider.
+type ReferenceConfigUpgraders map[int]ReferenceConfigUpgrader
 
-type ReferenceFixers map[BlockType]map[string]ReferenceFixFunction
+// ReferenceConfigUpgrader upgrades the reference config from the current schema version to the next version
+type ReferenceConfigUpgrader struct {
+	ReferenceConfigUpgrader func(context.Context, UpgradeReferenceConfigRequest, *UpgradeReferenceConfigResponse)
+}
+
+type UpgradeReferenceConfigRequest struct {
+	Traversals []hcl.Traversal
+}
+
+type UpgradeReferenceConfigResponse struct {
+	Traversals []hcl.Traversal
+	Error      error
+}
+
+type ReferenceFixers map[BlockType]map[string]ReferenceConfigUpgraders
 
 type FixConfigReferenceFunction struct {
 	Fixers ReferenceFixers
@@ -72,6 +91,7 @@ func (a FixConfigReferenceFunction) Run(ctx context.Context, request function.Ru
 		return
 	}
 
+	// Parsing traversals
 	var traversals []hcl.Traversal
 	for _, content := range rawContents {
 		expr, diags := hclsyntax.ParseExpression([]byte(content), "", hcl.InitialPos)
@@ -92,14 +112,33 @@ func (a FixConfigReferenceFunction) Run(ctx context.Context, request function.Ru
 		traversals = append(traversals, tv)
 	}
 
+	// Fix traversals
 	if m, ok := a.Fixers[BlockType(blockType)]; ok {
-		if u, ok := m[blockName]; ok {
-			var err error
-			traversals, err = u(int(version), traversals)
+		if us, ok := m[blockName]; ok {
+			versions := slices.Sorted(maps.Keys(us))
+			version := int(version)
+			idx, err := SchemaVersioIndex(versions, version)
 			if err != nil {
 				response.Error = function.NewFuncError(err.Error())
 				return
 			}
+			if idx != -1 {
+				for _, v := range versions[idx:] {
+					u := us[v]
+					var resp UpgradeReferenceConfigResponse
+					req := UpgradeReferenceConfigRequest{
+						Traversals: traversals,
+					}
+					u.ReferenceConfigUpgrader(ctx, req, &resp)
+					if resp.Error != nil {
+						response.Error = function.NewFuncError(resp.Error.Error())
+						return
+					}
+					// Update traversals
+					traversals = resp.Traversals
+				}
+			}
+
 		}
 	}
 

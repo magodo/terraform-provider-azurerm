@@ -3,6 +3,8 @@ package tfxsdk
 import (
 	"context"
 	"encoding/json"
+	"maps"
+	"slices"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
@@ -11,9 +13,33 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/function"
 )
 
-type DefinitionFixFunction func(version int, sbody *hclsyntax.Body, wbody *hclwrite.Body, state *tfjson.StateResource) error
+// DefinitionConfigUpgraders is a collection of DefinitionConfigUpgrader, from the schema version 0 to the latest supported version. Each DefinitionConfigUpgraders upgrades the definition config one version forward.
+//
+// The schema version expects to be continuouse within the major version of the provider.
+type DefinitionConfigUpgraders map[int]DefinitionConfigUpgrader
 
-type DefinitionFixers map[BlockType]map[string]DefinitionFixFunction
+// DefinitionConfigUpgrader upgrades the definition config from the current schema version to the next version
+type DefinitionConfigUpgrader struct {
+	DefinitionConfigUpgrader func(context.Context, UpgradeDefinitionConfigRequest, *UpgradeDefinitionConfigResponse)
+}
+
+type UpgradeDefinitionConfigRequest struct {
+	// The syntax body that descirbes this definition
+	SyntaxBody *hclsyntax.Body
+	// The hclwrite.Body that the user is supposed to make change to
+	WriteBody *hclwrite.Body
+	// State can be nil for modules without state, or resource whose address contains the index
+	State map[string]interface{}
+}
+
+type UpgradeDefinitionConfigResponse struct {
+	// State represents the upgraded states to the next schema version.
+	// The provider is expected to invoke its StateUpgrader to retrieve the result.
+	State map[string]interface{}
+	Error error
+}
+
+type DefinitionFixers map[BlockType]map[string]DefinitionConfigUpgraders
 
 type FixConfigDefinitionFunction struct {
 	Fixers DefinitionFixers
@@ -75,40 +101,62 @@ func (a FixConfigDefinitionFunction) Run(ctx context.Context, request function.R
 		return
 	}
 
-	sf, diags := hclsyntax.ParseConfig([]byte(rawContent), "", hcl.InitialPos)
-	if diags.HasErrors() {
-		response.Error = function.NewFuncError(diags.Error())
-		return
-	}
-	sbody := sf.Body.(*hclsyntax.Body).Blocks[0].Body
-
-	wf, diags := hclwrite.ParseConfig([]byte(rawContent), "", hcl.InitialPos)
-	if diags.HasErrors() {
-		response.Error = function.NewFuncError(diags.Error())
-		return
-	}
-	wbody := wf.Body().Blocks()[0].Body()
-
-	var state *tfjson.StateResource
+	var state map[string]interface{}
 	if rawState != "" {
 		var tstate tfjson.StateResource
 		if err := json.Unmarshal([]byte(rawState), &tstate); err != nil {
-			response.Error = function.NewFuncError(diags.Error())
+			response.Error = function.NewFuncError(err.Error())
 			return
 		}
-		state = &tstate
+		state = tstate.AttributeValues
 	}
 
-	var err error
 	if m, ok := a.Fixers[BlockType(blockType)]; ok {
-		if u, ok := m[blockName]; ok {
-			err = u(int(version), sbody, wbody, state)
+		if us, ok := m[blockName]; ok {
+			versions := slices.Sorted(maps.Keys(us))
+			version := int(version)
+			idx, err := SchemaVersioIndex(versions, version)
+			if err != nil {
+				response.Error = function.NewFuncError(err.Error())
+				return
+			}
+			if idx != -1 {
+				for _, v := range versions[idx:] {
+					u := us[v]
+
+					sf, diags := hclsyntax.ParseConfig([]byte(rawContent), "", hcl.InitialPos)
+					if diags.HasErrors() {
+						response.Error = function.NewFuncError(diags.Error())
+						return
+					}
+					sbody := sf.Body.(*hclsyntax.Body).Blocks[0].Body
+
+					wf, diags := hclwrite.ParseConfig([]byte(rawContent), "", hcl.InitialPos)
+					if diags.HasErrors() {
+						response.Error = function.NewFuncError(diags.Error())
+						return
+					}
+					wbody := wf.Body().Blocks()[0].Body()
+
+					var resp UpgradeDefinitionConfigResponse
+					req := UpgradeDefinitionConfigRequest{
+						SyntaxBody: sbody,
+						WriteBody:  wbody,
+						State:      state,
+					}
+					u.DefinitionConfigUpgrader(ctx, req, &resp)
+					if resp.Error != nil {
+						response.Error = function.NewFuncError(resp.Error.Error())
+						return
+					}
+
+					// Update rawContent and state
+					rawContent = string(wf.Bytes())
+					state = resp.State
+				}
+			}
 		}
 	}
-	if err != nil {
-		response.Error = function.NewFuncError(err.Error())
-		return
-	}
 
-	response.Error = function.ConcatFuncErrors(response.Result.Set(ctx, string(wf.Bytes())))
+	response.Error = function.ConcatFuncErrors(response.Result.Set(ctx, rawContent))
 }

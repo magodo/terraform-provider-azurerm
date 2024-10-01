@@ -37,14 +37,14 @@ func (p *azureRmFrameworkProvider) Functions(_ context.Context) []func() functio
 		providerfunction.NewParseResourceIDFunction,
 		func() function.Function {
 			return tfxsdk.NewFixConfigDefinitionFunction(tfxsdk.DefinitionFixers{
-				tfxsdk.BlockTypeResource: map[string]tfxsdk.DefinitionFixFunction{
+				tfxsdk.BlockTypeResource: map[string]tfxsdk.DefinitionConfigUpgraders{
 					"azurerm_virtual_network": fixnetwork.DefinitionVirtualNetwork,
 				},
 			})
 		},
 		func() function.Function {
 			return tfxsdk.NewFixConfigReferenceFunction(tfxsdk.ReferenceFixers{
-				tfxsdk.BlockTypeResource: map[string]tfxsdk.ReferenceFixFunction{
+				tfxsdk.BlockTypeResource: map[string]tfxsdk.ReferenceConfigUpgraders{
 					"azurerm_virtual_network": fixnetwork.ReferenceVirtualNetwork,
 				},
 			})
