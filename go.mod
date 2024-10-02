@@ -30,7 +30,7 @@ require (
 	github.com/hashicorp/terraform-plugin-mux v0.16.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.33.0
 	github.com/hashicorp/terraform-plugin-testing v1.8.0
-	github.com/magodo/terrafix-sdk v0.0.0-00010101000000-000000000000
+	github.com/magodo/terrafix-sdk v0.0.0-20241001141131-8ab8a4e970a4
 	github.com/magodo/terraform-provider-azurerm-example-gen v0.0.0-20220407025246-3a3ee0ab24a8
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/rickb777/date v1.12.5-0.20200422084442-6300e543c4d9
@@ -96,5 +96,3 @@ require (
 )
 
 go 1.23
-
-replace github.com/magodo/terrafix-sdk => ../terrafix-sdk
