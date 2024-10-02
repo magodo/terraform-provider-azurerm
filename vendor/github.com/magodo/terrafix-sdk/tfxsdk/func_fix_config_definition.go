@@ -45,11 +45,12 @@ type FixConfigDefinitionFunction struct {
 	Fixers DefinitionFixers
 }
 
-var _ function.Function = FixConfigDefinitionFunction{}
-
+// NewFixConfigDefinitionFunction returns the provider function for fixing the config definition.
 func NewFixConfigDefinitionFunction(fixers DefinitionFixers) function.Function {
 	return &FixConfigDefinitionFunction{Fixers: fixers}
 }
+
+var _ function.Function = FixConfigDefinitionFunction{}
 
 func (a FixConfigDefinitionFunction) Metadata(_ context.Context, _ function.MetadataRequest, response *function.MetadataResponse) {
 	response.Name = "terrafix_config_definition"

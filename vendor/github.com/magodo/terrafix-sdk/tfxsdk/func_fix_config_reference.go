@@ -39,6 +39,7 @@ type FixConfigReferenceFunction struct {
 
 var _ function.Function = FixConfigReferenceFunction{}
 
+// NewFixConfigReferenceFunction returns the provider function for fixing the config reference.
 func NewFixConfigReferenceFunction(fixers ReferenceFixers) function.Function {
 	return &FixConfigReferenceFunction{Fixers: fixers}
 }
