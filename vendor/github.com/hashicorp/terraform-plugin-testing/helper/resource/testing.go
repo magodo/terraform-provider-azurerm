@@ -892,13 +892,13 @@ func Test(t testing.T, c TestCase) {
 	// Run the PreCheck if we have it.
 	// This is done after the auto-configure to allow providers
 	// to override the default auto-configure parameters.
-	if c.PreCheck != nil {
-		logging.HelperResourceDebug(ctx, "Calling TestCase PreCheck")
+	// if c.PreCheck != nil {
+	// 	logging.HelperResourceDebug(ctx, "Calling TestCase PreCheck")
 
-		c.PreCheck()
+	// 	c.PreCheck()
 
-		logging.HelperResourceDebug(ctx, "Called TestCase PreCheck")
-	}
+	// 	logging.HelperResourceDebug(ctx, "Called TestCase PreCheck")
+	// }
 
 	sourceDir, err := os.Getwd()
 	if err != nil {

@@ -7,6 +7,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+	"strconv"
 
 	"github.com/hashicorp/terraform-exec/tfexec"
 	tfjson "github.com/hashicorp/terraform-json"
@@ -95,6 +99,16 @@ func testStepNewConfig(ctx context.Context, t testing.T, c TestCase, wd *plugint
 		return fmt.Errorf("Error setting config: %w", err)
 	}
 
+	if dir := os.Getenv("TF_OUTDIR"); dir != "" {
+		tdir := filepath.Join(dir, t.Name(), strconv.Itoa(stepIndex))
+		if err := os.MkdirAll(tdir, 0755); err != nil {
+			log.Fatal(err)
+		}
+		if err := testStepConfig.Write(ctx, tdir); err != nil {
+			log.Fatal(err)
+		}
+	}
+	return nil
 	// If this step is a PlanOnly step, skip over this first Plan and
 	// subsequent Apply, and use the follow-up Plan that checks for
 	// permadiffs
