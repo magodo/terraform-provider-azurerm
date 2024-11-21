@@ -195,8 +195,8 @@ func resourceStorageShareCreate(d *pluginsdk.ResourceData, meta interface{}) err
 	defer cancel()
 
 	if !features.FivePointOhBeta() {
-		storageClient := meta.(*clients.Client).Storage
 		if accountName := d.Get("storage_account_name").(string); accountName != "" {
+			storageClient := meta.(*clients.Client).Storage
 			shareName := d.Get("name").(string)
 			quota := d.Get("quota").(int)
 			metaDataRaw := d.Get("metadata").(map[string]interface{})
@@ -323,7 +323,7 @@ func resourceStorageShareRead(d *pluginsdk.ResourceData, meta interface{}) error
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
-	if !features.FivePointOhBeta() && !strings.HasPrefix(d.Id(), "/subscriptions/") {
+	if !features.FivePointOhBeta() && !isArmID(d.Id()) {
 		storageClient := meta.(*clients.Client).Storage
 		id, err := shares.ParseShareID(d.Id(), storageClient.StorageDomainSuffix)
 		if err != nil {
@@ -452,7 +452,7 @@ func resourceStorageShareUpdate(d *pluginsdk.ResourceData, meta interface{}) err
 	ctx, cancel := timeouts.ForUpdate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
-	if !features.FivePointOhBeta() && !strings.HasPrefix(d.Id(), "/subscriptions/") {
+	if !features.FivePointOhBeta() && !isArmID(d.Id()) {
 		id, err := shares.ParseShareID(d.Id(), storageClient.StorageDomainSuffix)
 		if err != nil {
 			return err
@@ -575,7 +575,7 @@ func resourceStorageShareDelete(d *pluginsdk.ResourceData, meta interface{}) err
 	ctx, cancel := timeouts.ForDelete(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
-	if !features.FivePointOhBeta() && !strings.HasPrefix(d.Id(), "/subscriptions/") {
+	if !features.FivePointOhBeta() && !isArmID(d.Id()) {
 		storageClient := meta.(*clients.Client).Storage
 		id, err := shares.ParseShareID(d.Id(), storageClient.StorageDomainSuffix)
 		if err != nil {

@@ -10,8 +10,12 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-azure-helpers/lang/response"
+	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonids"
+	"github.com/hashicorp/go-azure-sdk/resource-manager/storage/2023-01-01/fileshares"
 	"github.com/hashicorp/terraform-provider-azurerm/helpers/tf"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
+	"github.com/hashicorp/terraform-provider-azurerm/internal/features"
+	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/client"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/helpers"
 	storageValidate "github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/validate"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
@@ -50,10 +54,13 @@ func resourceStorageShareFile() *pluginsdk.Resource {
 			},
 
 			"storage_share_id": {
-				Type:         pluginsdk.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: storageValidate.StorageShareDataPlaneID,
+				Type:     pluginsdk.TypeString,
+				Required: true,
+				ForceNew: true,
+				ValidateFunc: validation.Any(
+					storageValidate.StorageShareDataPlaneID,
+					fileshares.ValidateShareID,
+				),
 			},
 
 			"path": {
@@ -112,35 +119,128 @@ func resourceStorageShareFileCreate(d *pluginsdk.ResourceData, meta interface{})
 	ctx, cancel := timeouts.ForCreate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
-	storageShareId, err := shares.ParseShareID(d.Get("storage_share_id").(string), storageClient.StorageDomainSuffix)
+	if !features.FivePointOhBeta() && !isArmID(d.Get("storage_share_id").(string)) {
+		storageShareId, err := shares.ParseShareID(d.Get("storage_share_id").(string), storageClient.StorageDomainSuffix)
+		if err != nil {
+			return err
+		}
+
+		fileName := d.Get("name").(string)
+		path := d.Get("path").(string)
+
+		account, err := storageClient.FindAccount(ctx, subscriptionId, storageShareId.AccountId.AccountName)
+		if err != nil {
+			return fmt.Errorf("retrieving Account %q for File %q (Share %q): %v", storageShareId.AccountId.AccountName, fileName, storageShareId.ShareName, err)
+		}
+		if account == nil {
+			return fmt.Errorf("locating Storage Account %q", storageShareId.AccountId.AccountName)
+		}
+
+		accountId, err := accounts.ParseAccountID(storageShareId.ID(), storageClient.StorageDomainSuffix)
+		if err != nil {
+			return fmt.Errorf("parsing Account ID: %v", err)
+		}
+
+		id := files.NewFileID(*accountId, storageShareId.ShareName, path, fileName)
+
+		client, err := storageClient.FileShareFilesDataPlaneClient(ctx, *account, storageClient.DataPlaneOperationSupportingAnyAuthMethod())
+		if err != nil {
+			return fmt.Errorf("building File Share Directories Client: %s", err)
+		}
+
+		existing, err := client.GetProperties(ctx, storageShareId.ShareName, path, fileName)
+		if err != nil {
+			if !response.WasNotFound(existing.HttpResponse) {
+				return fmt.Errorf("checking for existing %s: %v", id, err)
+			}
+		}
+
+		if !response.WasNotFound(existing.HttpResponse) {
+			return tf.ImportAsExistsError("azurerm_storage_share_file", id.ID())
+		}
+
+		input := files.CreateInput{
+			MetaData:           ExpandMetaData(d.Get("metadata").(map[string]interface{})),
+			ContentType:        utils.String(d.Get("content_type").(string)),
+			ContentEncoding:    utils.String(d.Get("content_encoding").(string)),
+			ContentDisposition: utils.String(d.Get("content_disposition").(string)),
+		}
+
+		if v, ok := d.GetOk("content_md5"); ok {
+			// Azure uses a Base64 encoded representation of the standard MD5 sum of the file
+			contentMD5, err := convertHexToBase64Encoding(v.(string))
+			if err != nil {
+				return fmt.Errorf("failed to hex decode then base64 encode `content_md5` value: %s", err)
+			}
+			input.ContentMD5 = &contentMD5
+		}
+
+		var file *os.File
+		if v, ok := d.GetOk("source"); ok {
+			file, err = os.Open(v.(string))
+			if err != nil {
+				return fmt.Errorf("opening file: %s", err)
+			}
+
+			info, err := file.Stat()
+			if err != nil {
+				return fmt.Errorf("'stat'-ing File %q (File Share %q / Account %q): %v", fileName, storageShareId.ShareName, storageShareId.AccountId.AccountName, err)
+			}
+
+			if info.Size() == 0 {
+				return fmt.Errorf("file %q (File Share %q / Account %q) is empty", fileName, storageShareId.ShareName, storageShareId.AccountId.AccountName)
+			}
+
+			input.ContentLength = info.Size()
+		}
+
+		if _, err = client.Create(ctx, storageShareId.ShareName, path, fileName, input); err != nil {
+			return fmt.Errorf("creating File %q (File Share %q / Account %q): %v", fileName, storageShareId.ShareName, storageShareId.AccountId.AccountName, err)
+		}
+
+		if file != nil {
+			if err = client.PutFile(ctx, storageShareId.ShareName, path, fileName, file, 4); err != nil {
+				return fmt.Errorf("uploading File: %q (File Share %q / Account %q): %v", fileName, storageShareId.ShareName, storageShareId.AccountId.AccountName, err)
+			}
+		}
+
+		d.SetId(id.ID())
+
+		return resourceStorageShareFileRead(d, meta)
+	}
+
+	shareArmId, err := fileshares.ParseShareID(d.Get("storage_share_id").(string))
 	if err != nil {
 		return err
 	}
+	accountArmId := commonids.NewStorageAccountID(shareArmId.SubscriptionId, shareArmId.ResourceGroupName, shareArmId.StorageAccountName)
 
 	fileName := d.Get("name").(string)
 	path := d.Get("path").(string)
 
-	account, err := storageClient.FindAccount(ctx, subscriptionId, storageShareId.AccountId.AccountName)
+	account, err := storageClient.GetAccount(ctx, accountArmId)
 	if err != nil {
-		return fmt.Errorf("retrieving Account %q for File %q (Share %q): %v", storageShareId.AccountId.AccountName, fileName, storageShareId.ShareName, err)
-	}
-	if account == nil {
-		return fmt.Errorf("locating Storage Account %q", storageShareId.AccountId.AccountName)
+		return fmt.Errorf("retrieving Account %q for File %q (Share %q): %v", accountArmId, fileName, shareArmId.ShareName, err)
 	}
 
-	accountId, err := accounts.ParseAccountID(storageShareId.ID(), storageClient.StorageDomainSuffix)
+	endpoint, err := account.DataPlaneEndpoint(client.EndpointTypeFile)
+	if err != nil {
+		return err
+	}
+
+	accountId, err := accounts.ParseAccountID(*endpoint, storageClient.StorageDomainSuffix)
 	if err != nil {
 		return fmt.Errorf("parsing Account ID: %v", err)
 	}
 
-	id := files.NewFileID(*accountId, storageShareId.ShareName, path, fileName)
+	id := files.NewFileID(*accountId, shareArmId.ShareName, path, fileName)
 
 	client, err := storageClient.FileShareFilesDataPlaneClient(ctx, *account, storageClient.DataPlaneOperationSupportingAnyAuthMethod())
 	if err != nil {
 		return fmt.Errorf("building File Share Directories Client: %s", err)
 	}
 
-	existing, err := client.GetProperties(ctx, storageShareId.ShareName, path, fileName)
+	existing, err := client.GetProperties(ctx, shareArmId.ShareName, path, fileName)
 	if err != nil {
 		if !response.WasNotFound(existing.HttpResponse) {
 			return fmt.Errorf("checking for existing %s: %v", id, err)
@@ -171,28 +271,28 @@ func resourceStorageShareFileCreate(d *pluginsdk.ResourceData, meta interface{})
 	if v, ok := d.GetOk("source"); ok {
 		file, err = os.Open(v.(string))
 		if err != nil {
-			return fmt.Errorf("opening file: %s", err)
+			return fmt.Errorf("opening file %s: %v", v, err)
 		}
 
 		info, err := file.Stat()
 		if err != nil {
-			return fmt.Errorf("'stat'-ing File %q (File Share %q / Account %q): %v", fileName, storageShareId.ShareName, storageShareId.AccountId.AccountName, err)
+			return fmt.Errorf("'stat'-ing file %s: %v", v, err)
 		}
 
 		if info.Size() == 0 {
-			return fmt.Errorf("file %q (File Share %q / Account %q) is empty", fileName, storageShareId.ShareName, storageShareId.AccountId.AccountName)
+			return fmt.Errorf("file %q is empty", v)
 		}
 
 		input.ContentLength = info.Size()
 	}
 
-	if _, err = client.Create(ctx, storageShareId.ShareName, path, fileName, input); err != nil {
-		return fmt.Errorf("creating File %q (File Share %q / Account %q): %v", fileName, storageShareId.ShareName, storageShareId.AccountId.AccountName, err)
+	if _, err = client.Create(ctx, shareArmId.ShareName, path, fileName, input); err != nil {
+		return fmt.Errorf("creating %q: %v", id, err)
 	}
 
 	if file != nil {
-		if err = client.PutFile(ctx, storageShareId.ShareName, path, fileName, file, 4); err != nil {
-			return fmt.Errorf("uploading File: %q (File Share %q / Account %q): %v", fileName, storageShareId.ShareName, storageShareId.AccountId.AccountName, err)
+		if err = client.PutFile(ctx, shareArmId.ShareName, path, fileName, file, 4); err != nil {
+			return fmt.Errorf("uploading %q: %v", id, err)
 		}
 	}
 
@@ -293,7 +393,19 @@ func resourceStorageShareFileRead(d *pluginsdk.ResourceData, meta interface{}) e
 
 	d.Set("name", id.FileName)
 	d.Set("path", id.DirectoryPath)
-	d.Set("storage_share_id", shares.NewShareID(id.AccountId, id.ShareName).ID())
+
+	stateStorageShareId := d.Get("storage_share_id").(string)
+	if !features.FivePointOhBeta() && (stateStorageShareId != "" && !isArmID(stateStorageShareId)) {
+		d.Set("storage_share_id", shares.NewShareID(id.AccountId, id.ShareName).ID())
+	} else {
+		shareId := fileshares.NewShareID(
+			account.StorageAccountId.SubscriptionId,
+			account.StorageAccountId.ResourceGroupName,
+			account.StorageAccountId.StorageAccountName,
+			id.ShareName,
+		)
+		d.Set("storage_share_id", shareId.ID())
+	}
 
 	if err = d.Set("metadata", FlattenMetaData(props.MetaData)); err != nil {
 		return fmt.Errorf("setting `metadata`: %s", err)

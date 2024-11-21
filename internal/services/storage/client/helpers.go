@@ -184,6 +184,33 @@ func (c Client) FindAccount(ctx context.Context, subscriptionIdRaw, accountName 
 	return nil, nil
 }
 
+func (c Client) GetAccount(ctx context.Context, id commonids.StorageAccountId) (*AccountDetails, error) {
+	cacheAccountsLock.Lock()
+	defer cacheAccountsLock.Unlock()
+
+	if existing, ok := storageAccountsCache[id.StorageAccountName]; ok {
+		return &existing, nil
+	}
+
+	resp, err := c.ResourceManager.StorageAccounts.GetProperties(ctx, id, storageaccounts.DefaultGetPropertiesOperationOptions())
+	if err != nil {
+		return nil, err
+	}
+
+	model := resp.Model
+	if model == nil {
+		return nil, fmt.Errorf("unexpected nil model from %v", id)
+	}
+
+	account, err := populateAccountDetails(id, *model)
+	if err != nil {
+		return nil, fmt.Errorf("populating details for %s: %+v", id, err)
+	}
+
+	storageAccountsCache[id.StorageAccountName] = *account
+	return account, nil
+}
+
 func populateAccountDetails(accountId commonids.StorageAccountId, account storageaccounts.StorageAccount) (*AccountDetails, error) {
 	out := AccountDetails{
 		Kind:             pointer.From(account.Kind),

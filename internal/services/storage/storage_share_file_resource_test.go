@@ -14,12 +14,31 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance/check"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
+	"github.com/hashicorp/terraform-provider-azurerm/internal/features"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
 	"github.com/hashicorp/terraform-provider-azurerm/utils"
 	"github.com/tombuildsstuff/giovanni/storage/2023-11-03/file/files"
 )
 
 type StorageShareFileResource struct{}
+
+func TestAccAzureRMStorageShareFile_basicDeprecated(t *testing.T) {
+	if features.FivePointOhBeta() {
+		t.Skip("skipping as not valid in 5.0")
+	}
+	data := acceptance.BuildTestData(t, "azurerm_storage_share_file", "test")
+	r := StorageShareFileResource{}
+
+	data.ResourceTest(t, r, []acceptance.TestStep{
+		{
+			Config: r.basicDeprecated(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep("storage_share_id"),
+	})
+}
 
 func TestAccAzureRMStorageShareFile_basic(t *testing.T) {
 	data := acceptance.BuildTestData(t, "azurerm_storage_share_file", "test")
@@ -66,6 +85,24 @@ func TestAccAzureRMStorageShareFile_requiresImport(t *testing.T) {
 	})
 }
 
+func TestAccAzureRMStorageShareFile_completeDeprecated(t *testing.T) {
+	if features.FivePointOhBeta() {
+		t.Skip("skipping as not valid in 5.0")
+	}
+	data := acceptance.BuildTestData(t, "azurerm_storage_share_file", "test")
+	r := StorageShareFileResource{}
+
+	data.ResourceTest(t, r, []acceptance.TestStep{
+		{
+			Config: r.completeDeprecated(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep("storage_share_id"),
+	})
+}
+
 func TestAccAzureRMStorageShareFile_complete(t *testing.T) {
 	data := acceptance.BuildTestData(t, "azurerm_storage_share_file", "test")
 	r := StorageShareFileResource{}
@@ -78,6 +115,39 @@ func TestAccAzureRMStorageShareFile_complete(t *testing.T) {
 			),
 		},
 		data.ImportStep(),
+	})
+}
+
+func TestAccAzureRMStorageShareFile_updateDeprecated(t *testing.T) {
+	if features.FivePointOhBeta() {
+		t.Skip("skipping as not valid in 5.0")
+	}
+	data := acceptance.BuildTestData(t, "azurerm_storage_share_file", "test")
+	r := StorageShareFileResource{}
+
+	data.ResourceTest(t, r, []acceptance.TestStep{
+		{
+			Config: r.basicDeprecated(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+				check.That(data.ResourceName).Key("content_length").Exists(),
+			),
+		},
+		data.ImportStep("storage_share_id"),
+		{
+			Config: r.completeDeprecated(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep("storage_share_id"),
+		{
+			Config: r.basicDeprecated(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+			),
+		},
+		data.ImportStep("storage_share_id"),
 	})
 }
 
@@ -247,7 +317,7 @@ resource "azurerm_storage_account" "test" {
 
 resource "azurerm_storage_share" "test" {
   name                 = "fileshare"
-  storage_account_name = azurerm_storage_account.test.name
+  storage_account_id   = azurerm_storage_account.test.id
   quota                = 50
 }
 `, data.RandomInteger, data.Locations.Primary, data.RandomString)
@@ -290,7 +360,7 @@ resource "azurerm_storage_account" "test" {
 
 resource "azurerm_storage_share" "test" {
   name                 = "fileshare"
-  storage_account_name = azurerm_storage_account.test.name
+  storage_account_id = azurerm_storage_account.test.id
   quota                = 50
 }
 
@@ -398,4 +468,66 @@ resource "azurerm_storage_share_file" "test" {
   depends_on       = [azurerm_storage_share_directory.dos]
 }
 `, StorageShareDirectoryResource{}.nestedWithBackslashes(data))
+}
+
+func (StorageShareFileResource) templateDeprecated(data acceptance.TestData) string {
+	return fmt.Sprintf(`
+provider "azurerm" {
+  features {}
+}
+
+resource "azurerm_resource_group" "test" {
+  name     = "acctestRG-storage-%d"
+  location = "%s"
+}
+
+resource "azurerm_storage_account" "test" {
+  name                     = "acctestsa%s"
+  resource_group_name      = azurerm_resource_group.test.name
+  location                 = azurerm_resource_group.test.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_storage_share" "test" {
+  name                 = "fileshare"
+  storage_account_name = azurerm_storage_account.test.name
+  quota                = 50
+}
+`, data.RandomInteger, data.Locations.Primary, data.RandomString)
+}
+
+func (r StorageShareFileResource) basicDeprecated(data acceptance.TestData) string {
+	return fmt.Sprintf(`
+%s
+
+resource "azurerm_storage_share_file" "test" {
+  name             = "file"
+  storage_share_id = azurerm_storage_share.test.id
+
+  metadata = {
+    hello = "world"
+  }
+}
+`, r.templateDeprecated(data))
+}
+
+func (r StorageShareFileResource) completeDeprecated(data acceptance.TestData) string {
+	return fmt.Sprintf(`
+%s
+
+resource "azurerm_storage_share_file" "test" {
+  name             = "file"
+  storage_share_id = azurerm_storage_share.test.id
+
+
+  content_type        = "test_content_type"
+  content_encoding    = "test_encoding"
+  content_disposition = "test_content_disposition"
+
+  metadata = {
+    hello = "world"
+  }
+}
+`, r.templateDeprecated(data))
 }

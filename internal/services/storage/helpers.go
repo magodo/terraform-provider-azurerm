@@ -5,6 +5,7 @@ package storage
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/hashicorp/go-azure-sdk/resource-manager/storage/2023-01-01/storageaccounts"
 )
@@ -16,4 +17,8 @@ func sortedKeysFromSlice(input map[storageaccounts.Kind]struct{}) []string {
 	}
 	sort.Strings(keys)
 	return keys
+}
+
+func isArmID(id string) bool {
+	return strings.HasPrefix(strings.ToLower(id), "/subscriptions/")
 }
