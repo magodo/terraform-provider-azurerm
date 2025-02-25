@@ -12,8 +12,10 @@ import (
 
 	"github.com/hashicorp/go-azure-helpers/lang/pointer"
 	"github.com/hashicorp/go-azure-helpers/lang/response"
+	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonids"
 	"github.com/hashicorp/terraform-provider-azurerm/helpers/tf"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
+	"github.com/hashicorp/terraform-provider-azurerm/internal/features"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/helpers"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/migration"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/validate"
@@ -25,7 +27,7 @@ import (
 )
 
 func resourceStorageBlob() *pluginsdk.Resource {
-	return &pluginsdk.Resource{
+	r := &pluginsdk.Resource{
 		Create: resourceStorageBlobCreate,
 		Read:   resourceStorageBlobRead,
 		Update: resourceStorageBlobUpdate,
@@ -56,18 +58,11 @@ func resourceStorageBlob() *pluginsdk.Resource {
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
 
-			"storage_account_name": {
+			"storage_container_id": {
 				Type:         pluginsdk.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validate.StorageAccountName,
-			},
-
-			"storage_container_name": {
-				Type:         pluginsdk.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validate.StorageContainerName,
+				ValidateFunc: commonids.ValidateStorageContainerID,
 			},
 
 			"type": {
@@ -172,6 +167,34 @@ func resourceStorageBlob() *pluginsdk.Resource {
 			return nil
 		},
 	}
+
+	if !features.FivePointOh() {
+		r.Schema["storage_container_id"] = &pluginsdk.Schema{
+			Type:         pluginsdk.TypeString,
+			Optional:     true,
+			ForceNew:     true,
+			ValidateFunc: commonids.ValidateStorageContainerID,
+			ExactlyOneOf: []string{"storage_container_id", "storage_container_name"},
+		}
+		r.Schema["storage_account_name"] = &pluginsdk.Schema{
+			Type:         pluginsdk.TypeString,
+			Optional:     true,
+			ForceNew:     true,
+			ValidateFunc: validate.StorageAccountName,
+			ExactlyOneOf: []string{"storage_container_id", "storage_account_name"},
+			RequiredWith: []string{"storage_account_name", "storage_container_name"},
+		}
+		r.Schema["storage_container_name"] = &pluginsdk.Schema{
+			Type:         pluginsdk.TypeString,
+			Optional:     true,
+			ForceNew:     true,
+			ValidateFunc: validate.StorageContainerName,
+			ExactlyOneOf: []string{"storage_container_id", "storage_container_name"},
+			RequiredWith: []string{"storage_account_name", "storage_container_name"},
+		}
+	}
+
+	return r
 }
 
 func resourceStorageBlobCreate(d *pluginsdk.ResourceData, meta interface{}) error {
@@ -180,8 +203,19 @@ func resourceStorageBlobCreate(d *pluginsdk.ResourceData, meta interface{}) erro
 	ctx, cancel := timeouts.ForCreate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
-	accountName := d.Get("storage_account_name").(string)
-	containerName := d.Get("storage_container_name").(string)
+	var accountName, containerName string
+	if !features.FivePointOh() {
+		if containerId := d.Get("storage_container_id").(string); containerId != "" {
+			id, err := commonids.ParseStorageContainerID(containerId)
+			if err != nil {
+				return fmt.Errorf("parsing `storage_container_id`: %v", err)
+			}
+		} else {
+			accountName = d.Get("storage_account_name").(string)
+			containerName = d.Get("storage_container_name").(string)
+		}
+	}
+
 	name := d.Get("name").(string)
 
 	account, err := storageClient.FindAccount(ctx, subscriptionId, accountName)
