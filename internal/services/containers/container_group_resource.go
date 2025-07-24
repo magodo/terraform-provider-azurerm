@@ -308,6 +308,27 @@ func resourceContainerGroup() *pluginsdk.Resource {
 							ForceNew: true,
 						},
 
+						"gpu": {
+							Type:     pluginsdk.TypeList,
+							Optional: true,
+							ForceNew: true,
+							Elem: &pluginsdk.Resource{
+								Schema: map[string]*pluginsdk.Schema{
+									"count": {
+										Type:     pluginsdk.TypeInt,
+										Required: true,
+										ForceNew: true,
+									},
+									"sku": {
+										Type:         pluginsdk.TypeString,
+										Required:     true,
+										ForceNew:     true,
+										ValidateFunc: validation.StringInSlice(containerinstance.PossibleValuesForGpuSku(), false),
+									},
+								},
+							},
+						},
+
 						"cpu_limit": {
 							Type:         pluginsdk.TypeFloat,
 							Optional:     true,
@@ -318,6 +339,27 @@ func resourceContainerGroup() *pluginsdk.Resource {
 							Type:         pluginsdk.TypeFloat,
 							Optional:     true,
 							ValidateFunc: validation.FloatAtLeast(0.0),
+						},
+
+						"gpu_limit": {
+							Type:     pluginsdk.TypeList,
+							Optional: true,
+							ForceNew: true,
+							Elem: &pluginsdk.Resource{
+								Schema: map[string]*pluginsdk.Schema{
+									"count": {
+										Type:     pluginsdk.TypeInt,
+										Required: true,
+										ForceNew: true,
+									},
+									"sku": {
+										Type:         pluginsdk.TypeString,
+										Required:     true,
+										ForceNew:     true,
+										ValidateFunc: validation.StringInSlice(containerinstance.PossibleValuesForGpuSku(), false),
+									},
+								},
+							},
 						},
 
 						"ports": {
@@ -1156,6 +1198,7 @@ func expandContainerGroupContainers(d *pluginsdk.ResourceData, addedEmptyDirs ma
 		image := data["image"].(string)
 		cpu := data["cpu"].(float64)
 		memory := data["memory"].(float64)
+		gpu := expandContainerGroupGPUResource(data["gpu"].([]interface{}))
 
 		container := containerinstance.Container{
 			Name: name,
@@ -1165,6 +1208,7 @@ func expandContainerGroupContainers(d *pluginsdk.ResourceData, addedEmptyDirs ma
 					Requests: containerinstance.ResourceRequests{
 						MemoryInGB: memory,
 						Cpu:        cpu,
+						Gpu:        gpu,
 					},
 				},
 				SecurityContext: expandContainerSecurityContext(data["security"].([]interface{})),
@@ -1173,8 +1217,9 @@ func expandContainerGroupContainers(d *pluginsdk.ResourceData, addedEmptyDirs ma
 
 		cpuLimit := data["cpu_limit"].(float64)
 		memLimit := data["memory_limit"].(float64)
+		gpuLimit := expandContainerGroupGPUResource(data["gpu_limit"].([]interface{}))
 
-		if !(cpuLimit == 0.0 && memLimit == 0.0) {
+		if !(cpuLimit == 0.0 && memLimit == 0.0 && gpuLimit == nil) {
 			limits := &containerinstance.ResourceLimits{}
 			if cpuLimit != 0.0 {
 				limits.Cpu = &cpuLimit
@@ -1182,6 +1227,7 @@ func expandContainerGroupContainers(d *pluginsdk.ResourceData, addedEmptyDirs ma
 			if memLimit != 0.0 {
 				limits.MemoryInGB = &memLimit
 			}
+			limits.Gpu = gpuLimit
 
 			container.Properties.Resources.Limits = limits
 		}
@@ -1694,6 +1740,7 @@ func flattenContainerGroupContainers(d *pluginsdk.ResourceData, containers *[]co
 		resourceRequests := resources.Requests
 		containerConfig["cpu"] = resourceRequests.Cpu
 		containerConfig["memory"] = resourceRequests.MemoryInGB
+		containerConfig["gpu"] = flattenContainerGroupGPUResource(resourceRequests.Gpu)
 
 		if resourceLimits := resources.Limits; resourceLimits != nil {
 			if v := resourceLimits.Cpu; v != nil {
@@ -1702,6 +1749,7 @@ func flattenContainerGroupContainers(d *pluginsdk.ResourceData, containers *[]co
 			if v := resourceLimits.MemoryInGB; v != nil {
 				containerConfig["memory_limit"] = *v
 			}
+			containerConfig["gpu_limit"] = flattenContainerGroupGPUResource(resourceLimits.Gpu)
 		}
 
 		containerPorts := make([]interface{}, len(*container.Properties.Ports))
@@ -2100,4 +2148,29 @@ func expandContainerGroupSubnets(input []interface{}) (*[]containerinstance.Cont
 		})
 	}
 	return &results, nil
+}
+
+func expandContainerGroupGPUResource(input []interface{}) *containerinstance.GpuResource {
+	if len(input) == 0 || input[0] == nil {
+		return nil
+	}
+
+	raw := input[0].(map[string]interface{})
+	return &containerinstance.GpuResource{
+		Count: int64(raw["count"].(int)),
+		Sku:   containerinstance.GpuSku(raw["sku"].(string)),
+	}
+}
+
+func flattenContainerGroupGPUResource(input *containerinstance.GpuResource) []interface{} {
+	if input == nil {
+		return []interface{}{}
+	}
+
+	return []interface{}{
+		map[string]interface{}{
+			"count": int(input.Count),
+			"sku":   string(input.Sku),
+		},
+	}
 }
