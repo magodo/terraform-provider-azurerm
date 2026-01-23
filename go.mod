@@ -116,6 +116,6 @@ require (
 
 go 1.24.5
 
-replace github.com/hashicorp/go-azure-sdk/sdk => github.com/magodo/go-azure-sdk/sdk v0.0.0-20251020050436-b29fad1aec2e
+replace github.com/hashicorp/go-azure-sdk/sdk => github.com/magodo/go-azure-sdk/sdk v0.0.0-20260123025616-61fca42a2034
 
 replace github.com/hashicorp/go-plugin => github.com/magodo/go-plugin v1.4.2-0.20251020053729-969b511a8df1
