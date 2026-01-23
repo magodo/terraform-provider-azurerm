@@ -434,17 +434,17 @@ func (r ManagedRedisResource) Read() sdk.ResourceFunc {
 						Port:                                     pointer.From(props.Port),
 					}
 
-					if defaultDb.AccessKeysAuthenticationEnabled {
-						keysResp, err := dbClient.ListKeys(ctx, dbId)
-						if err != nil {
-							return fmt.Errorf("listing keys for %s: %+v", dbId, err)
-						}
+					// if defaultDb.AccessKeysAuthenticationEnabled {
+					// 	keysResp, err := dbClient.ListKeys(ctx, dbId)
+					// 	if err != nil {
+					// 		return fmt.Errorf("listing keys for %s: %+v", dbId, err)
+					// 	}
 
-						if keysModel := keysResp.Model; keysModel != nil {
-							defaultDb.PrimaryAccessKey = pointer.From(keysModel.PrimaryKey)
-							defaultDb.SecondaryAccessKey = pointer.From(keysModel.SecondaryKey)
-						}
-					}
+					// 	if keysModel := keysResp.Model; keysModel != nil {
+					// 		defaultDb.PrimaryAccessKey = pointer.From(keysModel.PrimaryKey)
+					// 		defaultDb.SecondaryAccessKey = pointer.From(keysModel.SecondaryKey)
+					// 	}
+					// }
 
 					state.DefaultDatabase = []DefaultDatabaseModel{defaultDb}
 				}
