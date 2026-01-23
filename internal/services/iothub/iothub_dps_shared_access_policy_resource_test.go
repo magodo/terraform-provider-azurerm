@@ -1,4 +1,4 @@
-// Copyright (c) HashiCorp, Inc.
+// Copyright IBM Corp. 2014, 2025
 // SPDX-License-Identifier: MPL-2.0
 
 package iothub_test
@@ -9,11 +9,11 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/hashicorp/go-azure-helpers/lang/pointer"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance/check"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
-	"github.com/hashicorp/terraform-provider-azurerm/utils"
 )
 
 type IotHubDpsSharedAccessPolicyResource struct{}
@@ -49,7 +49,7 @@ func TestAccIotHubDpsSharedAccessPolicy_writeWithoutRead(t *testing.T) {
 	data.ResourceTest(t, r, []acceptance.TestStep{
 		{
 			Config:      r.writeWithoutRead(data),
-			ExpectError: regexp.MustCompile("If `registration_write` is set to true, `registration_read` must also be set to true"),
+			ExpectError: regexp.MustCompile("if `registration_write` is set to true, `registration_read` must also be set to true"),
 		},
 	})
 }
@@ -61,7 +61,7 @@ func TestAccIotHubDpsSharedAccessPolicy_enrollmentReadWithoutRegistration(t *tes
 	data.ResourceTest(t, r, []acceptance.TestStep{
 		{
 			Config:      r.enrollmentReadWithoutRegistration(data),
-			ExpectError: regexp.MustCompile("If `enrollment_read` is set to true, `registration_read` must also be set to true"),
+			ExpectError: regexp.MustCompile("if `enrollment_read` is set to true, `registration_read` must also be set to true"),
 		},
 	})
 }
@@ -73,7 +73,7 @@ func TestAccIotHubDpsSharedAccessPolicy_enrollmentWriteWithoutOthers(t *testing.
 	data.ResourceTest(t, r, []acceptance.TestStep{
 		{
 			Config:      r.enrollmentWriteWithoutOthers(data),
-			ExpectError: regexp.MustCompile("If `enrollment_write` is set to true, `enrollment_read`, `registration_read`, and `registration_write` must also be set to true"),
+			ExpectError: regexp.MustCompile("if `enrollment_write` is set to true, `enrollment_read`, `registration_read`, and `registration_write` must also be set to true"),
 		},
 	})
 }
@@ -213,6 +213,5 @@ func (t IotHubDpsSharedAccessPolicyResource) Exists(ctx context.Context, clients
 	// 	return nil, fmt.Errorf("loading Shared Access Policy (%s): %+v", id, err)
 	// }
 
-	// return utils.Bool(accessPolicy.Model != nil && accessPolicy.Model.PrimaryKey != nil), nil
-	return utils.Bool(true), nil
+	return pointer.To(true), nil
 }

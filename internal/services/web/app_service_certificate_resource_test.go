@@ -1,4 +1,4 @@
-// Copyright (c) HashiCorp, Inc.
+// Copyright IBM Corp. 2014, 2025
 // SPDX-License-Identifier: MPL-2.0
 
 package web_test
@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/go-azure-helpers/lang/pointer"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance/check"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
@@ -88,11 +89,11 @@ func (r AppServiceCertificateResource) Exists(ctx context.Context, clients *clie
 	resp, err := clients.Web.CertificatesClient.Get(ctx, id.ResourceGroup, id.Name)
 	if err != nil {
 		if utils.ResponseWasNotFound(resp.Response) {
-			return utils.Bool(false), nil
+			return pointer.To(false), nil
 		}
 		return nil, fmt.Errorf("retrieving App Service Certificate %q (Resource Group %q): %+v", id.Name, id.ResourceGroup, err)
 	}
-	return utils.Bool(true), nil
+	return pointer.To(true), nil
 }
 
 func (r AppServiceCertificateResource) pfx(data acceptance.TestData) string {
@@ -156,7 +157,7 @@ resource "azurerm_resource_group" "test" {
 }
 
 resource "azurerm_key_vault" "test" {
-  name                = "acct%d"
+  name                = "acctest%s"
   location            = azurerm_resource_group.test.location
   resource_group_name = azurerm_resource_group.test.name
 
@@ -231,7 +232,7 @@ resource "azurerm_app_service_certificate" "test" {
   location            = azurerm_resource_group.test.location
   key_vault_secret_id = azurerm_key_vault_certificate.test.id
 }
-`, data.RandomInteger, data.Locations.Primary, data.RandomInteger, data.RandomInteger, data.RandomInteger)
+`, data.RandomInteger, data.Locations.Primary, data.RandomString, data.RandomInteger, data.RandomInteger)
 }
 
 func (r AppServiceCertificateResource) keyVaultId(data acceptance.TestData) string {
@@ -254,7 +255,7 @@ resource "azurerm_resource_group" "test" {
 }
 
 resource "azurerm_key_vault" "test" {
-  name                = "acct%d"
+  name                = "acctest%s"
   location            = azurerm_resource_group.test.location
   resource_group_name = azurerm_resource_group.test.name
 
@@ -330,5 +331,5 @@ resource "azurerm_app_service_certificate" "test" {
   key_vault_id        = azurerm_key_vault.test.id
   key_vault_secret_id = azurerm_key_vault_certificate.test.id
 }
-`, data.RandomInteger, data.Locations.Primary, data.RandomInteger, data.RandomInteger, data.RandomInteger)
+`, data.RandomInteger, data.Locations.Primary, data.RandomString, data.RandomInteger, data.RandomInteger)
 }

@@ -1,4 +1,4 @@
-// Copyright (c) HashiCorp, Inc.
+// Copyright IBM Corp. 2014, 2025
 // SPDX-License-Identifier: MPL-2.0
 
 package appservice_test
@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/go-azure-helpers/lang/pointer"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance/check"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
-	"github.com/hashicorp/terraform-provider-azurerm/utils"
 )
 
 type AppServiceEnvironmentV3Resource struct{}
@@ -168,7 +168,7 @@ func TestAccAppServiceEnvironmentV3_dedicatedHosts(t *testing.T) {
 }
 
 func (AppServiceEnvironmentV3Resource) Exists(ctx context.Context, client *clients.Client, state *pluginsdk.InstanceState) (*bool, error) {
-	return utils.Bool(true), nil
+	return pointer.To(true), nil
 }
 
 func (r AppServiceEnvironmentV3Resource) basic(data acceptance.TestData) string {

@@ -1,4 +1,4 @@
-// Copyright (c) HashiCorp, Inc.
+// Copyright IBM Corp. 2014, 2025
 // SPDX-License-Identifier: MPL-2.0
 
 package netapp_test
@@ -9,13 +9,13 @@ import (
 	"os"
 	"testing"
 
+	"github.com/hashicorp/go-azure-helpers/lang/pointer"
 	"github.com/hashicorp/go-azure-helpers/lang/response"
 	"github.com/hashicorp/go-azure-sdk/resource-manager/netapp/2025-06-01/volumegroups"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/acceptance/check"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/clients"
-	"github.com/hashicorp/terraform-provider-azurerm/utils"
 )
 
 type NetAppVolumeGroupOracleResource struct{}
@@ -234,12 +234,12 @@ func (t NetAppVolumeGroupOracleResource) Exists(ctx context.Context, clients *cl
 	resp, err := clients.NetApp.VolumeGroupClient.Get(ctx, *id)
 	if err != nil {
 		if response.WasNotFound(resp.HttpResponse) {
-			return utils.Bool(false), nil
+			return pointer.To(false), nil
 		}
 		return nil, fmt.Errorf("retrieving %s: %+v", id, err)
 	}
 
-	return utils.Bool(true), nil
+	return pointer.To(true), nil
 }
 
 func (NetAppVolumeGroupOracleResource) basicAvailabilityZone(data acceptance.TestData) string {
@@ -804,13 +804,14 @@ resource "azurerm_netapp_account" "test" {
 }
 
 resource "azurerm_key_vault" "test" {
-  name                            = "anfakv%[1]d"
+  name                            = "acctest%[1]d"
   location                        = azurerm_resource_group.test.location
   resource_group_name             = azurerm_resource_group.test.name
   enabled_for_disk_encryption     = true
   enabled_for_deployment          = true
   enabled_for_template_deployment = true
   purge_protection_enabled        = true
+  soft_delete_retention_days      = 7
   tenant_id                       = "%[2]s"
   sku_name                        = "standard"
 
@@ -852,7 +853,7 @@ resource "azurerm_key_vault" "test" {
 }
 
 resource "azurerm_key_vault_key" "test" {
-  name         = "anfenckey%[1]d"
+  name         = "acctest%[1]d"
   key_vault_id = azurerm_key_vault.test.id
   key_type     = "RSA"
   key_size     = 2048
@@ -1009,7 +1010,7 @@ resource "azurerm_netapp_volume_group_oracle" "test" {
     }
   }
 }
-`, data.RandomInteger, tenantID, data.Locations.Primary)
+`, data.RandomIntOfLength(17), tenantID, data.Locations.Primary)
 }
 
 func (NetAppVolumeGroupOracleResource) templatePpgOracle(data acceptance.TestData) string {
