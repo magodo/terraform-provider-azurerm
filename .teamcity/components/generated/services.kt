@@ -120,6 +120,7 @@ var services = mapOf(
         "signalr" to "SignalR",
         "springcloud" to "Spring Cloud",
         "storage" to "Storage",
+        "storageactions" to "Storage Actions",
         "storagecache" to "Storage Cache",
         "storagemover" to "Storage Mover",
         "streamanalytics" to "Stream Analytics",

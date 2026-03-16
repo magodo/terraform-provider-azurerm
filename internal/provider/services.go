@@ -123,6 +123,7 @@ import (
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/signalr"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/springcloud"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storage"
+	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storageactions"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storagecache"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/storagemover"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/services/streamanalytics"
@@ -225,6 +226,7 @@ func SupportedTypedServices() []sdk.TypedServiceRegistration {
 		signalr.Registration{},
 		springcloud.Registration{},
 		storage.Registration{},
+		storageactions.Registration{},
 		storagecache.Registration{},
 		storagemover.Registration{},
 		streamanalytics.Registration{},
@@ -463,6 +465,7 @@ func SupportedFrameworkServices() []sdk.FrameworkServiceRegistration {
 		signalr.Registration{},
 		springcloud.Registration{},
 		storage.Registration{},
+		storageactions.Registration{},
 		storagecache.Registration{},
 		storagemover.Registration{},
 		streamanalytics.Registration{},

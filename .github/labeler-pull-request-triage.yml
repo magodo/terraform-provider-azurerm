@@ -546,6 +546,11 @@ service/storage:
   - any-glob-to-any-file:
     - internal/services/storage/**/*
 
+service/storageactions:
+- changed-files:
+  - any-glob-to-any-file:
+    - internal/services/storageactions/**/*
+
 service/storagemover:
 - changed-files:
   - any-glob-to-any-file:

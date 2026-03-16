@@ -137,6 +137,7 @@ import (
 	signalr "github.com/hashicorp/terraform-provider-azurerm/internal/services/signalr/client"
 	appPlatform "github.com/hashicorp/terraform-provider-azurerm/internal/services/springcloud/client"
 	storage "github.com/hashicorp/terraform-provider-azurerm/internal/services/storage/client"
+	storageactions "github.com/hashicorp/terraform-provider-azurerm/internal/services/storageactions/client"
 	storageCache "github.com/hashicorp/terraform-provider-azurerm/internal/services/storagecache/client"
 	storageMover "github.com/hashicorp/terraform-provider-azurerm/internal/services/storagemover/client"
 	streamAnalytics "github.com/hashicorp/terraform-provider-azurerm/internal/services/streamanalytics/client"
@@ -273,6 +274,7 @@ type Client struct {
 	ServiceNetworking                 *servicenetworking_2025_01_01.Client
 	SignalR                           *signalr.Client
 	Storage                           *storage.Client
+	StorageActions                    *storageactions.Client
 	StorageCache                      *storagecache_2024_07_01.Client
 	StorageCache_2023_05_01           *storagecache_2023_05_01.Client
 	StorageMover                      *storageMover.Client
@@ -640,6 +642,9 @@ func (client *Client) Build(ctx context.Context, o *common.ClientOptions) error 
 	}
 	if client.Storage, err = storage.NewClient(o); err != nil {
 		return fmt.Errorf("building clients for Storage: %+v", err)
+	}
+	if client.StorageActions, err = storageactions.NewClient(o); err != nil {
+		return fmt.Errorf("building clients for Storage Actions: %+v", err)
 	}
 	if client.StorageCache, err = storageCache.NewClient(o); err != nil {
 		return fmt.Errorf("building clients for Storage Cache: %+v", err)
