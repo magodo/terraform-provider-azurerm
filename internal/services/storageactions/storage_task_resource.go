@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/commonschema"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/identity"
 	"github.com/hashicorp/go-azure-helpers/resourcemanager/location"
-	"github.com/hashicorp/go-azure-sdk/resource-manager/storageactions/2023-01-01/storageactions"
 	"github.com/hashicorp/go-azure-sdk/resource-manager/storageactions/2023-01-01/storagetasks"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/sdk"
 	"github.com/hashicorp/terraform-provider-azurerm/internal/tf/pluginsdk"
@@ -40,11 +39,11 @@ type StorageActionsStorageTaskActionModel struct {
 
 type StorageActionsStorageTaskActionIfModel struct {
 	Condition  string                                    `tfschema:"condition"`
-	Operations []StorageActionsStorageTaskOperationModel `tfschema:"operations"`
+	Operations []StorageActionsStorageTaskOperationModel `tfschema:"operation"`
 }
 
 type StorageActionsStorageTaskActionElseModel struct {
-	Operations []StorageActionsStorageTaskOperationModel `tfschema:"operations"`
+	Operations []StorageActionsStorageTaskOperationModel `tfschema:"operation"`
 }
 
 type StorageActionsStorageTaskOperationModel struct {
@@ -83,7 +82,7 @@ func (r StorageActionsStorageTaskResource) Arguments() map[string]*pluginsdk.Sch
 									Required:     true,
 									ValidateFunc: validation.StringIsNotEmpty,
 								},
-								"operations": {
+								"operation": {
 									Type:     pluginsdk.TypeList,
 									Required: true,
 									MinItems: 1,
@@ -109,7 +108,7 @@ func (r StorageActionsStorageTaskResource) Arguments() map[string]*pluginsdk.Sch
 						Optional: true,
 						Elem: &pluginsdk.Resource{
 							Schema: map[string]*pluginsdk.Schema{
-								"operations": {
+								"operation": {
 									Type:     pluginsdk.TypeList,
 									Required: true,
 									MinItems: 1,
@@ -155,7 +154,7 @@ func (r StorageActionsStorageTaskResource) ResourceType() string {
 	return "azurerm_storage_task"
 }
 
-func (r StorageActionsStorageTaskResource) ModelObject() interface{} {
+func (r StorageActionsStorageTaskResource) ModelObject() any {
 	return &StorageActionsStorageTaskModel{}
 }
 
@@ -188,7 +187,7 @@ func (r StorageActionsStorageTaskResource) Create() sdk.ResourceFunc {
 
 			identityModel, err := identity.ExpandLegacySystemAndUserAssignedMapFromModel(model.Identity)
 			if err != nil {
-				return fmt.Errorf("expanding the system and user assigned identity: %v", err)
+				return fmt.Errorf("expanding the `identity`: %v", err)
 			}
 
 			params := storagetasks.StorageTask{
@@ -231,12 +230,28 @@ func (r StorageActionsStorageTaskResource) Read() sdk.ResourceFunc {
 				return fmt.Errorf("retrieving %s: %+v", id, err)
 			}
 
-			model := StorageActionsStorageTaskModel{}
+			model := StorageActionsStorageTaskModel{
+				Name:          id.StorageTaskName,
+				ResourceGroup: id.ResourceGroupName,
+			}
 
 			if respModel := resp.Model; respModel != nil {
+				model.Location = location.Normalize(respModel.Location)
+
+				identity, err := identity.FlattenLegacySystemAndUserAssignedMapToModel(&respModel.Identity)
+				if err != nil {
+					return fmt.Errorf("flattening `identity`: %v", err)
+				}
+				model.Identity = identity
+
 				if tags := respModel.Tags; tags != nil {
 					model.Tags = *respModel.Tags
 				}
+
+				props := respModel.Properties
+				model.Action = r.flattenAction(&props.Action)
+				model.Description = props.Description
+				model.Enabled = props.Enabled
 			}
 
 			return metadata.Encode(&model)
@@ -270,11 +285,29 @@ func (r StorageActionsStorageTaskResource) Update() sdk.ResourceFunc {
 
 			params := *existing.Model
 
-			// TODO: update the params
-			// if props := params.Properties; props != nil {
-			// 	if metadata.ResourceData.HasChange("xxx") {
-			// 		props.Xxx = plan.Xxx
-			// 	}
+			if metadata.ResourceData.HasChange("identity") {
+				identityModel, err := identity.ExpandLegacySystemAndUserAssignedMapFromModel(model.Identity)
+				if err != nil {
+					return fmt.Errorf("expanding the `identity`: %v", err)
+				}
+				params.Identity = *identityModel
+			}
+
+			if metadata.ResourceData.HasChange("action") {
+				params.Properties.Action = r.expandAction(model.Action)
+			}
+
+			if metadata.ResourceData.HasChange("enabled") {
+				params.Properties.Enabled = model.Enabled
+			}
+
+			if metadata.ResourceData.HasChange("description") {
+				params.Properties.Description = model.Description
+			}
+
+			if metadata.ResourceData.HasChange("tags") {
+				params.Tags = &model.Tags
+			}
 
 			if err := client.CreateThenPoll(ctx, *id, params); err != nil {
 				return fmt.Errorf("updating %s: %+v", id, err)
@@ -395,10 +428,10 @@ func (r StorageActionsStorageTaskResource) expandAction(input []StorageActionsSt
 
 	// This is guaranteed by the schema definition, but added here anyway to avoid panic.
 	if ifCondition == nil {
-		return nil
+		return storagetasks.StorageTaskAction{}
 	}
 
-	return &storagetasks.StorageTaskAction{
+	return storagetasks.StorageTaskAction{
 		If:   *ifCondition,
 		Else: r.expandElse(model.Else),
 	}
