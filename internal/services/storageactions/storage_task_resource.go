@@ -65,6 +65,11 @@ func (r StorageActionsStorageTaskResource) Arguments() map[string]*pluginsdk.Sch
 		"resource_group_name": commonschema.ResourceGroupName(),
 		"location":            commonschema.Location(),
 		"identity":            commonschema.SystemAssignedUserAssignedIdentityRequired(),
+		"description": {
+			Type:         pluginsdk.TypeString,
+			Required:     true,
+			ValidateFunc: validation.StringIsNotEmpty,
+		},
 		"action": {
 			Type:     pluginsdk.TypeList,
 			Required: true,
@@ -136,11 +141,6 @@ func (r StorageActionsStorageTaskResource) Arguments() map[string]*pluginsdk.Sch
 			Type:     pluginsdk.TypeBool,
 			Optional: true,
 			Default:  true,
-		},
-		"description": {
-			Type:         pluginsdk.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.StringIsNotEmpty,
 		},
 		"tags": commonschema.Tags(),
 	}
