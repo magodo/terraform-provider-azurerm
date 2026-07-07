@@ -171,10 +171,12 @@ func resourceIotHubSharedAccessPolicyCreateUpdate(d *pluginsdk.ResourceData, met
 	// 	}
 	// 	existingAccessPolicy := accessPolicyIterator.Value()
 
-	// 	if strings.EqualFold(*existingAccessPolicy.KeyName, id.IotHubKeyName) {
-	// 		if d.IsNewResource() {
+	// if strings.EqualFold(*existingAccessPolicy.KeyName, id.IotHubKeyName) {
+	// 	if d.IsNewResource() {
+	// 		if !meta.(*clients.Client).Features.SkipImportCheckOnCreateAndAllowOverwritingExistingResources {
 	// 			return tf.ImportAsExistsError("azurerm_iothub_shared_access_policy", id.ID())
 	// 		}
+	// 	}
 
 	// 		if existingAccessPolicy.PrimaryKey != nil {
 	// 			expandedAccessPolicy.PrimaryKey = existingAccessPolicy.PrimaryKey
@@ -204,11 +206,11 @@ func resourceIotHubSharedAccessPolicyCreateUpdate(d *pluginsdk.ResourceData, met
 		return fmt.Errorf("updating %s: %+v", id, err)
 	}
 
+	d.SetId(id.ID())
+
 	if err = future.WaitForCompletionRef(ctx, client.Client); err != nil {
 		return fmt.Errorf("waiting for %s to finish updating: %+v", id, err)
 	}
-
-	d.SetId(id.ID())
 
 	return resourceIotHubSharedAccessPolicyRead(d, meta)
 }

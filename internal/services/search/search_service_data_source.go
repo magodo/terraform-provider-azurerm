@@ -78,8 +78,9 @@ func dataSourceSearchService() *pluginsdk.Resource {
 						},
 
 						"key": {
-							Type:     pluginsdk.TypeString,
-							Computed: true,
+							Type:      pluginsdk.TypeString,
+							Computed:  true,
+							Sensitive: true,
 						},
 					},
 				},

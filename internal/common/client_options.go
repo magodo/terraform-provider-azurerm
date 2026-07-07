@@ -52,7 +52,6 @@ type ClientOptions struct {
 	ResourceManagerEndpoint string
 
 	// Legacy authorizers for go-autorest
-	BatchManagementAuthorizer autorest.Authorizer
 	KeyVaultAuthorizer        autorest.Authorizer
 	ManagedHSMAuthorizer      autorest.Authorizer
 	ResourceManagerAuthorizer autorest.Authorizer
@@ -62,12 +61,19 @@ type ClientOptions struct {
 	SkipProviderReg bool
 
 	CustomHeader http.Header
+	// Transport exposes the go-azure-sdk mechanism to attach / replace the default transport. Primarily for go-vcr
+	// testing
+	Transport http.RoundTripper
 }
 
 // Configure set up a resourcemanager.Client using an auth.Authorizer from hashicorp/go-azure-sdk
 func (o ClientOptions) Configure(c client.BaseClient, authorizer auth.Authorizer) {
 	c.SetAuthorizer(authorizer)
 	c.SetUserAgent(userAgent(c.GetUserAgent(), o.TerraformVersion, o.PartnerId, o.DisableTerraformPartnerID))
+
+	if o.Transport != nil {
+		c.SetTransport(o.Transport)
+	}
 
 	if !o.DisableCorrelationRequestID {
 		id := o.CustomCorrelationRequestID
