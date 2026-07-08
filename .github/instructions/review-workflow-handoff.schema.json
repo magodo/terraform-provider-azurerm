@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wodansson.github.io/terraform-azurerm-ai-assisted-development/.github/instructions/review-workflow-handoff.schema.json",
+  "title": "Review Workflow Handoff Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "roles",
+    "title",
+    "scope",
+    "severity",
+    "evidence",
+    "reasoning",
+    "confidence",
+    "classification",
+    "visible"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/role"
+      }
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "observation"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/evidenceItem"
+      }
+    },
+    "reasoning": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "issue",
+        "observation"
+      ]
+    },
+    "visible": {
+      "type": "boolean"
+    },
+    "issueClasses": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "ownership-overlap",
+          "mode-gating-symmetry",
+          "destructive-path-gating",
+          "poller-terminal-failure",
+          "validator-doc-parity",
+          "companion-completeness",
+          "list-resource-exception",
+          "identity-list-docs-tests",
+          "patch-residual-state",
+          "optional-state-drift",
+          "acceptance-test-matrix",
+          "docs-example-correctness"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "ruleReferences": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "roleNotes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/roleNote"
+      }
+    },
+    "mergedInto": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "presentation": {
+      "$ref": "#/$defs/presentationHint"
+    }
+  },
+  "$defs": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "reviewer",
+        "review-architect",
+        "review-skeptic",
+        "review-advocate",
+        "moderator"
+      ]
+    },
+    "evidenceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "file",
+            "diff",
+            "tool",
+            "comment",
+            "pattern",
+            "external"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "roleNote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "kind",
+        "summary"
+      ],
+      "properties": {
+        "role": {
+          "$ref": "#/$defs/role"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "finding",
+            "direction",
+            "challenge",
+            "defense",
+            "adjudication",
+            "status-change"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "presentationHint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewType": {
+          "type": "string",
+          "enum": [
+            "change-request",
+            "nitpick",
+            "refactor-suggestion",
+            "thought-or-concern",
+            "positive-feedback",
+            "future-consideration"
+          ]
+        },
+        "impact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "suggestedChange": {
+          "type": "string",
+          "minLength": 1
+        },
+        "currentCode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correctedCode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "codeLanguage": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
