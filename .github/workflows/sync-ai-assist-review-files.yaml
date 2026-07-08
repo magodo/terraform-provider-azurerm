@@ -1,0 +1,39 @@
+name: Sync skills & instructions from upstream
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+
+      - name: Checkout WodansSon's repo
+        uses: actions/checkout@v4
+        with:
+          repository: WodansSon/terraform-azurerm-ai-assisted-development
+          path: _upstream
+
+      - name: Copy files (no overwrite)
+        run: |
+          mkdir -p .github/skills .github/instructions
+          cp -rn _upstream/.github/skills/.       .github/skills/       || true
+          cp -rn _upstream/.github/instructions/. .github/instructions/ || true
+          rm -rf _upstream
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: sync/upstream-skills
+          commit-message: "chore: sync skills & instructions from upstream"
+          title: "chore: sync skills & instructions from upstream"
+          body: "Automated sync from WodansSon/terraform-azurerm-ai-assisted-development"
+          delete-branch: true
