@@ -255,7 +255,7 @@ func resourceContainerRegistry() *pluginsdk.Resource {
 	if !features.FivePointOh() {
 		schema["trust_policy_enabled"] = &pluginsdk.Schema{
 			Type:       pluginsdk.TypeBool,
-			Deprecated: "This attribute is deprecated by the service and will be completely removed on March 31, 2028",
+			Deprecated: "the `trust_policy_enabled` property is deprecated by the service and will be removed in v5.0 of the AzureRM Provider",
 			Optional:   true,
 			Default:    false,
 		}
