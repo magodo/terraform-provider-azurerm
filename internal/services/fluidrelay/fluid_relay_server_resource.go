@@ -259,7 +259,7 @@ func (s Server) Update() sdk.ResourceFunc {
 			}
 
 			if _, err = client.Update(ctx, *id, payload); err != nil {
-				return fmt.Errorf("updating %s: %v", id, err)
+				return fmt.Errorf("Updating %s: %s", id, err.Error())
 			}
 
 			return nil
