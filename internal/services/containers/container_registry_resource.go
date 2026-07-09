@@ -328,7 +328,7 @@ func resourceContainerRegistry() *pluginsdk.Resource {
 
 					// Can't enable `trustPolicy` for new creation.
 					if d.GetRawState().IsNull() {
-						return errors.New("`trust_policy_enabled` can't be enabled as it is deprecated by the service")
+						return errors.New("`trust_policy_enabled` cannot be enabled as it is deprecated by the service")
 					}
 				}
 			}
