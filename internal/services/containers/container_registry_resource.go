@@ -561,7 +561,7 @@ func resourceContainerRegistryUpdate(d *pluginsdk.ResourceData, meta interface{}
 		"azuread_authentication_as_arm_policy_enabled",
 	}
 
-	policyKeys = append(policyKeys, []string{"retention_policy_in_days", "trust_policy_enabled"}...)
+	policyKeys = append(policyKeys, "retention_policy_in_days")
 	if !features.FivePointOh() {
 		policyKeys = append(policyKeys, "trust_policy_enabled")
 	}
