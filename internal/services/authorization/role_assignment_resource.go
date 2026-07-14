@@ -327,7 +327,7 @@ func resourceArmRoleAssignmentUpdate(d *pluginsdk.ResourceData, meta interface{}
 			if props.Condition == nil {
 				props.ConditionVersion = nil
 			} else {
-				props.ConditionVersion = new("2.0")
+				props.ConditionVersion = pointer.To("2.0")
 			}
 		}
 	}
