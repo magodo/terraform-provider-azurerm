@@ -76,6 +76,7 @@ var services = mapOf(
         "machinelearning" to "Machine Learning",
         "maintenance" to "Maintenance",
         "managedapplications" to "Managed Applications",
+        "manageddevopspools" to "Managed DevOps Pools",
         "managedhsm" to "Managed HSM",
         "managedredis" to "Managed Redis",
         "managedidentity" to "ManagedIdentity",
@@ -83,7 +84,6 @@ var services = mapOf(
         "maps" to "Maps",
         "mssql" to "Microsoft SQL Server / Azure SQL",
         "mssqlmanagedinstance" to "Microsoft SQL Server Managed Instances",
-        "mobilenetwork" to "Mobile Network",
         "mongocluster" to "Mongo Cluster",
         "monitor" to "Monitor",
         "mysql" to "MySQL",
@@ -131,7 +131,6 @@ var services = mapOf(
         "codesigning" to "Trusted Signing",
         "vmware" to "VMware",
         "videoindexer" to "VideoIndexer",
-        "voiceservices" to "Voice Services",
         "web" to "Web",
         "workloads" to "Workloads"
 )

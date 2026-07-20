@@ -361,6 +361,7 @@ resource "azurerm_key_vault" "test" {
   name                       = "acctest-%[4]s"
   location                   = azurerm_resource_group.test.location
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "standard"
   purge_protection_enabled   = true
@@ -449,6 +450,7 @@ resource "azurerm_subnet" "test1" {
   resource_group_name  = azurerm_resource_group.test.name
   virtual_network_name = azurerm_virtual_network.test.name
   address_prefixes     = ["10.0.1.0/24"]
+  service_endpoints    = ["Microsoft.AzureCosmosDB"]
 
   delegation {
     name = "delegation"
@@ -457,12 +459,6 @@ resource "azurerm_subnet" "test1" {
       name    = "Microsoft.Web/serverFarms"
       actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
     }
-  }
-
-  lifecycle {
-    ignore_changes = [
-      service_endpoints,
-    ]
   }
 }
 
