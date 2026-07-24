@@ -143,9 +143,42 @@ func (r UserAssignedIdentityResource) Create() sdk.ResourceFunc {
 				return fmt.Errorf("creating %s: %+v", id, err)
 			}
 
+			deadline, ok := ctx.Deadline()
+			if !ok {
+				return fmt.Errorf("internal-error: context had no deadline")
+			}
+
+			// The User Assigned Identity is eventually consistent, so a Get immediately after creation can return a 404. Poll until it becomes available.
+			stateConf := &pluginsdk.StateChangeConf{
+				Pending:                   []string{"404"},
+				Target:                    []string{"200"},
+				Refresh:                   userAssignedIdentityCreateRefreshFunc(ctx, client, id),
+				MinTimeout:                5 * time.Second,
+				ContinuousTargetOccurence: 5,
+				Timeout:                   time.Until(deadline),
+			}
+
+			if _, err := stateConf.WaitForStateContext(ctx); err != nil {
+				return fmt.Errorf("waiting for %s to become available: %+v", id, err)
+			}
+
 			metadata.SetID(id)
 			return nil
 		},
+	}
+}
+
+func userAssignedIdentityCreateRefreshFunc(ctx context.Context, client *identities.IdentitiesClient, id commonids.UserAssignedIdentityId) pluginsdk.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		resp, err := client.UserAssignedIdentitiesGet(ctx, id)
+		if err != nil {
+			if response.WasNotFound(resp.HttpResponse) {
+				return resp, "404", nil
+			}
+			return resp, "", fmt.Errorf("retrieving %s: %+v", id, err)
+		}
+
+		return resp, "200", nil
 	}
 }
 
