@@ -61,6 +61,7 @@ tf.zip
 .github/instructions
 .github/prompts
 .github/skills
+.github/copilot-instructions.md
 
 # do not upload .bob instructions
 .bob
