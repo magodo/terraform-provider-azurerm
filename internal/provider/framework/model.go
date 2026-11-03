@@ -9,6 +9,8 @@ import (
 )
 
 type ProviderModel struct {
+	ManagedIdentityClientId        types.String `tfsdk:"managed_identity_client_id"`
+	UseManagedIdentityOIDC         types.Bool   `tfsdk:"use_managed_identity_oidc"`
 	SubscriptionId                 types.String `tfsdk:"subscription_id"`
 	ClientId                       types.String `tfsdk:"client_id"`
 	ClientIdFilePath               types.String `tfsdk:"client_id_file_path"`

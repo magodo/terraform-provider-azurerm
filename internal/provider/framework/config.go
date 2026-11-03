@@ -77,7 +77,8 @@ func (p *ProviderConfig) Load(ctx context.Context, data *ProviderModel, tfVersio
 		return
 	}
 
-	enableOIDC := getEnvBoolIfValueAbsent(data.UseOIDC, "ARM_USE_OIDC") || getEnvBoolIfValueAbsent(data.UseAKSWorkloadIdentity, "ARM_USE_AKS_WORKLOAD_IDENTITY")
+	enableManagedIdentityOIDC := getEnvBoolOrDefault(data.UseManagedIdentityOIDC, "ARM_USE_MANAGED_IDENTITY_OIDC", false)
+	enableOIDC := (getEnvBoolIfValueAbsent(data.UseOIDC, "ARM_USE_OIDC") || getEnvBoolIfValueAbsent(data.UseAKSWorkloadIdentity, "ARM_USE_AKS_WORKLOAD_IDENTITY")) && !enableManagedIdentityOIDC
 	auxTenants := getEnvListOfStringsIfAbsent(data.AuxiliaryTenantIds, "ARM_AUXILIARY_TENANT_IDS", ";")
 
 	oidcReqURL := getEnvStringsOrDefault(data.OIDCRequestURL, []string{"ARM_OIDC_REQUEST_URL", "ACTIONS_ID_TOKEN_REQUEST_URL", "SYSTEM_OIDCREQUESTURI"}, "")
@@ -101,6 +102,9 @@ func (p *ProviderConfig) Load(ctx context.Context, data *ProviderModel, tfVersio
 		OIDCTokenRequestURL:   oidcReqURL,
 		OIDCTokenRequestToken: oidcReqToken,
 
+		ManagedIdentityClientID:                      getEnvStringOrDefault(data.ManagedIdentityClientId, "ARM_MANAGED_IDENTITY_CLIENT_ID", ""),
+		EnableAuthenticationUsingManagedIdentityOIDC: enableManagedIdentityOIDC,
+
 		ADOPipelineServiceConnectionID: adoPipelineServiceConnectionID,
 
 		CustomManagedIdentityEndpoint:   getEnvStringOrDefault(data.MSIEndpoint, "ARM_MSI_ENDPOINT", ""),
@@ -108,8 +112,8 @@ func (p *ProviderConfig) Load(ctx context.Context, data *ProviderModel, tfVersio
 
 		AzureCliSubscriptionIDHint: subscriptionId,
 
-		EnableAuthenticatingUsingClientCertificate: true,
-		EnableAuthenticatingUsingClientSecret:      true,
+		EnableAuthenticatingUsingClientCertificate: !enableManagedIdentityOIDC,
+		EnableAuthenticatingUsingClientSecret:      !enableManagedIdentityOIDC,
 		EnableAuthenticationUsingOIDC:              enableOIDC,
 		EnableAuthenticationUsingGitHubOIDC:        enableOIDC,
 		EnableAuthenticationUsingADOPipelineOIDC:   enableOIDC,

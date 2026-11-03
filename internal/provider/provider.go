@@ -237,6 +237,20 @@ func azureProvider(supportLegacyTestSuite bool, testName string) *schema.Provide
 			},
 
 			// OIDC specific fields
+			"use_managed_identity_oidc": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ARM_USE_MANAGED_IDENTITY_OIDC", false),
+				Description: "Authenticate the application using a federated managed identity.",
+			},
+
+			"managed_identity_client_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ARM_MANAGED_IDENTITY_CLIENT_ID", nil),
+				Description: "The client ID of the managed identity trusted by the application's federated identity credential.",
+			},
+
 			"use_oidc": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -498,9 +512,10 @@ func providerConfigure(p *schema.Provider, testName string) schema.ConfigureCont
 		}
 
 		var (
-			enableAzureCli        = d.Get("use_cli").(bool)
-			enableManagedIdentity = d.Get("use_msi").(bool)
-			enableOidc            = d.Get("use_oidc").(bool) || d.Get("use_aks_workload_identity").(bool)
+			enableAzureCli            = d.Get("use_cli").(bool)
+			enableManagedIdentity     = d.Get("use_msi").(bool)
+			enableManagedIdentityOIDC = d.Get("use_managed_identity_oidc").(bool)
+			enableOidc                = (d.Get("use_oidc").(bool) || d.Get("use_aks_workload_identity").(bool)) && !enableManagedIdentityOIDC
 		)
 
 		authConfig := &auth.Credentials{
@@ -518,6 +533,9 @@ func providerConfigure(p *schema.Provider, testName string) schema.ConfigureCont
 			OIDCTokenRequestURL:   d.Get("oidc_request_url").(string),
 			OIDCTokenRequestToken: d.Get("oidc_request_token").(string),
 
+			ManagedIdentityClientID:                      d.Get("managed_identity_client_id").(string),
+			EnableAuthenticationUsingManagedIdentityOIDC: enableManagedIdentityOIDC,
+
 			ADOPipelineServiceConnectionID: d.Get("ado_pipeline_service_connection_id").(string),
 
 			CustomManagedIdentityEndpoint:   d.Get("msi_endpoint").(string),
@@ -525,8 +543,8 @@ func providerConfigure(p *schema.Provider, testName string) schema.ConfigureCont
 
 			AzureCliSubscriptionIDHint: subscriptionId,
 
-			EnableAuthenticatingUsingClientCertificate: true,
-			EnableAuthenticatingUsingClientSecret:      true,
+			EnableAuthenticatingUsingClientCertificate: !enableManagedIdentityOIDC,
+			EnableAuthenticatingUsingClientSecret:      !enableManagedIdentityOIDC,
 			EnableAuthenticatingUsingAzureCLI:          enableAzureCli,
 			EnableAuthenticatingUsingManagedIdentity:   enableManagedIdentity,
 			EnableAuthenticationUsingOIDC:              enableOidc,

@@ -819,6 +819,33 @@ func testAccProvider_clientSecretAuthFromFiles(t *testing.T) {
 	}
 }
 
+func TestAccProvider_managedIdentityOidcAuth(t *testing.T) {
+	if os.Getenv("TF_ACC") == "" {
+		t.Skip("TF_ACC not set")
+	}
+	for _, name := range []string{"ARM_CLIENT_ID", "ARM_TENANT_ID", "ARM_MANAGED_IDENTITY_CLIENT_ID"} {
+		if os.Getenv(name) == "" {
+			t.Skipf("%s not set", name)
+		}
+	}
+
+	logging.SetOutput(t)
+	provider := TestAzureProvider()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	defer cancel()
+
+	d := provider.Configure(ctx, terraform.NewResourceConfigRaw(map[string]interface{}{
+		"use_managed_identity_oidc": true,
+		"use_cli":                   false,
+	}))
+	if d != nil && d.HasError() {
+		t.Fatalf("err: %+v", d)
+	}
+	for _, err := range testCheckProvider(provider) {
+		t.Error(err)
+	}
+}
+
 func TestAccProvider_genericOidcAuth(t *testing.T) {
 	if os.Getenv("TF_ACC") == "" {
 		t.Skip("TF_ACC not set")
