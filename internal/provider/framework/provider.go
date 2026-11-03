@@ -129,11 +129,6 @@ func (p *azureRmFrameworkProvider) Schema(_ context.Context, _ provider.SchemaRe
 			},
 
 			// OIDC specific fields
-			"use_managed_identity_oidc": schema.BoolAttribute{
-				Optional:    true,
-				Description: "Authenticate the application using a federated managed identity.",
-			},
-
 			"managed_identity_client_id": schema.StringAttribute{
 				Optional:    true,
 				Description: "The client ID of the managed identity trusted by the application's federated identity credential.",

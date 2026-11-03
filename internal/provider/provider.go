@@ -237,13 +237,6 @@ func azureProvider(supportLegacyTestSuite bool, testName string) *schema.Provide
 			},
 
 			// OIDC specific fields
-			"use_managed_identity_oidc": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("ARM_USE_MANAGED_IDENTITY_OIDC", false),
-				Description: "Authenticate the application using a federated managed identity.",
-			},
-
 			"managed_identity_client_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -512,10 +505,9 @@ func providerConfigure(p *schema.Provider, testName string) schema.ConfigureCont
 		}
 
 		var (
-			enableAzureCli            = d.Get("use_cli").(bool)
-			enableManagedIdentity     = d.Get("use_msi").(bool)
-			enableManagedIdentityOIDC = d.Get("use_managed_identity_oidc").(bool)
-			enableOidc                = (d.Get("use_oidc").(bool) || d.Get("use_aks_workload_identity").(bool)) && !enableManagedIdentityOIDC
+			enableAzureCli        = d.Get("use_cli").(bool)
+			enableManagedIdentity = d.Get("use_msi").(bool)
+			enableOidc            = d.Get("use_oidc").(bool) || d.Get("use_aks_workload_identity").(bool)
 		)
 
 		authConfig := &auth.Credentials{
@@ -533,8 +525,7 @@ func providerConfigure(p *schema.Provider, testName string) schema.ConfigureCont
 			OIDCTokenRequestURL:   d.Get("oidc_request_url").(string),
 			OIDCTokenRequestToken: d.Get("oidc_request_token").(string),
 
-			ManagedIdentityClientID:                      d.Get("managed_identity_client_id").(string),
-			EnableAuthenticationUsingManagedIdentityOIDC: enableManagedIdentityOIDC,
+			ManagedIdentityClientID: d.Get("managed_identity_client_id").(string),
 
 			ADOPipelineServiceConnectionID: d.Get("ado_pipeline_service_connection_id").(string),
 
@@ -543,13 +534,14 @@ func providerConfigure(p *schema.Provider, testName string) schema.ConfigureCont
 
 			AzureCliSubscriptionIDHint: subscriptionId,
 
-			EnableAuthenticatingUsingClientCertificate: !enableManagedIdentityOIDC,
-			EnableAuthenticatingUsingClientSecret:      !enableManagedIdentityOIDC,
-			EnableAuthenticatingUsingAzureCLI:          enableAzureCli,
-			EnableAuthenticatingUsingManagedIdentity:   enableManagedIdentity,
-			EnableAuthenticationUsingOIDC:              enableOidc,
-			EnableAuthenticationUsingGitHubOIDC:        enableOidc,
-			EnableAuthenticationUsingADOPipelineOIDC:   enableOidc,
+			EnableAuthenticatingUsingClientCertificate:    true,
+			EnableAuthenticatingUsingClientSecret:         true,
+			EnableAuthenticatingUsingAzureCLI:             enableAzureCli,
+			EnableAuthenticatingUsingManagedIdentity:      enableManagedIdentity,
+			EnableAuthenticationUsingOIDC:                 enableOidc,
+			EnableAuthenticationUsingGitHubOIDC:           enableOidc,
+			EnableAuthenticationUsingADOPipelineOIDC:      enableOidc,
+			EnableAuthenticationUsingManagedIdentityOIDC:  enableOidc,
 		}
 
 		return buildClient(ctx, p, d, authConfig, testName)

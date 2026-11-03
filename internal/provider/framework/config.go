@@ -77,8 +77,7 @@ func (p *ProviderConfig) Load(ctx context.Context, data *ProviderModel, tfVersio
 		return
 	}
 
-	enableManagedIdentityOIDC := getEnvBoolOrDefault(data.UseManagedIdentityOIDC, "ARM_USE_MANAGED_IDENTITY_OIDC", false)
-	enableOIDC := (getEnvBoolIfValueAbsent(data.UseOIDC, "ARM_USE_OIDC") || getEnvBoolIfValueAbsent(data.UseAKSWorkloadIdentity, "ARM_USE_AKS_WORKLOAD_IDENTITY")) && !enableManagedIdentityOIDC
+	enableOIDC := getEnvBoolIfValueAbsent(data.UseOIDC, "ARM_USE_OIDC") || getEnvBoolIfValueAbsent(data.UseAKSWorkloadIdentity, "ARM_USE_AKS_WORKLOAD_IDENTITY")
 	auxTenants := getEnvListOfStringsIfAbsent(data.AuxiliaryTenantIds, "ARM_AUXILIARY_TENANT_IDS", ";")
 
 	oidcReqURL := getEnvStringsOrDefault(data.OIDCRequestURL, []string{"ARM_OIDC_REQUEST_URL", "ACTIONS_ID_TOKEN_REQUEST_URL", "SYSTEM_OIDCREQUESTURI"}, "")
@@ -102,8 +101,7 @@ func (p *ProviderConfig) Load(ctx context.Context, data *ProviderModel, tfVersio
 		OIDCTokenRequestURL:   oidcReqURL,
 		OIDCTokenRequestToken: oidcReqToken,
 
-		ManagedIdentityClientID:                      getEnvStringOrDefault(data.ManagedIdentityClientId, "ARM_MANAGED_IDENTITY_CLIENT_ID", ""),
-		EnableAuthenticationUsingManagedIdentityOIDC: enableManagedIdentityOIDC,
+		ManagedIdentityClientID: getEnvStringOrDefault(data.ManagedIdentityClientId, "ARM_MANAGED_IDENTITY_CLIENT_ID", ""),
 
 		ADOPipelineServiceConnectionID: adoPipelineServiceConnectionID,
 
@@ -112,13 +110,14 @@ func (p *ProviderConfig) Load(ctx context.Context, data *ProviderModel, tfVersio
 
 		AzureCliSubscriptionIDHint: subscriptionId,
 
-		EnableAuthenticatingUsingClientCertificate: !enableManagedIdentityOIDC,
-		EnableAuthenticatingUsingClientSecret:      !enableManagedIdentityOIDC,
-		EnableAuthenticationUsingOIDC:              enableOIDC,
-		EnableAuthenticationUsingGitHubOIDC:        enableOIDC,
-		EnableAuthenticationUsingADOPipelineOIDC:   enableOIDC,
-		EnableAuthenticatingUsingAzureCLI:          getEnvBoolOrDefault(data.UseCLI, "ARM_USE_CLI", true),
-		EnableAuthenticatingUsingManagedIdentity:   getEnvBoolOrDefault(data.UseMSI, "ARM_USE_MSI", false),
+		EnableAuthenticatingUsingClientCertificate:   true,
+		EnableAuthenticatingUsingClientSecret:        true,
+		EnableAuthenticationUsingOIDC:                enableOIDC,
+		EnableAuthenticationUsingGitHubOIDC:          enableOIDC,
+		EnableAuthenticationUsingADOPipelineOIDC:     enableOIDC,
+		EnableAuthenticationUsingManagedIdentityOIDC: enableOIDC,
+		EnableAuthenticatingUsingAzureCLI:            getEnvBoolOrDefault(data.UseCLI, "ARM_USE_CLI", true),
+		EnableAuthenticatingUsingManagedIdentity:     getEnvBoolOrDefault(data.UseMSI, "ARM_USE_MSI", false),
 	}
 
 	p.clientBuilder.SubscriptionID = getEnvStringIfValueAbsent(data.SubscriptionId, "ARM_SUBSCRIPTION_ID")

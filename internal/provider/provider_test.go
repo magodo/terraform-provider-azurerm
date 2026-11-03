@@ -835,8 +835,8 @@ func TestAccProvider_managedIdentityOidcAuth(t *testing.T) {
 	defer cancel()
 
 	d := provider.Configure(ctx, terraform.NewResourceConfigRaw(map[string]interface{}{
-		"use_managed_identity_oidc": true,
-		"use_cli":                   false,
+		"use_oidc": true,
+		"use_cli":  false,
 	}))
 	if d != nil && d.HasError() {
 		t.Fatalf("err: %+v", d)
