@@ -237,6 +237,13 @@ func azureProvider(supportLegacyTestSuite bool, testName string) *schema.Provide
 			},
 
 			// OIDC specific fields
+			"managed_identity_client_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ARM_MANAGED_IDENTITY_CLIENT_ID", nil),
+				Description: "The client ID of the managed identity trusted by the application's federated identity credential.",
+			},
+
 			"use_oidc": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -518,6 +525,8 @@ func providerConfigure(p *schema.Provider, testName string) schema.ConfigureCont
 			OIDCTokenRequestURL:   d.Get("oidc_request_url").(string),
 			OIDCTokenRequestToken: d.Get("oidc_request_token").(string),
 
+			ManagedIdentityClientID: d.Get("managed_identity_client_id").(string),
+
 			ADOPipelineServiceConnectionID: d.Get("ado_pipeline_service_connection_id").(string),
 
 			CustomManagedIdentityEndpoint:   d.Get("msi_endpoint").(string),
@@ -525,13 +534,14 @@ func providerConfigure(p *schema.Provider, testName string) schema.ConfigureCont
 
 			AzureCliSubscriptionIDHint: subscriptionId,
 
-			EnableAuthenticatingUsingClientCertificate: true,
-			EnableAuthenticatingUsingClientSecret:      true,
-			EnableAuthenticatingUsingAzureCLI:          enableAzureCli,
-			EnableAuthenticatingUsingManagedIdentity:   enableManagedIdentity,
-			EnableAuthenticationUsingOIDC:              enableOidc,
-			EnableAuthenticationUsingGitHubOIDC:        enableOidc,
-			EnableAuthenticationUsingADOPipelineOIDC:   enableOidc,
+			EnableAuthenticatingUsingClientCertificate:   true,
+			EnableAuthenticatingUsingClientSecret:        true,
+			EnableAuthenticatingUsingAzureCLI:            enableAzureCli,
+			EnableAuthenticatingUsingManagedIdentity:     enableManagedIdentity,
+			EnableAuthenticationUsingOIDC:                enableOidc,
+			EnableAuthenticationUsingGitHubOIDC:          enableOidc,
+			EnableAuthenticationUsingADOPipelineOIDC:     enableOidc,
+			EnableAuthenticationUsingManagedIdentityOIDC: enableOidc,
 		}
 
 		return buildClient(ctx, p, d, authConfig, testName)

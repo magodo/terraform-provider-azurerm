@@ -129,6 +129,11 @@ func (p *azureRmFrameworkProvider) Schema(_ context.Context, _ provider.SchemaRe
 			},
 
 			// OIDC specific fields
+			"managed_identity_client_id": schema.StringAttribute{
+				Optional:    true,
+				Description: "The client ID of the managed identity trusted by the application's federated identity credential.",
+			},
+
 			"oidc_request_token": schema.StringAttribute{
 				Optional:    true,
 				Description: "The bearer token for the request to the OIDC provider. For use when authenticating as a Service Principal using OpenID Connect.",
