@@ -534,14 +534,14 @@ func providerConfigure(p *schema.Provider, testName string) schema.ConfigureCont
 
 			AzureCliSubscriptionIDHint: subscriptionId,
 
-			EnableAuthenticatingUsingClientCertificate:    true,
-			EnableAuthenticatingUsingClientSecret:         true,
-			EnableAuthenticatingUsingAzureCLI:             enableAzureCli,
-			EnableAuthenticatingUsingManagedIdentity:      enableManagedIdentity,
-			EnableAuthenticationUsingOIDC:                 enableOidc,
-			EnableAuthenticationUsingGitHubOIDC:           enableOidc,
-			EnableAuthenticationUsingADOPipelineOIDC:      enableOidc,
-			EnableAuthenticationUsingManagedIdentityOIDC:  enableOidc,
+			EnableAuthenticatingUsingClientCertificate:   true,
+			EnableAuthenticatingUsingClientSecret:        true,
+			EnableAuthenticatingUsingAzureCLI:            enableAzureCli,
+			EnableAuthenticatingUsingManagedIdentity:     enableManagedIdentity,
+			EnableAuthenticationUsingOIDC:                enableOidc,
+			EnableAuthenticationUsingGitHubOIDC:          enableOidc,
+			EnableAuthenticationUsingADOPipelineOIDC:     enableOidc,
+			EnableAuthenticationUsingManagedIdentityOIDC: enableOidc,
 		}
 
 		return buildClient(ctx, p, d, authConfig, testName)
