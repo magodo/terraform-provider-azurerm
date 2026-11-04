@@ -18,6 +18,7 @@ import (
 // - OIDC authentication
 // - ADO Pipeline OIDC authentication
 // - GitHub OIDC authentication
+// - Managed Identity OIDC authentication
 // - MSI authentication
 // - Azure CLI authentication
 //
@@ -29,6 +30,7 @@ import (
 // For OIDC authentication, specify TenantID, ClientID and OIDCAssertionToken.
 // For ADO Pipeline OIDC authentication, specify TenantID, ClientID, ADOPipelineServiceConnectionID, OIDCTokenRequestURL and OIDCTokenRequestToken.
 // For GitHub OIDC authentication, specify TenantID, ClientID, OIDCTokenRequestURL and OIDCTokenRequestToken.
+// For Managed Identity OIDC authentication, specify TenantID, ClientID (the application) and ManagedIdentityClientID.
 // MSI authentication (if enabled) using the Azure Metadata Service is then attempted
 // Azure CLI authentication (if enabled) is attempted last
 //
@@ -125,6 +127,27 @@ func NewAuthorizerFromCredentials(ctx context.Context, c Credentials, api enviro
 		a, err := NewGitHubOIDCAuthorizer(context.Background(), opts)
 		if err != nil {
 			return nil, fmt.Errorf("could not configure GitHubOIDC Authorizer: %s", err)
+		}
+		if a != nil {
+			return a, nil
+		}
+	}
+
+	if c.EnableAuthenticationUsingManagedIdentityOIDC && strings.TrimSpace(c.TenantID) != "" && strings.TrimSpace(c.ClientID) != "" && strings.TrimSpace(c.ManagedIdentityClientID) != "" {
+		opts := ManagedIdentityOIDCAuthorizerOptions{
+			Environment:                     c.Environment,
+			Api:                             api,
+			TenantId:                        c.TenantID,
+			AuxiliaryTenantIds:              c.AuxiliaryTenantIDs,
+			AppClientId:                     c.ClientID,
+			ManagedIdentityClientId:         c.ManagedIdentityClientID,
+			CustomManagedIdentityEndpoint:   c.CustomManagedIdentityEndpoint,
+			CustomManagedIdentityAPIVersion: c.CustomManagedIdentityAPIVersion,
+			CustomManagedIdentityHeaders:    c.CustomManagedIdentityHeaders,
+		}
+		a, err := NewManagedIdentityOIDCAuthorizer(ctx, opts)
+		if err != nil {
+			return nil, fmt.Errorf("could not configure ManagedIdentityOIDC Authorizer: %w", err)
 		}
 		if a != nil {
 			return a, nil

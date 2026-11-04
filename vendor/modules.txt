@@ -1341,7 +1341,7 @@ github.com/hashicorp/go-azure-sdk/resource-manager/workloads/2024-09-01/sapappli
 github.com/hashicorp/go-azure-sdk/resource-manager/workloads/2024-09-01/sapcentralserverinstances
 github.com/hashicorp/go-azure-sdk/resource-manager/workloads/2024-09-01/sapdatabaseinstances
 github.com/hashicorp/go-azure-sdk/resource-manager/workloads/2024-09-01/sapvirtualinstances
-# github.com/hashicorp/go-azure-sdk/sdk v0.20261103.1162831 => github.com/magodo/go-azure-sdk/sdk v0.0.0-20260706234620-f99bf45ea2bb
+# github.com/hashicorp/go-azure-sdk/sdk v0.20261103.1162831 => github.com/magodo/go-azure-sdk/sdk v0.0.0-20261103232208-221dd6fedef6
 ## explicit; go 1.26.3
 github.com/hashicorp/go-azure-sdk/sdk/auth
 github.com/hashicorp/go-azure-sdk/sdk/auth/autorest
@@ -1938,5 +1938,5 @@ gopkg.in/dnaeon/go-vcr.v4/pkg/recorder
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3
-# github.com/hashicorp/go-azure-sdk/sdk => github.com/magodo/go-azure-sdk/sdk v0.0.0-20260706234620-f99bf45ea2bb
+# github.com/hashicorp/go-azure-sdk/sdk => github.com/magodo/go-azure-sdk/sdk v0.0.0-20261103232208-221dd6fedef6
 # github.com/hashicorp/go-plugin => github.com/magodo/go-plugin v1.4.2-0.20251020053729-969b511a8df1

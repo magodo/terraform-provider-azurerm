@@ -57,6 +57,11 @@ type Credentials struct {
 	// OIDCAssertionToken specifies the OIDC Assertion Token to authenticate using Client Credentials.
 	OIDCAssertionToken string
 
+	// EnableAuthenticationUsingManagedIdentityOIDC enables authenticating ClientID using a managed identity assertion.
+	EnableAuthenticationUsingManagedIdentityOIDC bool
+	// ManagedIdentityClientID specifies the user-assigned managed identity trusted by the application's federated identity credential.
+	ManagedIdentityClientID string
+
 	// EnableAuthenticationUsingGitHubOIDC specifies whether GitHub OIDC should be checked.
 	EnableAuthenticationUsingGitHubOIDC bool
 
