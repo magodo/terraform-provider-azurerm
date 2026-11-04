@@ -118,7 +118,7 @@ require (
 	google.golang.org/protobuf v1.36.11 // indirect
 )
 
-replace github.com/hashicorp/go-azure-sdk/sdk => github.com/magodo/go-azure-sdk/sdk v0.0.0-20260706234620-f99bf45ea2bb
+replace github.com/hashicorp/go-azure-sdk/sdk => github.com/magodo/go-azure-sdk/sdk v0.0.0-20261103232208-221dd6fedef6
 
 replace github.com/hashicorp/go-plugin => github.com/magodo/go-plugin v1.4.2-0.20251020053729-969b511a8df1
 
