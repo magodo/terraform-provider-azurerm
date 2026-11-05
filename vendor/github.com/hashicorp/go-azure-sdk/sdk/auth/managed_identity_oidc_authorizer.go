@@ -6,7 +6,9 @@ package auth
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/http"
+	"os"
 
 	"github.com/hashicorp/go-azure-sdk/sdk/environments"
 	"golang.org/x/oauth2"
@@ -49,12 +51,34 @@ func NewManagedIdentityOIDCAuthorizer(ctx context.Context, options ManagedIdenti
 		return nil, fmt.Errorf("determining scope for %q: %+v", options.Api.Name(), err)
 	}
 
+	// For Aztfy-api, it's hosted on Azure Container App.
+	// To keep the effort when merge upstream we handle these environment variables here.
+	customManagedIdentityEndpoint := options.CustomManagedIdentityEndpoint
+	customManagedIdentityAPIVersion := options.CustomManagedIdentityAPIVersion
+	customManagedIdentityHeaders := maps.Clone(options.CustomManagedIdentityHeaders)
+
+	// On ACS, the endpoint and header environment are always set.
+	if identityEndpoint, identityHeader := os.Getenv("IDENTITY_ENDPOINT"), os.Getenv("IDENTITY_HEADER"); identityEndpoint != "" && identityHeader != "" {
+		if customManagedIdentityEndpoint == "" {
+			customManagedIdentityEndpoint = identityEndpoint
+		}
+		if customManagedIdentityAPIVersion == "" {
+			customManagedIdentityAPIVersion = "2019-08-01"
+		}
+		if customManagedIdentityHeaders == nil {
+			customManagedIdentityHeaders = make(map[string][]string)
+		}
+		if _, ok := customManagedIdentityHeaders["X-IDENTITY-HEADER"]; !ok {
+			customManagedIdentityHeaders["X-IDENTITY-HEADER"] = []string{identityHeader}
+		}
+	}
+
 	managedIdentityAuthorizer, err := NewManagedIdentityAuthorizer(ctx, ManagedIdentityAuthorizerOptions{
 		Api:                             environments.NewApiEndpoint("AzureADTokenExchange", "api://AzureADTokenExchange", nil),
 		ClientId:                        options.ManagedIdentityClientId,
-		CustomManagedIdentityEndpoint:   options.CustomManagedIdentityEndpoint,
-		CustomManagedIdentityAPIVersion: options.CustomManagedIdentityAPIVersion,
-		CustomManagedIdentityHeaders:    options.CustomManagedIdentityHeaders,
+		CustomManagedIdentityEndpoint:   customManagedIdentityEndpoint,
+		CustomManagedIdentityAPIVersion: customManagedIdentityAPIVersion,
+		CustomManagedIdentityHeaders:    customManagedIdentityHeaders,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("building managed identity authorizer: %w", err)
