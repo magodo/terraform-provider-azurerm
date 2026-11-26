@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2014, 2025
+// Copyright IBM Corp. 2014, 2026
 // SPDX-License-Identifier: MPL-2.0
 
 package containerapps
@@ -77,7 +77,7 @@ func (a ContainerAppCustomDomainResource) Attributes() map[string]*pluginsdk.Sch
 	}
 }
 
-func (a ContainerAppCustomDomainResource) ModelObject() interface{} {
+func (a ContainerAppCustomDomainResource) ModelObject() any {
 	return &ContainerAppCustomDomainResourceModel{}
 }
 
@@ -168,7 +168,7 @@ func (a ContainerAppCustomDomainResource) Create() sdk.ResourceFunc {
 
 			if certificateId != nil {
 				customDomain.CertificateId = pointer.To(certificateId.ID())
-				customDomain.BindingType = pointer.To(containerapps.BindingType(model.BindingType))
+				customDomain.BindingType = pointer.ToEnum[containerapps.BindingType](model.BindingType)
 			}
 
 			if !exists {
@@ -243,7 +243,7 @@ func (a ContainerAppCustomDomainResource) Read() sdk.ResourceFunc {
 							}
 						}
 
-						state.BindingType = string(pointer.From(v.BindingType))
+						state.BindingType = pointer.FromEnum(v.BindingType)
 					}
 				}
 			}

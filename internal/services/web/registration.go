@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2014, 2025
+// Copyright IBM Corp. 2014, 2026
 // SPDX-License-Identifier: MPL-2.0
 
 package web
@@ -37,19 +37,17 @@ func (r Registration) SupportedDataSources() map[string]*pluginsdk.Resource {
 
 // SupportedResources returns the supported Resources supported by this Service
 func (r Registration) SupportedResources() map[string]*pluginsdk.Resource {
-	resources := map[string]*pluginsdk.Resource{
+	return map[string]*pluginsdk.Resource{
 		"azurerm_app_service_certificate":                           resourceAppServiceCertificate(),
+		"azurerm_app_service_certificate_binding":                   resourceAppServiceCertificateBinding(),
 		"azurerm_app_service_certificate_order":                     resourceAppServiceCertificateOrder(),
 		"azurerm_app_service_custom_hostname_binding":               resourceAppServiceCustomHostnameBinding(),
-		"azurerm_app_service_certificate_binding":                   resourceAppServiceCertificateBinding(),
 		"azurerm_app_service_managed_certificate":                   resourceAppServiceManagedCertificate(),
 		"azurerm_app_service_public_certificate":                    resourceAppServicePublicCertificate(),
 		"azurerm_app_service_slot_custom_hostname_binding":          resourceAppServiceSlotCustomHostnameBinding(),
 		"azurerm_app_service_slot_virtual_network_swift_connection": resourceAppServiceSlotVirtualNetworkSwiftConnection(),
 		"azurerm_app_service_virtual_network_swift_connection":      resourceAppServiceVirtualNetworkSwiftConnection(),
 	}
-
-	return resources
 }
 
 func (r Registration) DataSources() []sdk.DataSource {
@@ -77,5 +75,7 @@ func (r Registration) EphemeralResources() []func() ephemeral.EphemeralResource 
 }
 
 func (r Registration) ListResources() []sdk.FrameworkListWrappedResource {
-	return []sdk.FrameworkListWrappedResource{}
+	return []sdk.FrameworkListWrappedResource{
+		AppServiceCustomHostnameBindingListResource{},
+	}
 }

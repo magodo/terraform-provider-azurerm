@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2014, 2025
+// Copyright IBM Corp. 2014, 2026
 // SPDX-License-Identifier: MPL-2.0
 
 package containerapps_test
@@ -8,8 +8,6 @@ import (
 	"fmt"
 	"regexp"
 	"testing"
-
-	"github.com/hashicorp/terraform-provider-azurerm/internal/features"
 
 	"github.com/hashicorp/go-azure-helpers/lang/pointer"
 	"github.com/hashicorp/go-azure-helpers/lang/response"
@@ -21,6 +19,16 @@ import (
 )
 
 type ContainerAppResource struct{}
+
+func TestAccContainerAppResource_regressionTest(t *testing.T) {
+	data := acceptance.BuildTestData(t, "azurerm_container_app", "test")
+	r := ContainerAppResource{}
+	data.ResourceRegressionTest(t, r, []acceptance.TestStep{
+		{
+			Config: r.complete(data, "rev1"),
+		},
+	}, "")
+}
 
 func TestAccContainerAppResource_basic(t *testing.T) {
 	data := acceptance.BuildTestData(t, "azurerm_container_app", "test")
@@ -294,21 +302,6 @@ func TestAccContainerAppResource_completeWithNoDaprAppPort(t *testing.T) {
 	data.ResourceTest(t, r, []acceptance.TestStep{
 		{
 			Config: r.completeWithNoDaprAppPort(data, "rev1"),
-			Check: acceptance.ComposeTestCheckFunc(
-				check.That(data.ResourceName).ExistsInAzure(r),
-			),
-		},
-		data.ImportStep(),
-	})
-}
-
-func TestAccContainerAppResource_completeWithVNet(t *testing.T) {
-	data := acceptance.BuildTestData(t, "azurerm_container_app", "test")
-	r := ContainerAppResource{}
-
-	data.ResourceTest(t, r, []acceptance.TestStep{
-		{
-			Config: r.completeWithVnet(data, "rev1"),
 			Check: acceptance.ComposeTestCheckFunc(
 				check.That(data.ResourceName).ExistsInAzure(r),
 			),
@@ -790,6 +783,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "test" {
   name                       = "acctest-kv-%[3]s"
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   location                   = azurerm_resource_group.test.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "premium"
@@ -882,6 +876,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "test" {
   name                       = "acctest-kv-%[3]s"
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   location                   = azurerm_resource_group.test.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "premium"
@@ -974,6 +969,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "test" {
   name                       = "acctest-kv-%[3]s"
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   location                   = azurerm_resource_group.test.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "premium"
@@ -1086,6 +1082,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "test" {
   name                       = "acctest-kv-%[3]s"
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   location                   = azurerm_resource_group.test.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "premium"
@@ -1212,6 +1209,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "test" {
   name                       = "acctest-kv-%[3]s"
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   location                   = azurerm_resource_group.test.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "premium"
@@ -1792,98 +1790,6 @@ resource "azurerm_container_app" "test" {
   }
 }
 `, r.templatePlusExtras(data), data.RandomInteger, revisionSuffix)
-}
-
-func (r ContainerAppResource) completeWithVnet(data acceptance.TestData, revisionSuffix string) string {
-	return fmt.Sprintf(`
-%s
-
-resource "azurerm_container_app" "test" {
-  name                         = "acctest-capp-%[2]d"
-  resource_group_name          = azurerm_resource_group.test.name
-  container_app_environment_id = azurerm_container_app_environment.test.id
-  revision_mode                = "Single"
-
-  template {
-    container {
-      name   = "acctest-cont-%[2]d"
-      image  = "jackofallops/azure-containerapps-python-acctest:v0.0.1"
-      cpu    = 0.25
-      memory = "0.5Gi"
-
-      readiness_probe {
-        transport = "HTTP"
-        port      = 5000
-      }
-
-      liveness_probe {
-        transport = "HTTP"
-        port      = 5000
-        path      = "/health"
-
-        header {
-          name  = "Cache-Control"
-          value = "no-cache"
-        }
-
-        initial_delay           = 5
-        timeout                 = 2
-        failure_count_threshold = 1
-      }
-
-      startup_probe {
-        transport = "TCP"
-        port      = 5000
-      }
-
-      volume_mounts {
-        name = azurerm_container_app_environment_storage.test.name
-        path = "/tmp/testdata"
-      }
-    }
-
-    volume {
-      name          = azurerm_container_app_environment_storage.test.name
-      storage_type  = "AzureFile"
-      storage_name  = azurerm_container_app_environment_storage.test.name
-      mount_options = "dir_mode=0777,file_mode=0666"
-    }
-
-    min_replicas                = 2
-    max_replicas                = 3
-    cooldown_period_in_seconds  = 1000
-    polling_interval_in_seconds = 10
-
-    revision_suffix = "%[3]s"
-  }
-
-  ingress {
-    allow_insecure_connections = true
-    target_port                = 5000
-    transport                  = "http"
-    traffic_weight {
-      latest_revision = true
-      percentage      = 100
-    }
-  }
-
-  registry {
-    server               = azurerm_container_registry.test.login_server
-    username             = azurerm_container_registry.test.admin_username
-    password_secret_name = "registry-password"
-  }
-
-  secret {
-    name  = "registry-password"
-    value = azurerm_container_registry.test.admin_password
-  }
-
-  tags = {
-    foo     = "Bar"
-    accTest = "1"
-  }
-}
-`, r.templateWithVnet(data), data.RandomInteger, revisionSuffix)
 }
 
 func (r ContainerAppResource) completeWithSidecar(data acceptance.TestData, revisionSuffix string) string {
@@ -2814,46 +2720,6 @@ func (ContainerAppResource) templateMultipleWorkloadProfiles(data acceptance.Tes
 }
 
 func (ContainerAppResource) templateWithVnet(data acceptance.TestData) string {
-	if !features.FivePointOh() {
-		return fmt.Sprintf(`
-		%s
-resource "azurerm_container_registry" "test" {
-  name                = "testacccr%[2]d"
-  resource_group_name = azurerm_resource_group.test.name
-  location            = azurerm_resource_group.test.location
-  sku                 = "Basic"
-  admin_enabled       = true
-}
-
-resource "azurerm_storage_account" "test" {
-  name                = "unlikely23exst2acct%[3]s"
-  resource_group_name = azurerm_resource_group.test.name
-
-  location                 = azurerm_resource_group.test.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-
-  tags = {
-    environment = "production"
-  }
-}
-
-resource "azurerm_storage_share" "test" {
-  name                 = "testshare%[3]s"
-  storage_account_name = azurerm_storage_account.test.name
-  quota                = 1
-}
-
-resource "azurerm_container_app_environment_storage" "test" {
-  name                         = "testacc-caes-%[2]d"
-  container_app_environment_id = azurerm_container_app_environment.test.id
-  account_name                 = azurerm_storage_account.test.name
-  access_key                   = azurerm_storage_account.test.primary_access_key
-  share_name                   = azurerm_storage_share.test.name
-  access_mode                  = "ReadWrite"
-}
-		`, ContainerAppEnvironmentResource{}.completeWithoutWorkloadProfile(data), data.RandomInteger, data.RandomString)
-	}
 	return fmt.Sprintf(`
 	%s
 resource "azurerm_container_registry" "test" {
@@ -2891,38 +2757,10 @@ resource "azurerm_container_app_environment_storage" "test" {
   share_name                   = azurerm_storage_share.test.name
   access_mode                  = "ReadWrite"
 }
-	`, ContainerAppEnvironmentResource{}.completeWithoutWorkloadProfile(data), data.RandomInteger, data.RandomString)
+	`, ContainerAppEnvironmentResource{}.complete(data), data.RandomInteger, data.RandomString)
 }
 
 func (ContainerAppResource) templatePlusExtras(data acceptance.TestData) string {
-	if !features.FivePointOh() {
-		return fmt.Sprintf(`
-		%s
-
-resource "azurerm_container_registry" "test" {
-  name                = "testacccr%[2]d"
-  resource_group_name = azurerm_resource_group.test.name
-  location            = azurerm_resource_group.test.location
-  sku                 = "Basic"
-  admin_enabled       = true
-}
-
-resource "azurerm_storage_share" "test" {
-  name               = "testshare%[3]s"
-  storage_account_id = azurerm_storage_account.test.id
-  quota              = 1
-}
-
-resource "azurerm_container_app_environment_storage" "test" {
-  name                         = "testacc-caes-%[2]d"
-  container_app_environment_id = azurerm_container_app_environment.test.id
-  account_name                 = azurerm_storage_account.test.name
-  access_key                   = azurerm_storage_account.test.primary_access_key
-  share_name                   = azurerm_storage_share.test.name
-  access_mode                  = "ReadWrite"
-}
-		`, ContainerAppEnvironmentDaprComponentResource{}.complete(data), data.RandomInteger, data.RandomString)
-	}
 	return fmt.Sprintf(`
 	%s
 

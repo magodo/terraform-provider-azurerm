@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2014, 2025
+// Copyright IBM Corp. 2014, 2026
 // SPDX-License-Identifier: MPL-2.0
 
 package serviceconnector
@@ -44,9 +44,10 @@ func (r AppServiceConnectorResource) Arguments() map[string]*schema.Schema {
 		},
 
 		"app_service_id": {
-			Type:     pluginsdk.TypeString,
-			Required: true,
-			ForceNew: true,
+			Type:         pluginsdk.TypeString,
+			Required:     true,
+			ForceNew:     true,
+			ValidateFunc: validation.AsGeneratedID(commonids.ParseAppServiceIDInsensitively),
 		},
 
 		"target_resource_id": {
@@ -77,12 +78,9 @@ func (r AppServiceConnectorResource) Arguments() map[string]*schema.Schema {
 		"secret_store": secretStoreSchema(),
 
 		"vnet_solution": {
-			Type:     pluginsdk.TypeString,
-			Optional: true,
-			ValidateFunc: validation.StringInSlice([]string{
-				string(servicelinker.VNetSolutionTypeServiceEndpoint),
-				string(servicelinker.VNetSolutionTypePrivateLink),
-			}, false),
+			Type:         pluginsdk.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.StringInSlice(servicelinker.PossibleValuesForVNetSolutionType(), false),
 		},
 
 		"authentication": authInfoSchema(),
@@ -93,7 +91,7 @@ func (r AppServiceConnectorResource) Attributes() map[string]*schema.Schema {
 	return map[string]*pluginsdk.Schema{}
 }
 
-func (r AppServiceConnectorResource) ModelObject() interface{} {
+func (r AppServiceConnectorResource) ModelObject() any {
 	return &AppServiceConnectorResourceModel{}
 }
 
@@ -146,19 +144,16 @@ func (r AppServiceConnectorResource) Create() sdk.ResourceFunc {
 			}
 
 			if model.SecretStore != nil {
-				secretStore := expandSecretStore(model.SecretStore)
-				serviceConnectorProperties.SecretStore = secretStore
+				serviceConnectorProperties.SecretStore = expandSecretStore(model.SecretStore)
 			}
 
 			if model.ClientType != "" {
-				clientType := servicelinker.ClientType(model.ClientType)
-				serviceConnectorProperties.ClientType = &clientType
+				serviceConnectorProperties.ClientType = pointer.ToEnum[servicelinker.ClientType](model.ClientType)
 			}
 
 			if model.VnetSolution != "" {
-				vNetSolutionType := servicelinker.VNetSolutionType(model.VnetSolution)
 				vNetSolution := servicelinker.VNetSolution{
-					Type: &vNetSolutionType,
+					Type: pointer.ToEnum[servicelinker.VNetSolutionType](model.VnetSolution),
 				}
 				serviceConnectorProperties.VNetSolution = &vNetSolution
 			}
@@ -269,14 +264,12 @@ func (r AppServiceConnectorResource) Update() sdk.ResourceFunc {
 			d := metadata.ResourceData
 
 			if d.HasChange("client_type") {
-				clientType := links.ClientType(state.ClientType)
-				linkerProps.ClientType = &clientType
+				linkerProps.ClientType = pointer.ToEnum[links.ClientType](state.ClientType)
 			}
 
 			if d.HasChange("vnet_solution") {
-				vnetSolutionType := links.VNetSolutionType(state.VnetSolution)
 				vnetSolution := links.VNetSolution{
-					Type: &vnetSolutionType,
+					Type: pointer.ToEnum[links.VNetSolutionType](state.VnetSolution),
 				}
 				linkerProps.VNetSolution = &vnetSolution
 			}

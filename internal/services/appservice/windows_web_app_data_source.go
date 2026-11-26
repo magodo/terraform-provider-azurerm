@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2014, 2025
+// Copyright IBM Corp. 2014, 2026
 // SPDX-License-Identifier: MPL-2.0
 
 package appservice
@@ -63,7 +63,7 @@ type WindowsWebAppDataSourceModel struct {
 
 var _ sdk.DataSource = WindowsWebAppDataSource{}
 
-func (d WindowsWebAppDataSource) ModelObject() interface{} {
+func (d WindowsWebAppDataSource) ModelObject() any {
 	return &WindowsWebAppDataSourceModel{}
 }
 
@@ -327,7 +327,7 @@ func (d WindowsWebAppDataSource) Read() sdk.ResourceFunc {
 					if props.ClientCertEnabled != nil {
 						webApp.ClientCertEnabled = *props.ClientCertEnabled
 					}
-					webApp.ClientCertMode = string(pointer.From(props.ClientCertMode))
+					webApp.ClientCertMode = pointer.FromEnum(props.ClientCertMode)
 					webApp.ClientCertExclusionPaths = pointer.From(props.ClientCertExclusionPaths)
 					webApp.CustomDomainVerificationId = pointer.From(props.CustomDomainVerificationId)
 					webApp.DefaultHostname = pointer.From(props.DefaultHostName)
@@ -392,8 +392,7 @@ func (d WindowsWebAppDataSource) Read() sdk.ResourceFunc {
 				// }
 
 				siteConfig := helpers.SiteConfigWindows{}
-				err = siteConfig.Flatten(webAppSiteConfig.Model.Properties, currentStack)
-				if err != nil {
+				if err = siteConfig.Flatten(webAppSiteConfig.Model.Properties, currentStack); err != nil {
 					return err
 				}
 

@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2014, 2025
+// Copyright IBM Corp. 2014, 2026
 // SPDX-License-Identifier: MPL-2.0
 
 package helpers
@@ -28,8 +28,7 @@ import (
 // 	}
 
 // 	if siteCredentials.HttpResponse != nil {
-// 		err = UnmarshalCredentialsResponse(siteCredentials.HttpResponse.Body, userModel)
-// 		if err != nil {
+// 		if err = UnmarshalCredentialsResponse(siteCredentials.HttpResponse.Body, userModel); err != nil {
 // 			return nil, fmt.Errorf("could not decode Publishing Credential information for %s: %+v", id, err)
 // 		}
 // 	}
@@ -54,8 +53,7 @@ import (
 // 	}
 
 // 	if siteCredentials.HttpResponse != nil {
-// 		err = UnmarshalCredentialsResponse(siteCredentials.HttpResponse.Body, userModel)
-// 		if err != nil {
+// 		if err = UnmarshalCredentialsResponse(siteCredentials.HttpResponse.Body, userModel); err != nil {
 // 			return nil, fmt.Errorf("could not decode Publishing Credential information for %s: %+v", id, err)
 // 		}
 // 	}

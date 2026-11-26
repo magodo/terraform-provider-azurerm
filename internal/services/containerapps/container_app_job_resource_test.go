@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2014, 2025
+// Copyright IBM Corp. 2014, 2026
 // SPDX-License-Identifier: MPL-2.0
 
 package containerapps_test
@@ -35,6 +35,16 @@ func (r ContainerAppJobResource) Exists(ctx context.Context, client *clients.Cli
 	return pointer.To(true), nil
 }
 
+func TestAccContainerAppJob_regressionTest(t *testing.T) {
+	data := acceptance.BuildTestData(t, "azurerm_container_app_job", "test")
+	r := ContainerAppJobResource{}
+	data.ResourceRegressionTest(t, r, []acceptance.TestStep{
+		{
+			Config: r.complete(data),
+		},
+	}, "")
+}
+
 func TestAccContainerAppJob_basic(t *testing.T) {
 	data := acceptance.BuildTestData(t, "azurerm_container_app_job", "test")
 	r := ContainerAppJobResource{}
@@ -44,6 +54,8 @@ func TestAccContainerAppJob_basic(t *testing.T) {
 			Config: r.basic(data),
 			Check: acceptance.ComposeTestCheckFunc(
 				check.That(data.ResourceName).ExistsInAzure(r),
+				check.That(data.ResourceName).Key("event_stream_endpoint").IsNotEmpty(),
+				check.That(data.ResourceName).Key("outbound_ip_addresses.#").IsSet(),
 			),
 		},
 		data.ImportStep(),
@@ -814,6 +826,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "test" {
   name                       = "acctest-kv-%[3]s"
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   location                   = azurerm_resource_group.test.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "premium"
@@ -914,6 +927,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "test" {
   name                       = "acctest-kv-%[3]s"
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   location                   = azurerm_resource_group.test.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "premium"
@@ -1014,6 +1028,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "test" {
   name                       = "acctest-kv-%[3]s"
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   location                   = azurerm_resource_group.test.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "premium"
@@ -1138,6 +1153,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "test" {
   name                       = "acctest-kv-%[3]s"
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   location                   = azurerm_resource_group.test.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "premium"
@@ -1272,6 +1288,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "test" {
   name                       = "acctest-kv-%[3]s"
   resource_group_name        = azurerm_resource_group.test.name
+  rbac_authorization_enabled = false
   location                   = azurerm_resource_group.test.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "premium"

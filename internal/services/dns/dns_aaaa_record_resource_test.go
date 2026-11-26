@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2014, 2025
+// Copyright IBM Corp. 2014, 2026
 // SPDX-License-Identifier: MPL-2.0
 
 package dns_test
@@ -149,7 +149,7 @@ func TestAccDnsAAAARecord_RecordsToAlias(t *testing.T) {
 	})
 }
 
-func TestAccDnsAaaaRecord_AliasToRecords(t *testing.T) {
+func TestAccDnsAAAARecord_AliasToRecords(t *testing.T) {
 	data := acceptance.BuildTestData(t, "azurerm_dns_aaaa_record", "test")
 	r := DnsAAAARecordResource{}
 	targetResourceName := "azurerm_public_ip.test"
