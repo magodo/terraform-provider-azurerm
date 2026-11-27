@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 	"strings"
 	"time"
 
@@ -1976,14 +1975,14 @@ func resourceStorageAccountFlatten(ctx context.Context, d *pluginsdk.ResourceDat
 	}
 
 	storageClient := meta.(*clients.Client).Storage.ResourceManager
-	client := storageClient.StorageAccounts
-	storageDomainSuffix, ok := meta.(*clients.Client).Account.Environment.Storage.DomainSuffix()
-	if !ok {
-		return fmt.Errorf("could not determine Storage domain suffix for environment %q", meta.(*clients.Client).Account.Environment.Name)
-	}
+	// client := storageClient.StorageAccounts
+	// storageDomainSuffix, ok := meta.(*clients.Client).Account.Environment.Storage.DomainSuffix()
+	// if !ok {
+	// 	return fmt.Errorf("could not determine Storage domain suffix for environment %q", meta.(*clients.Client).Account.Environment.Name)
+	// }
 
-	listKeysOpts := storageaccounts.DefaultListKeysOperationOptions()
-	listKeysOpts.Expand = pointer.To(storageaccounts.ExpandKerb)
+	// listKeysOpts := storageaccounts.DefaultListKeysOperationOptions()
+	// listKeysOpts.Expand = pointer.To(storageaccounts.ExpandKerb)
 
 	supportLevel := storageAccountServiceSupportLevel{}
 
@@ -2138,21 +2137,21 @@ func resourceStorageAccountFlatten(ctx context.Context, d *pluginsdk.ResourceDat
 	endpoints := flattenAccountEndpoints(primaryEndpoints, secondaryEndpoints, routingPreference)
 	endpoints.set(d)
 
-	keys, err := client.ListKeys(ctx, id, listKeysOpts)
-	if err != nil {
-		hasWriteLock := response.WasConflict(keys.HttpResponse)
-		doesntHavePermissions := response.WasForbidden(keys.HttpResponse) || response.WasStatusCode(keys.HttpResponse, http.StatusUnauthorized)
-		if !hasWriteLock && !doesntHavePermissions {
-			return fmt.Errorf("listing Keys for %s: %+v", id, err)
-		}
-	}
+	// keys, err := client.ListKeys(ctx, id, listKeysOpts)
+	// if err != nil {
+	// 	hasWriteLock := response.WasConflict(keys.HttpResponse)
+	// 	doesntHavePermissions := response.WasForbidden(keys.HttpResponse) || response.WasStatusCode(keys.HttpResponse, http.StatusUnauthorized)
+	// 	if !hasWriteLock && !doesntHavePermissions {
+	// 		return fmt.Errorf("listing Keys for %s: %+v", id, err)
+	// 	}
+	// }
 
-	storageAccountKeys := make([]storageaccounts.StorageAccountKey, 0)
-	if keys.Model != nil && keys.Model.Keys != nil {
-		storageAccountKeys = *keys.Model.Keys
-	}
-	keysAndConnectionStrings := flattenAccountAccessKeysAndConnectionStrings(id.StorageAccountName, *storageDomainSuffix, storageAccountKeys, endpoints)
-	keysAndConnectionStrings.set(d)
+	//storageAccountKeys := make([]storageaccounts.StorageAccountKey, 0)
+	// if keys.Model != nil && keys.Model.Keys != nil {
+	// 	storageAccountKeys = *keys.Model.Keys
+	// }
+	// keysAndConnectionStrings := flattenAccountAccessKeysAndConnectionStrings(id.StorageAccountName, *storageDomainSuffix, storageAccountKeys, endpoints)
+	// keysAndConnectionStrings.set(d)
 
 	blobProperties := make([]any, 0)
 	if supportLevel.supportBlob {

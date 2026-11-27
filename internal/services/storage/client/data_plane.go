@@ -56,18 +56,7 @@ func (c *Client) configureDataPlane(ctx context.Context, clientName, resourceIde
 	}
 
 	if operation.SupportsSharedKeyAuthentication {
-		accountKey, err := account.AccountKey(ctx, *c)
-		if err != nil {
-			return fmt.Errorf("retrieving Storage Account Key: %s", err)
-		}
-
-		storageAuth, err := auth.NewSharedKeyAuthorizer(account.StorageAccountId.StorageAccountName, *accountKey, operation.sharedKeyAuthenticationType)
-		if err != nil {
-			return fmt.Errorf("building Shared Key Authorizer for %s client: %+v", clientName, err)
-		}
-
-		baseClient.SetAuthorizer(storageAuth)
-		return nil
+		return fmt.Errorf("shared key auth is not supported")
 	}
 
 	return fmt.Errorf("building %s client: no configured authentication types are supported", clientName)
